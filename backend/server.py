@@ -13,7 +13,7 @@ api.add_resource(Init, '/manage/init') #Management API for initializing the DB
 
 api.add_resource(Version, '/manage/version') #Management API for checking DB version
 
-api.add_resource(HelloWorld, '/') 
+api.add_resource(HelloWorld, '/hello') 
 
 api.add_resource(AccountRiderInfo, '/accountinfo/rider/<string:id>', methods=["PUT", "POST", "GET", "DELETE"])
 
