@@ -1,6 +1,6 @@
 from flask_restful import Resource, reqparse, request  #NOTE: Import from flask_restful, not python
 
-from db.swen344_db_utils import *
+from db.db_utils import *
 
 from db.rideshare import *
 

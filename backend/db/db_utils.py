@@ -1,20 +1,11 @@
 import os
 import psycopg2
 
-conn = psycopg2.connect(
-    host='localhost',
-    database='rideshare',
-    user=os.environ['ayden'],
-    password=os.environ['M0nkeyb0y81'],
-    port=os.environ['5432']
-)
-
 def connect():
-    return psycopg2.connect(dbname=os.environ['database'],
-                            user=os.environ['user'],
-                            password=os.environ['password'],
-                            host=os.environ['host'],
-                            port=os.environ['port'])
+    return psycopg2.connect(dbname='rideshare',
+                            user='ayden',
+                            password='M0nkeyb0y81',
+                            host='localhost')
 
 def exec_sql_file(path):
     full_path = os.path.join(os.path.dirname(__file__), f'../../{path}')
