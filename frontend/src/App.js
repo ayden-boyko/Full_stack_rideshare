@@ -8,7 +8,7 @@ function App() {
   useEffect(() => {
     fetch("/hello").then((res) =>
       res.json().then((data) => {
-        console.log(data);
+        console.log("recieved");
         setData(data);
       })
     );
@@ -19,6 +19,8 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>hey is this working?</p>
+        <p>{data}</p>
+        <p>no</p>
         <a
           className="App-link"
           href="https://reactjs.org"

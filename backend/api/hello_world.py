@@ -4,4 +4,4 @@ from flask import jsonify
 
 class HelloWorld(Resource):
     def get(self):
-        return jsonify("hey")
+        return "hey"

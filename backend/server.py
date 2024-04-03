@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_restful import Resource, Api
+from flask_cors import CORS
 from api.hello_world import HelloWorld
 from api.management import *
 from api.accountinfo import *
@@ -8,6 +9,7 @@ from api.transaction import *
 
 app = Flask(__name__)
 api = Api(app)
+CORS(app)
 
 api.add_resource(Init, '/manage/init') #Management API for initializing the DB
 
