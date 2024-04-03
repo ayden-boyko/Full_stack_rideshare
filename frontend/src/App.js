@@ -3,15 +3,24 @@ import "./App.css";
 import React, { useState, useEffect } from "react";
 
 function App() {
-  const [data, setData] = useState("");
+  const [data, setData] = useState({ message: "test" });
 
   useEffect(() => {
-    fetch("/hello").then((res) =>
-      res.json().then((data) => {
-        console.log("recieved");
-        setData(data);
-      })
-    );
+    /*this took so much time to fix, instead of the rout being /hello, 
+    it was supposed to be http://localhost:5000/hello because im running the requests through a proxy url, localhost:5000*/
+    const fetch_Hello = async () => {
+      const response = await fetch("http://localhost:5000/hello", {
+        headers: { Accept: "application/json" },
+      });
+      const responseClone = response.clone();
+      responseClone.text().then((text) => console.log(text));
+      const json = await response.json();
+      console.log(response.ok);
+      if (response.ok) {
+        setData(json);
+      }
+    };
+    fetch_Hello();
   }, []);
 
   return (
@@ -19,7 +28,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>hey is this working?</p>
-        <p>{data}</p>
+        <p>{data.message}</p>
         <p>no</p>
         <a
           className="App-link"
