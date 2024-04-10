@@ -305,12 +305,12 @@ def update_rating(role, id, rating):
 
     db_disconnect(conn)
 
-def new_ride(d_id, d_name, r_id, r_name, special_instructions = "No special instructions", start = '0,0'):
+def new_ride(d_id, d_name, r_id, r_name, special_instructions = "No special instructions", start = '0,0', end = '0,0'):
     """Adds a new ride to current rides"""
     conn, cur = db_connect()
 
-    statement = """INSERT INTO current_rides (driver_id, d_name, rider_id, r_name, s_instructions, start) VALUES (%s, %s, %s, %s, %s, %s)"""
-    cur.execute(statement, [d_id, d_name, r_id, r_name, special_instructions, start])
+    statement = """INSERT INTO current_rides (driver_id, d_name, rider_id, r_name, s_instructions, start, end) VALUES (%s, %s, %s, %s, %s, %s, %s)"""
+    cur.execute(statement, [d_id, d_name, r_id, r_name, special_instructions, start, end])
 
     db_disconnect(conn)
 
@@ -365,8 +365,8 @@ def rider_finish_ride(id, rating_of_driver=4.5, review_of_driver="they were good
     info = cur.fetchone()
 
     if info != None:
-        statement2 = """ INSERT INTO past_rides (d_id, driver_name, r_id, rider_name, special_instructions, start, finish_time, rofd, driver_rating) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
-        cur.execute(statement2, [info[1], info[2], info[3], info[4], info[5], info[6], timestamp, review_of_driver, rating_of_driver])
+        statement2 = """ INSERT INTO past_rides (d_id, driver_name, r_id, rider_name, special_instructions, start, end, finish_time, rofd, driver_rating) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+        cur.execute(statement2, [info[1], info[2], info[3], info[4], info[5], info[6], info[7], timestamp, review_of_driver, rating_of_driver])
         statement = """DELETE FROM current_rides WHERE rider_id = %s"""
         cur.execute(statement, [id])
         charge(id, info[4], cost, timestamp)
@@ -391,6 +391,7 @@ def rider_finish_ride(id, rating_of_driver=4.5, review_of_driver="they were good
         statement = """UPDATE current_rides SET passengers = passengers - 1 WHERE driver_id = %s"""
         cur.execute(statement, [info[1]])
         charge(id, rider_name, cost/result[0], timestamp)
+        #USE THE CARPOOL METHOD TO SHIFT DESTINATION FOR DRIVER
 
     db_disconnect(conn)
 
@@ -403,8 +404,8 @@ def driver_finish_ride(id, rid, rating_of_rider=4.5, review_of_rider="they were 
     info = cur.fetchone()
 
     if info != None:
-        statement2 = """ INSERT INTO past_rides (d_id, driver_name, r_id, rider_name, special_instructions, start, finish_time, rofd, driver_rating) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
-        cur.execute(statement2, [info[1], info[2], info[3], info[4], info[5], info[6], timestamp, review_of_rider, rating_of_rider])
+        statement2 = """ INSERT INTO past_rides (d_id, driver_name, r_id, rider_name, special_instructions, start, end, finish_time, rofd, driver_rating) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+        cur.execute(statement2, [info[1], info[2], info[3], info[4], info[5], info[6], info[7], timestamp, review_of_rider, rating_of_rider])
         
         statement = """DELETE FROM current_rides WHERE rider_id = %s"""
         cur.execute(statement, [rid]) 
@@ -511,6 +512,8 @@ def change_carpool(id, zipcode):
 
     db_disconnect(conn)
 
+#UPDATE CARPOOL? after the driver finishes one of the carpool riders, how does the next destination get queued? bfs for destination routing?
+
 def find_drivers_carpool(zipcode):
     """Finds drivers that are carpooling and aren't full and displays them all, just like finding a driver that isn't carpooling"""
     #LOOKS FOR drivers that are currently giving a carpool, what if there are none currently
@@ -613,3 +616,7 @@ def get_driver_id(name):
     result = cur.fetchone()
     db_disconnect(conn)
     return result
+
+# create methods for adding riders to the awaitng rides table
+
+# create method for allowing the rider to enter their destination for now points, later address -> converted to points?
