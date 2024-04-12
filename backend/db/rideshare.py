@@ -620,3 +620,5 @@ def get_driver_id(name):
 # create methods for adding riders to the awaitng rides table
 
 # create method for allowing the rider to enter their destination for now points, later address -> converted to points?
+
+# create method for responding to past rides reviews
