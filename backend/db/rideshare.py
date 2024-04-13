@@ -611,13 +611,28 @@ def get_driver_id(name):
     """returns driver id based on their name"""
     conn, cur = db_connect()
 
-    driver = """SELECT driver_id FROM driver WHERE name = %s"""
+    driver = """SELECT driver_id 
+                FROM driver 
+                WHERE name = %s"""
     cur.execute(driver, [name])
     result = cur.fetchone()
     db_disconnect(conn)
     return result
 
-# create methods for adding riders to the awaitng rides table
+# create methods for adding riders to the awaiting rides table
+def request_ride(id, end):
+    """adds rider to the awaitng rides table for drivers to view"""
+    conn, cur = db_connect()
+    #FIX THIS SQL STATEMENT
+    rider = """INSERT INTO awaiting_rides 
+            VALUES 
+            ((SELECT rider_id, name, rating, special_instructions, location
+            FROM rider WHERE rider_id = %s), %s)""" 
+    cur.execute(rider, [id, end])
+    result = cur.fetchone()
+    db_disconnect()
+    return result
+            
 
 # create method for allowing the rider to enter their destination for now points, later address -> converted to points?
 

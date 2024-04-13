@@ -62,9 +62,9 @@ CREATE TABLE IF NOT EXISTS "past_rides"(
 CREATE TABLE IF NOT EXISTS "awaiting_rides"(
     "awaiting_rides_id" SERIAL PRIMARY KEY,
     "r_id" INTEGER REFERENCES "rider"("rider_id"),
-    "rider_name" TEXT DEFAULT 'John Doe',
+    "rider_name" TEXT DEFAULT "rider"("name"),
     "rider_rating" FLOAT REFERENCES "rider"("rating"),
-    "special_instructions" TEXT,
+    "special_instructions" TEXT REFERENCES "rider"("special_instructions"),
     "start" POINT NOT NULL REFERENCES "rider"("location"),
     "end" POINT NOT NULL DEFAULT REFERENCES "rider"("location")
 );
