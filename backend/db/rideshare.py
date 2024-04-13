@@ -630,7 +630,7 @@ def request_ride(id, end):
             FROM rider WHERE rider_id = %s), %s)""" 
     cur.execute(rider, [id, end])
     result = cur.fetchone()
-    db_disconnect()
+    db_disconnect(conn)
     return result
             
 
