@@ -611,7 +611,9 @@ def get_driver_id(name):
     """returns driver id based on their name"""
     conn, cur = db_connect()
 
-    driver = """SELECT driver_id FROM driver WHERE name = %s"""
+    driver = """SELECT driver_id 
+                FROM driver 
+                WHERE name = %s"""
     cur.execute(driver, [name])
     result = cur.fetchone()
     db_disconnect(conn)
