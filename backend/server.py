@@ -11,6 +11,8 @@ app = Flask(__name__)
 api = Api(app)
 CORS(app)
 
+#--------TO RUN BACKEND----python server.py--------------------
+
 api.add_resource(Init, '/manage/init') #Management API for initializing the DB
 
 api.add_resource(Version, '/manage/version') #Management API for checking DB version
