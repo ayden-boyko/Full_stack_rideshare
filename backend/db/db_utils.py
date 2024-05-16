@@ -2,10 +2,11 @@ import os
 import psycopg2
 
 def connect():
-    return psycopg2.connect(dbname='rideshare',
-                            user='ayden',
-                            password='M0nkeyb0y81',
-                            host='localhost')
+    return psycopg2.connect(host="aws-0-us-west-1.pooler.supabase.com",
+                            port="5432",
+                            dbname="postgres",
+                            user="postgres.ddbwomdlvyibuwlzzcas",
+                            password="5Upa_R|D3$hArE")
 
 def exec_sql_file(path):
     full_path = os.path.join(os.path.dirname(__file__), f'../../{path}')
