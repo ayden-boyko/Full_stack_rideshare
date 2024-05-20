@@ -3,6 +3,9 @@ from db.db_utils import *
 import csv
 from datetime import datetime
 from math import fsum
+from flask import jsonify
+
+# TO DO FIGURE OUT FORMATTING of json,. id, role, name, etc
 
 def create_tables():
     """drops, and then creates the sql and adds data to the sql tables"""
@@ -61,7 +64,7 @@ def get_accounts():
 
     db_disconnect(conn)
 
-    return result1 + result2
+    return jsonify({'drivers': result1 , 'riders': result2})
 
 def get_driver(id):
     """returns driver based on their id"""
@@ -74,7 +77,7 @@ def get_driver(id):
     cur.execute(drivers, (id,))
     result = cur.fetchone()
     db_disconnect(conn)
-    return result
+    return jsonify(result)
 
 def get_rider(id):
     """returns rider based on their id"""
@@ -87,7 +90,7 @@ def get_rider(id):
     cur.execute(riders, (id,))
     result = cur.fetchone()
     db_disconnect(conn)
-    return result
+    return jsonify(result)
 
 def get_past_rides():
     """returns all past rides"""
@@ -102,9 +105,8 @@ def get_past_rides():
     cur.execute(rides)
     result = cur.fetchall()
     db_disconnect(conn)
-    return result
+    return jsonify(result)
 
-    
 def get_past_rides_taken(id, name):
     """returns past rides taken"""
     conn, cur = db_connect()
@@ -114,7 +116,7 @@ def get_past_rides_taken(id, name):
     cur.execute(rides, [id, name])
     result = cur.fetchall()
     db_disconnect(conn)
-    return result
+    return jsonify(result)
 
 def get_past_rides_given(id, name):
     conn, cur = db_connect()
@@ -124,7 +126,7 @@ def get_past_rides_given(id, name):
     cur.execute(rides, [id, name]) 
     result = cur.fetchall()
     db_disconnect(conn)
-    return result
+    return jsonify(result)
 
 def get_rating(id, role):
     """returns rating"""
@@ -137,7 +139,7 @@ def get_rating(id, role):
     cur.execute(rating, [id])
     result = cur.fetchone()
     db_disconnect(conn)
-    return result
+    return jsonify(result)
 
 def get_instructions(id, role):
     """returns special instructions"""
@@ -150,7 +152,7 @@ def get_instructions(id, role):
     cur.execute(rating, [id])
     result = cur.fetchone()
     db_disconnect(conn)
-    return result
+    return jsonify(result)
 
 def create_account(role, name, date):
     """creates an account"""
@@ -162,7 +164,7 @@ def create_account(role, name, date):
     cur.execute(statement, [name, date])
     result = cur.fetchone()
     db_disconnect(conn)
-    return result
+    return jsonify(result)
 
 def deactivate_account(role, id):
     """deactivates an account"""
@@ -172,11 +174,11 @@ def deactivate_account(role, id):
         statement = """UPDATE driver SET is_active = False WHERE driver_id = %s"""
         cur.execute(statement, [id])
     else:
-
         statement = """UPDATE rider SET is_active = False WHERE rider_id = %s"""
         cur.execute(statement, [id])
 
     db_disconnect(conn)
+    return True
 
 def change_ride_status(id):
     """changes wants ride"""
@@ -188,8 +190,9 @@ def change_ride_status(id):
     
     statement = """UPDATE rider SET wants_ride = %s WHERE rider_id = %s"""
     cur.execute(statement, [not wants_ride, id])
-
+    
     db_disconnect(conn)
+    return True
 
 def update_instructions(role, id, instructions):
     """updates the special instructions of the accounts"""
@@ -204,6 +207,7 @@ def update_instructions(role, id, instructions):
         cur.execute(statement, [instructions, id])
 
     db_disconnect(conn)
+    return True
 
 def change_ride_status(id):
     """changes wants ride"""
@@ -217,9 +221,10 @@ def change_ride_status(id):
     cur.execute(statement, [not wants_ride[0], id])
 
     db_disconnect(conn)
+    return True
 
 def update_zipcode(role, id, zipcode):
-    """updates the special instructions of the accounts"""
+    """updates the zipcode of the account"""
     conn, cur = db_connect()
 
     if role == "driver":
@@ -247,7 +252,7 @@ def update_zipcode(role, id, zipcode):
         post = cur.fetchone()
 
     db_disconnect(conn)
-    return pre, post
+    return jsonify({'Old_zip': pre, 'New_zip' : post})
 
 def reactivate_account(role, id):
     """reactivates an account"""
@@ -262,6 +267,7 @@ def reactivate_account(role, id):
         cur.execute(statement, [True, id])
 
     db_disconnect(conn)
+    return True
 
 def get_next_ride( id, zipcode):
     """changes wants ride"""
@@ -271,6 +277,7 @@ def get_next_ride( id, zipcode):
     cur.execute(statement, [ zipcode, id])
 
     db_disconnect(conn)
+    return True
 
 def update_rating(role, id, rating):
     """updates the average rating of the accounts"""
@@ -302,8 +309,8 @@ def update_rating(role, id, rating):
         statement = """UPDATE rider SET rating = %s WHERE rider_id = %s"""
         cur.execute(statement, [rating, id])
 
-
     db_disconnect(conn)
+    return True
 
 def new_ride(d_id, d_name, r_id, r_name, special_instructions = "No special instructions", start = '0,0', end = '0,0'):
     """Adds a new ride to current rides"""
@@ -313,6 +320,7 @@ def new_ride(d_id, d_name, r_id, r_name, special_instructions = "No special inst
     cur.execute(statement, [d_id, d_name, r_id, r_name, special_instructions, start, end])
 
     db_disconnect(conn)
+    return True
 
 def cancel_ride(id, name):
     """removes ride from current_rides list this list is for upcoming or ongoing rides"""
@@ -330,8 +338,9 @@ def cancel_ride(id, name):
     post = cur.fetchone()
 
     db_disconnect(conn)
-    return pre, post
+    return jsonify({'Before' : pre, 'After' : post})
 
+##get rider from wants ride table
 def get_new_rider(zipcode):
     """stricly for driver, driver enters their zipcode, all riders in their zipcode are shown"""
     conn, cur = db_connect()
@@ -342,7 +351,7 @@ def get_new_rider(zipcode):
     db_disconnect(conn)
     result = result[0]
     (id, name, start, rating) = result
-    return id, name, start, rating
+    return jsonify({'r_id' : id, 'name' : name, 'start' : start, 'rating' : rating})
 
 def get_new_drivers(zipcode):
     """rider enters their zipcode, then all availabe drivers are shown"""
@@ -354,7 +363,7 @@ def get_new_drivers(zipcode):
     db_disconnect(conn)
     result = result[0]
     (id, name, rating) = result
-    return id, name, rating
+    return jsonify({'d_id' : id, 'name' : name, 'rating' : rating})
 
 def rider_finish_ride(id, rating_of_driver=4.5, review_of_driver="they were good", timestamp='1999-01-01 00:00:00', carpool = False, cost = 5.0):
     """finishes the riders current ride and adds ride to past rides"""
@@ -394,6 +403,7 @@ def rider_finish_ride(id, rating_of_driver=4.5, review_of_driver="they were good
         #USE THE CARPOOL METHOD TO SHIFT DESTINATION FOR DRIVER
 
     db_disconnect(conn)
+    return True
 
 def driver_finish_ride(id, rid, rating_of_rider=4.5, review_of_rider="they were good", timestamp='1999-01-01 00:00:00', carpool = False, cost = 5.0):
     """driver ends the ride and leaves a rating of the rider"""
@@ -434,6 +444,7 @@ def driver_finish_ride(id, rid, rating_of_rider=4.5, review_of_rider="they were 
         cur.execute(statement, [info[1]])
         charge(id, rider_name, cost/result[0], timestamp)
     db_disconnect(conn)
+    return True
 
 def get_current_ride(id):
     """gets the info on the current ride of the rider"""
@@ -444,7 +455,7 @@ def get_current_ride(id):
     result = cur.fetchone()
 
     db_disconnect(conn)
-    return result
+    return jsonify(result)
 
 def respond(id, role, review):
     """Allows the rider or driver to leave a responce the the rating/review given to them"""
@@ -457,6 +468,7 @@ def respond(id, role, review):
         statement = """UPDATE past_rides SET r_response = %s WHERE r_id = %s"""
         cur.execute(statement, [review, id])
     db_disconnect(conn)
+    return True
 
 def get_reviews(id, role):
     conn, cur = db_connect()
@@ -469,7 +481,7 @@ def get_reviews(id, role):
     cur.execute(statement, [id])
     result = cur.fetchall()
     db_disconnect(conn)
-    return result
+    return jsonify(result)
 
 def charge(id, name, amount, timestamp):
     """adds a charge to a list of bills"""
@@ -478,6 +490,7 @@ def charge(id, name, amount, timestamp):
     statement = """INSERT INTO tab (billed_id, name, charge, timestamp) VALUES (%s, %s, %s, %s)"""
     cur.execute(statement, [id, name, amount, timestamp])
     db_disconnect(conn)
+    return True
 
 def get_bills(id, name, start = datetime(1, 1, 1), end = datetime(9999, 12, 31)):
 
@@ -511,6 +524,7 @@ def change_carpool(id, zipcode):
     cur.execute(statement, [not wants_carpool[0], id])
 
     db_disconnect(conn)
+    return True
 
 #UPDATE CARPOOL? after the driver finishes one of the carpool riders, how does the next destination get queued? bfs for destination routing?
 
@@ -539,7 +553,7 @@ def find_drivers_carpool(zipcode):
             dlist.append(get_driver(driver)[1])
 
     db_disconnect(conn)
-    return dlist
+    return jsonify(dlist)
 
 def join_carpool(did, dname, rid, rname, instuctions, start, time, zipcode):
     """adds the carpool to the current rides, checks if carpool reaches max of 4 passengers,
@@ -562,6 +576,7 @@ def join_carpool(did, dname, rid, rname, instuctions, start, time, zipcode):
         cur.execute(statement, [4, did])
 
     db_disconnect(conn)
+    return True
 
 def full_ride_info(date):
     """displays all rides within one day of given date"""
@@ -575,7 +590,7 @@ def full_ride_info(date):
     result = cur.fetchone()
 
     db_disconnect(conn)
-    return result
+    return jsonify(result)
 
 def fare_times(timestamp):
     """provides all bills charged within the time given"""
@@ -595,7 +610,7 @@ def fare_times(timestamp):
     result = cur.fetchall()
 
     db_disconnect(conn)
-    return result
+    return jsonify(result)
 
 def get_rider_id(name):
     """returns rider id based on their name"""
@@ -605,7 +620,7 @@ def get_rider_id(name):
     cur.execute(rider, [name])
     result = cur.fetchone()
     db_disconnect(conn)
-    return result
+    return jsonify(result)
 
 def get_driver_id(name):
     """returns driver id based on their name"""
@@ -617,7 +632,7 @@ def get_driver_id(name):
     cur.execute(driver, [name])
     result = cur.fetchone()
     db_disconnect(conn)
-    return result
+    return jsonify(result)
 
 # create methods for adding riders to the awaitng rides table
 
