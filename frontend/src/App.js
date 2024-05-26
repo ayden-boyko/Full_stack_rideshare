@@ -27,14 +27,15 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <div className="Menu">
+    <body className="App">
+      <div className="start">
+        <h1>SELECT ROLE</h1>
+        <div className="menu">
           <User role="Rider" />
           <User role="Driver" />
         </div>
-      </header>
-    </div>
+      </div>
+    </body>
   );
 }
 
