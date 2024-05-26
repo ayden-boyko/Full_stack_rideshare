@@ -29,7 +29,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <div className="grid grid-rows-1 col-auto">
+        <div className=" grid grid-cols-2">
           <User role="Rider" />
           <User role="Driver" />
         </div>

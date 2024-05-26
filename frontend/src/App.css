@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+.Intro {
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+
 .App {
   text-align: center;
 }
