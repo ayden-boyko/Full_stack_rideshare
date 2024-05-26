@@ -1,5 +1,5 @@
-import logo from "./logo.svg";
 import "./App.css";
+import User from "./Components/User";
 import React, { useState, useEffect } from "react";
 
 /// TP RUN FRONTEND------------npm start
@@ -29,17 +29,10 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>hey is this working?</p>
-        <p>{data.drivers}</p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <div className="grid grid-rows-1 col-auto">
+          <User role="Rider" />
+          <User role="Driver" />
+        </div>
       </header>
     </div>
   );

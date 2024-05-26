@@ -1,5 +1,0 @@
-#db credentials
-.env
-
-#db certificate
-*.crt
