@@ -22,11 +22,22 @@ function Accounts(props) {
   const listUsers =
     data &&
     data[userType]?.map((person) => (
-      <li key={person[0]}>
-        <p>{person[1]}</p>
-      </li>
+      <tr key={person[0]}>
+        <th>{person[1]}</th>
+        <th>
+          <button className="item">SELECT</button>
+        </th>
+      </tr>
     ));
-  return <ul>{listUsers}</ul>;
+  return (
+    <table style={{ width: "50%" }}>
+      <tr>
+        <th>Users</th>
+        <th>Select</th>
+      </tr>
+      {listUsers}
+    </table>
+  );
 }
 
 export default Accounts;

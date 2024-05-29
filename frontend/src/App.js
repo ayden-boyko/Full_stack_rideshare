@@ -40,7 +40,6 @@ function App() {
         ) : (
           <>
             <Accounts userType={data} />
-            <p>hyyyyyyyyyy</p>
           </>
         )}
       </div>

@@ -40,3 +40,9 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+
+.table,
+th,
+tr {
+  border: 1px solid black;
+}
