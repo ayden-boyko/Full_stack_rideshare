@@ -50,21 +50,29 @@ def add_data(file):
         db_disconnect(conn)
         return None
     
-def get_accounts():
-    """returns all accounts"""
+def get_riders():
+    """returns all riders"""
+    conn, cur = db_connect()
+
+    riders = """SELECT rider_id, name FROM rider"""
+    cur.execute(riders)
+    result1 = cur.fetchall()
+
+    db_disconnect(conn)
+
+    return jsonify({'riders': result1})
+
+def get_drivers():
+    """returns all drivers"""
     conn, cur = db_connect()
 
     drivers = """SELECT driver_id, name FROM driver"""
     cur.execute(drivers)
     result1 = cur.fetchall()
 
-    riders = """SELECT rider_id, name FROM rider"""
-    cur.execute(riders)
-    result2 = cur.fetchall()
-
     db_disconnect(conn)
 
-    return jsonify({'drivers': result1 , 'riders': result2})
+    return jsonify({'drivers': result1})
 
 def get_driver(id):
     """returns driver based on their id"""

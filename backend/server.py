@@ -23,7 +23,9 @@ api.add_resource(AccountRiderInfo, '/accountinfo/rider/<string:id>', methods=["P
 
 api.add_resource(AccountDriverInfo, '/accountinfo/driver/<string:id>', methods=["PUT", "POST", "GET", "DELETE"])
 
-api.add_resource(AccountInfo, '/accountinfo/accounts')
+api.add_resource(AccountInfoDrivers, '/accountinfo/drivers')
+
+api.add_resource(AccountInfoRiders, '/accountinfo/riders')
 
 api.add_resource(RideInfo, '/rideinfo')
 

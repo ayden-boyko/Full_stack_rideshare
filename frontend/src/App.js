@@ -1,7 +1,7 @@
 import "./App.css";
-import User from "./Components/User";
 import React, { useState, useEffect } from "react";
-
+import User from "./Components/User";
+import Accounts from "./Components/Accounts";
 /// TP RUN FRONTEND------------npm start
 
 function App() {
@@ -34,11 +34,14 @@ function App() {
         {data == null ? <h1>SELECT ROLE</h1> : <></>}
         {data == null ? (
           <div className="menu">
-            <User role="Rider" event={() => setData("Rider")} />
-            <User role="Driver" event={() => setData("Driver")} />
+            <User role="Rider" event={() => setData("riders")} />
+            <User role="Driver" event={() => setData("drivers")} />
           </div>
         ) : (
-          <></>
+          <>
+            <Accounts userType={data} />
+            <p>hyyyyyyyyyy</p>
+          </>
         )}
       </div>
     </body>

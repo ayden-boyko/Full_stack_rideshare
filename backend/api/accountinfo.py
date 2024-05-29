@@ -86,7 +86,12 @@ class AccountDriverInfo(Resource):
             abort(400)
         return deactivate_account('driver', id)
     
-class AccountInfo(Resource):
+class AccountInfoRiders(Resource):
     """all methods accociated with alls accounts info"""
     def get(self):
-        return get_accounts()
+        return get_riders()
+    
+class AccountInfoDrivers(Resource):
+    """all methods accociated with alls accounts info"""
+    def get(self):
+        return get_drivers()
