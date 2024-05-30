@@ -31,11 +31,13 @@ function Accounts(props) {
     ));
   return (
     <table style={{ width: "50%" }}>
-      <tr>
-        <th>Users</th>
-        <th>Select</th>
-      </tr>
-      {listUsers}
+      <tbody>
+        <tr>
+          <th>Users</th>
+          <th>Select</th>
+        </tr>
+        {listUsers}
+      </tbody>
     </table>
   );
 }

@@ -31,7 +31,12 @@ function App() {
   return (
     <body className="App">
       <div className="start">
-        {data == null ? <h1>SELECT ROLE</h1> : <></>}
+        <div className="bar">
+          {data == null ? <h1>SELECT ROLE</h1> : <></>}
+          <button className="item" onClick={() => setData(null)}>
+            HOME
+          </button>
+        </div>
         {data == null ? (
           <div className="menu">
             <User role="Rider" event={() => setData("riders")} />

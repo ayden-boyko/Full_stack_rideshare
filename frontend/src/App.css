@@ -12,6 +12,20 @@
   margin-right: auto;
 }
 
+.bar {
+  display: grid;
+  grid-template-columns: 75% 25%;
+  grid-gap: 50%;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+  width: 25%;
+  height: 50%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .item {
   box-sizing: border-box;
   margin-top: 10px;
