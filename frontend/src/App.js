@@ -32,10 +32,13 @@ function App() {
     <body className="App">
       <div className="start">
         <div className="bar">
-          {data == null ? <h1>SELECT ROLE</h1> : <></>}
-          <button className="item" onClick={() => setData(null)}>
-            HOME
-          </button>
+          {data == null ? (
+            <h1>SELECT ROLE</h1>
+          ) : (
+            <button className="item" onClick={() => setData(null)}>
+              HOME
+            </button>
+          )}
         </div>
         {data == null ? (
           <div className="menu">

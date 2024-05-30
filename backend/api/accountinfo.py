@@ -30,13 +30,12 @@ class AccountRiderInfo(Resource):
     def post(self, id):
         args = self.parser.parse_args()
 
-        role = args['role']
         name = args['name']
         date = args['date']
         result = get_rider_id(name)
         if (result[0] > 0):
             abort(400)
-        return create_account(role, name, date)
+        return create_account("rider", name, date)
     
     """deactivates a users account(deletes it)"""
     def delete(self, id):
@@ -71,13 +70,12 @@ class AccountDriverInfo(Resource):
     def post(self, id):
         args = self.parser.parse_args()
 
-        role = args['role']
         name = args['name']
         date = args['date']
         result = get_driver_id(name)
         if (result[0] > 0):
             abort(400)
-        return create_account(role, name, date)
+        return create_account("driver", name, date)
     
     """deactivates a users account(deletes it)"""
     def delete(self, id):
