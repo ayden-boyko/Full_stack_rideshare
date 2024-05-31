@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, cache } from "react";
 
 function Accounts(props) {
   let { userType } = props;
   let text = `http://localhost:5000/accountinfo/${userType}`;
   const [data, setData] = useState();
+
   useEffect(() => {
     // chnage to route to reference the supabse db
     const fetch_Info = async () => {
@@ -47,7 +48,7 @@ function Accounts(props) {
           </tr>
         </tbody>
       </table>
-      <NewUserform />
+      <NewUserform userType={userType} />
     </>
   );
 }
@@ -60,10 +61,26 @@ function closeForm() {
   document.getElementById("myForm").style.display = "none";
 }
 
-function NewUserform() {
+function submitUser(props) {
+  let { userType } = props;
+  let submitRole = String(userType).slice(0, -1);
+  let submitLink = `http://localhost:5000/accountinfo/${submitRole}/1`;
+
+  const form = document.getElementById("userForm");
+  const formData = new FormData(form);
+
+  const data = {
+    name: formData.get("name"),
+    date: formData.get("date"),
+  };
+
+  //use fetch to send the request
+}
+
+function NewUserform(props) {
   return (
     <div className="form-popup" id="myForm">
-      <form className="form-container">
+      <form className="form-container" id="userForm">
         <h1 style={{ color: "black" }}>New User</h1>
 
         <label type="text">
@@ -80,20 +97,8 @@ function NewUserform() {
         <input type="date" style={{ color: "grey" }} name="date" required />
         <br></br>
 
-        <label type="location">
-          <b style={{ color: "black" }}>ZipCode</b>
-        </label>
-        <br></br>
-        <input
-          type="text"
-          placeholder="Enter Zipcode"
-          name="location"
-          required
-        />
-        <br></br>
-
-        <button type="submit" className="btn">
-          Login
+        <button type="submit" className="btn" onClick={() => submitUser(props)}>
+          Add
         </button>
         <button
           type="button"
