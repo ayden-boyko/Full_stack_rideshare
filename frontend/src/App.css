@@ -99,7 +99,7 @@ tr {
 /* Set a style for the submit/login button */
 .form-container .btn {
   background-color: #04aa6d;
-  color: white;
+  color: lightgray;
   padding: 16px 20px;
   border: none;
   cursor: pointer;
