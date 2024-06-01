@@ -1,9 +1,9 @@
-import React, { useEffect, useState, cache } from "react";
+import React, { useEffect, useState } from "react";
 
 function Accounts(props) {
   let { userType } = props;
   let text = `http://localhost:5000/accountinfo/${userType}`;
-  const [data, setData] = useState();
+  const [data, setData] = useState("");
 
   useEffect(() => {
     // chnage to route to reference the supabse db
@@ -18,7 +18,7 @@ function Accounts(props) {
       }
     };
     fetch_Info();
-  }, []);
+  });
 
   const listUsers =
     data &&
@@ -69,12 +69,32 @@ function submitUser(props) {
   const form = document.getElementById("userForm");
   const formData = new FormData(form);
 
-  const data = {
+  let tempDate = formData.get("date").split("-");
+
+  const userInfo = {
     name: formData.get("name"),
-    date: formData.get("date"),
+    date: tempDate[1] + "-" + tempDate[2] + "-" + tempDate[0], //reformat to mm-dd-yyyy
   };
 
-  //use fetch to send the request
+  console.log(JSON.stringify(userInfo));
+
+  const fetch_Info = async () => {
+    const result = await fetch(submitLink, {
+      method: "POST",
+      body: JSON.stringify(userInfo),
+      headers: { "Content-Type": "application/json" }, //cors in fetch() is changing post to options
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        console.log("success:", result);
+      })
+      .catch((error) => {
+        console.log("Error:", error);
+      });
+    console.log(result);
+  };
+
+  fetch_Info();
 }
 
 function NewUserform(props) {

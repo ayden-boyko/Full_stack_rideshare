@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import User from "./Components/User";
 import Accounts from "./Components/Accounts";
 /// TP RUN FRONTEND------------npm start
@@ -7,26 +7,7 @@ import Accounts from "./Components/Accounts";
 function App() {
   const [data, setData] = useState(null);
 
-  /*
-  useEffect(() => {
-    // chnage to route to reference the supabse db
-    const fetch_Hello = async () => {
-      const response = await fetch(
-        "http://localhost:5000/accountinfo/accounts",
-        {
-          headers: { Accept: "application/json" },
-        }
-      );
-      const responseClone = response.clone();
-      responseClone.text().then((text) => console.log(text));
-      const json = await response.json();
-      if (response.ok) {
-        setData(json);
-      }
-    };
-    fetch_Hello();
-  }, []);
-  */
+  // use multi value state: { data : null, thingy: string}
 
   return (
     <body className="App">
@@ -42,8 +23,8 @@ function App() {
         </div>
         {data == null ? (
           <div className="menu">
-            <User role="Rider" event={() => setData("riders")} />
-            <User role="Driver" event={() => setData("drivers")} />
+            <User type="Rider" event={() => setData("riders")} />
+            <User type="Driver" event={() => setData("drivers")} />
           </div>
         ) : (
           <>

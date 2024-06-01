@@ -32,9 +32,6 @@ class AccountRiderInfo(Resource):
 
         name = args['name']
         date = args['date']
-        result = get_rider_id(name)
-        if (result[0] > 0):
-            abort(400)
         return create_account("rider", name, date)
     
     """deactivates a users account(deletes it)"""

@@ -1,11 +1,11 @@
 import React from "react";
 
 function User(props) {
-  let { role, event } = props;
+  let { type, event } = props;
 
   return (
     <button type="button" className="item" onClick={event}>
-      {role}
+      {type}
     </button>
   );
 }
