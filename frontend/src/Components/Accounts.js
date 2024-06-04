@@ -3,13 +3,17 @@ import React, { useEffect, useState } from "react";
 function Accounts(props) {
   let { userType } = props;
   let text = `http://localhost:5000/accountinfo/${userType}`;
-  const [data, setData] = useState("");
+  const [data, setData] = useState();
 
   useEffect(() => {
     // chnage to route to reference the supabse db
     const fetch_Info = async () => {
       const response = await fetch(text, {
-        headers: { Accept: "application/json" },
+        mode: "cors",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
       });
       const json = await response.json();
       if (response.ok) {
@@ -18,7 +22,7 @@ function Accounts(props) {
       }
     };
     fetch_Info();
-  });
+  }, []);
 
   const listUsers =
     data &&
@@ -78,23 +82,24 @@ function submitUser(props) {
 
   console.log(JSON.stringify(userInfo));
 
-  const fetch_Info = async () => {
-    const result = await fetch(submitLink, {
-      method: "POST",
-      body: JSON.stringify(userInfo),
-      headers: { "Content-Type": "application/json" }, //cors in fetch() is changing post to options
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        console.log("success:", result);
-      })
-      .catch((error) => {
-        console.log("Error:", error);
+  const post_Info = async () => {
+    try {
+      const response = await fetch(submitLink, {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userInfo),
       });
-    console.log(result);
+      const result = await response.json();
+      console.log("success:", result);
+    } catch (error) {
+      console.log("Error:", error);
+    }
   };
-
-  fetch_Info();
+  post_Info();
 }
 
 function NewUserform(props) {

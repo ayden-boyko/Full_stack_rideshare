@@ -9,7 +9,13 @@ from api.transaction import *
 
 app = Flask(__name__)
 api = Api(app)
-CORS(app)
+cors = CORS(app, resources={
+     r'/*': {
+         'origins': ["http://localhost:3000", "http://localhost:5000"]
+     }
+ })
+ 
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 #--------TO RUN BACKEND----python server.py--------------------
 
@@ -30,6 +36,14 @@ api.add_resource(AccountInfoRiders, '/accountinfo/riders')
 api.add_resource(RideInfo, '/rideinfo')
 
 api.add_resource(TransactionInfo, '/transaction/reciept')
+
+
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    return response
 
 
 if __name__ == '__main__':
