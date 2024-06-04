@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 function Accounts(props) {
   let { userType } = props;
-  let text = `http://localhost:5000/accountinfo/${userType}`;
+  let text = `http://127.0.0.1:5000/accountinfo/${userType}`;
   const [data, setData] = useState();
 
   useEffect(() => {
@@ -68,7 +68,7 @@ function closeForm() {
 function submitUser(props) {
   let { userType } = props;
   let submitRole = String(userType).slice(0, -1);
-  let submitLink = `http://localhost:5000/accountinfo/${submitRole}/1`;
+  let submitLink = `http://127.0.0.1:5000/accountinfo/${submitRole}/1`;
 
   const form = document.getElementById("userForm");
   const formData = new FormData(form);
@@ -92,6 +92,7 @@ function submitUser(props) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(userInfo),
+        credentials: "same-origin",
       });
       const result = await response.json();
       console.log("success:", result);

@@ -69,9 +69,6 @@ class AccountDriverInfo(Resource):
 
         name = args['name']
         date = args['date']
-        result = get_driver_id(name)
-        if (result[0] > 0):
-            abort(400)
         return create_account("driver", name, date)
     
     """deactivates a users account(deletes it)"""
