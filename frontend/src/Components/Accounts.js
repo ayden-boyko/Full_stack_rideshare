@@ -3,10 +3,9 @@ import React, { useEffect, useState } from "react";
 function Accounts(props) {
   let { userType } = props;
   let text = `http://127.0.0.1:5000/accountinfo/${userType}`;
-  const [data, setData] = useState();
+  const [user, setUser] = useState();
 
   useEffect(() => {
-    // chnage to route to reference the supabse db
     const fetch_Info = async () => {
       const response = await fetch(text, {
         mode: "cors",
@@ -18,15 +17,15 @@ function Accounts(props) {
       const json = await response.json();
       if (response.ok) {
         let info = JSON.parse(JSON.stringify(json));
-        setData(info);
+        setUser(info);
       }
     };
     fetch_Info();
   }, []);
 
   const listUsers =
-    data &&
-    data[userType]?.map((person) => (
+    user &&
+    user[userType]?.map((person) => (
       <tr key={person[0]}>
         <th>{person[1]}</th>
         <th>
@@ -52,7 +51,7 @@ function Accounts(props) {
           </tr>
         </tbody>
       </table>
-      <NewUserform userType={userType} />
+      <NewUserform userType={userType} passedFunction={props.passedFunction} />
     </>
   );
 }
@@ -71,12 +70,12 @@ function submitUser(props) {
   let submitLink = `http://127.0.0.1:5000/accountinfo/${submitRole}/1`;
 
   const form = document.getElementById("userForm");
-  const formData = new FormData(form);
+  const formuser = new FormData(form);
 
-  let tempDate = formData.get("date").split("-");
+  let tempDate = formuser.get("date").split("-");
 
   const userInfo = {
-    name: formData.get("name"),
+    name: formuser.get("name"),
     date: tempDate[1] + "-" + tempDate[2] + "-" + tempDate[0], //reformat to mm-dd-yyyy
   };
 
@@ -96,11 +95,24 @@ function submitUser(props) {
       });
       const result = await response.json();
       console.log("success:", result);
+      return result;
     } catch (error) {
       console.log("Error:", error);
     }
   };
-  post_Info();
+  let id = post_Info();
+  //changes data from app to user that has just been created, this assums that when a user creates an account they want to select it
+  props.passedFunction({
+    role: submitRole,
+    id: id,
+    name: userInfo.name,
+    date: userInfo.date,
+    rating: 4,
+    instructions: null,
+    zipcode: null,
+    is_active: true,
+    carpool: false,
+  });
 }
 
 function NewUserform(props) {
@@ -123,7 +135,14 @@ function NewUserform(props) {
         <input type="date" style={{ color: "grey" }} name="date" required />
         <br></br>
 
-        <button type="submit" className="btn" onClick={() => submitUser(props)}>
+        <button
+          type="button"
+          className="btn"
+          onClick={() => {
+            submitUser(props);
+            closeForm();
+          }}
+        >
           Add
         </button>
         <button
