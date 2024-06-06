@@ -39,7 +39,7 @@ class AccountRiderInfo(Resource):
         user = get_rider(id)
         if user == None:
             abort(400)
-        return deactivate_account('rider', id)
+        return change_account_status('rider', id)
     
 class AccountDriverInfo(Resource):
     parser = reqparse.RequestParser()
@@ -76,7 +76,7 @@ class AccountDriverInfo(Resource):
         user = get_driver(id)
         if user == None:
             abort(400)
-        return deactivate_account('driver', id)
+        return change_account_status('driver', id)
     
 class AccountInfoRiders(Resource):
     """all methods accociated with alls accounts info"""

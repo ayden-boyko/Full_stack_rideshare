@@ -49,5 +49,5 @@ def after_request(response):
 
 
 if __name__ == '__main__':
-    rebuild_tables()
+    #rebuild_tables()
     app.run(debug=True)

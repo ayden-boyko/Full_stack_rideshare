@@ -29,7 +29,14 @@ function Accounts(props) {
       <tr key={person[0]}>
         <th>{person[1]}</th>
         <th>
-          <button className="item">SELECT</button>
+          <button
+            className="item"
+            onClick={() =>
+              selectUser(userType, person[0], props.passedFunction)
+            }
+          >
+            SELECT
+          </button>
         </th>
       </tr>
     ));
@@ -62,6 +69,42 @@ function openForm() {
 
 function closeForm() {
   document.getElementById("myForm").style.display = "none";
+}
+
+async function selectUser(userType, id, func) {
+  let submitRole = String(userType).slice(0, -1);
+  let submitLink = `http://127.0.0.1:5000/accountinfo/${submitRole}/${id}`;
+
+  const getUser = async () => {
+    try {
+      const response = await fetch(submitLink, {
+        method: "GET",
+        mode: "cors",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        credentials: "same-origin",
+      });
+      const result = await response.json();
+      console.log("Success", result);
+      return result;
+    } catch (error) {
+      console.log("Error:", error);
+    }
+  };
+  const userInfo = await getUser();
+  func({
+    role: submitRole,
+    id: id,
+    name: userInfo[1],
+    date: userInfo[4],
+    rating: userInfo[2],
+    instructions: userInfo[3],
+    zipcode: 12345, //setup location enetering upon account creation
+    is_active: userInfo[5],
+    carpool: userInfo[6],
+  });
 }
 
 function submitUser(props) {

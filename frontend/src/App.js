@@ -2,6 +2,7 @@ import "./App.css";
 import React, { useState } from "react";
 import User from "./Components/User";
 import Accounts from "./Components/Accounts";
+import NavBar from "./Components/NavBar";
 /// TP RUN FRONTEND------------npm start
 
 function App() {
@@ -17,6 +18,16 @@ function App() {
   });
 
   const func = setData;
+  const logOUT = {
+    role: null,
+    id: null,
+    name: null,
+    rating: null,
+    instructions: null,
+    zipcode: null,
+    is_active: false,
+    carpool: false,
+  };
 
   if (data.id == null) {
     return (
@@ -50,19 +61,23 @@ function App() {
               <Accounts userType={data.role} passedFunction={func} />
             </>
           )}
-
-          <div>
-            <p>({data.name}, heyyyy)</p>
-          </div>
         </div>
       </body>
     );
   } else {
+    console.log(data);
     return (
       <body className="App">
-        <div className="start">
-          <p>LOGGED IN!!!!!!</p>
-        </div>
+        <NavBar
+          userType={data.role}
+          userId={data.id}
+          userName={data.name}
+          userRating={data.rating}
+          userLocation={data.zipcode}
+          userStatus={data.is_active}
+          passedFunction={func}
+          logData={logOUT}
+        ></NavBar>
       </body>
     );
   }

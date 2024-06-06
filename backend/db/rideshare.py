@@ -174,19 +174,40 @@ def create_account(role, name, date):
     db_disconnect(conn)
     return jsonify(result)
 
-def deactivate_account(role, id):
+def change_account_status(role, id):
     """deactivates an account"""
     conn, cur = db_connect()
     if role == "driver":
 
-        statement = """UPDATE driver SET is_active = False WHERE driver_id = %s"""
+        statement = """SELECT is_active FROM driver WHERE driver_id = %s"""
         cur.execute(statement, [id])
+        is_active = cur.fetchone()
+        
+        if (is_active == False): 
+            is_active=True 
+        else: 
+            is_active=False
+            
+        
+        statement = """UPDATE driver SET is_active = %s WHERE driver_id = %s"""
+        cur.execute(statement, [is_active, id])
+        return is_active
     else:
-        statement = """UPDATE rider SET is_active = False WHERE rider_id = %s"""
+        statement = """SELECT is_active FROM rider WHERE rider_id = %s"""
         cur.execute(statement, [id])
+        is_active = cur.fetchone()
+        
+        if (is_active == False): 
+            is_active=True 
+        else: 
+            is_active=False
+
+        statement = """UPDATE rider SET is_active = %s WHERE rider_id = %s"""
+        cur.execute(statement, [is_active, id])
 
     db_disconnect(conn)
-    return True
+    return is_active
+
 
 def change_ride_status(id):
     """changes wants ride"""
@@ -261,21 +282,6 @@ def update_zipcode(role, id, zipcode):
 
     db_disconnect(conn)
     return jsonify({'Old_zip': pre, 'New_zip' : post})
-
-def reactivate_account(role, id):
-    """reactivates an account"""
-    conn, cur = db_connect()
-    if role == "driver":
-
-        statement = """UPDATE driver SET is_active = %s WHERE driver_id = %s"""
-        cur.execute(statement, [True, id])
-    else:
-
-        statement = """UPDATE rider SET is_active = %s WHERE rider_id = %s"""
-        cur.execute(statement, [True, id])
-
-    db_disconnect(conn)
-    return True
 
 def get_next_ride( id, zipcode):
     """changes wants ride"""
