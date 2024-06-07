@@ -115,23 +115,23 @@ def get_past_rides():
     db_disconnect(conn)
     return jsonify(result)
 
-def get_past_rides_taken(id, name):
+def get_past_rides_taken(id):
     """returns past rides taken"""
     conn, cur = db_connect()
 
-    rides = """SELECT * FROM past_rides WHERE r_id = %s AND rider_name = %s"""
+    rides = """SELECT * FROM past_rides WHERE r_id = %s"""
 
-    cur.execute(rides, [id, name])
+    cur.execute(rides, [id])
     result = cur.fetchall()
     db_disconnect(conn)
     return jsonify(result)
 
-def get_past_rides_given(id, name):
+def get_past_rides_given(id):
     conn, cur = db_connect()
 
-    rides = """SELECT * FROM past_rides WHERE d_id = %s AND driver_name = %s"""
+    rides = """SELECT * FROM past_rides WHERE d_id = %s"""
 
-    cur.execute(rides, [id, name]) 
+    cur.execute(rides, [id]) 
     result = cur.fetchall()
     db_disconnect(conn)
     return jsonify(result)
@@ -174,7 +174,7 @@ def create_account(role, name, date):
     db_disconnect(conn)
     return jsonify(result)
 
-def change_account_status(role, id):
+def change_account_status(role, id): #needs fixing
     """deactivates an account"""
     conn, cur = db_connect()
     if role == "driver":
@@ -208,21 +208,6 @@ def change_account_status(role, id):
     db_disconnect(conn)
     return is_active
 
-
-def change_ride_status(id):
-    """changes wants ride"""
-    conn, cur = db_connect()
-
-    statement = """SELECT wants_ride FROM rider WHERE rider_id = %s"""
-    cur.execute(statement, [id])
-    wants_ride = cur.fetchone()
-    
-    statement = """UPDATE rider SET wants_ride = %s WHERE rider_id = %s"""
-    cur.execute(statement, [not wants_ride, id])
-    
-    db_disconnect(conn)
-    return True
-
 def update_instructions(role, id, instructions):
     """updates the special instructions of the accounts"""
     conn, cur = db_connect()
@@ -234,20 +219,6 @@ def update_instructions(role, id, instructions):
     elif role == "rider":
         statement = """UPDATE rider SET special_instructions = %s WHERE rider_id = %s"""
         cur.execute(statement, [instructions, id])
-
-    db_disconnect(conn)
-    return True
-
-def change_ride_status(id):
-    """changes wants ride"""
-    conn, cur = db_connect()
-
-    statement = """SELECT wants_ride FROM rider WHERE rider_id = %s"""
-    cur.execute(statement, [id])
-    wants_ride = cur.fetchone()
-    
-    statement = """UPDATE rider SET wants_ride = %s WHERE rider_id = %s"""
-    cur.execute(statement, [not wants_ride[0], id])
 
     db_disconnect(conn)
     return True
@@ -283,12 +254,12 @@ def update_zipcode(role, id, zipcode):
     db_disconnect(conn)
     return jsonify({'Old_zip': pre, 'New_zip' : post})
 
-def get_next_ride( id, zipcode):
+def get_next_ride( id):
     """changes wants ride"""
     conn, cur = db_connect()
 
-    statement = """UPDATE rider SET wants_ride = True, zipcode = %s WHERE rider_id = %s"""
-    cur.execute(statement, [ zipcode, id])
+    statement = """UPDATE rider SET wants_ride = True WHERE rider_id = %s"""
+    cur.execute(statement, [id])
 
     db_disconnect(conn)
     return True
@@ -392,6 +363,8 @@ def rider_finish_ride(id, rating_of_driver=4.5, review_of_driver="they were good
         cur.execute(statement2, [info[1], info[2], info[3], info[4], info[5], info[6], info[7], timestamp, review_of_driver, rating_of_driver])
         statement = """DELETE FROM current_rides WHERE rider_id = %s"""
         cur.execute(statement, [id])
+        statement = """UPDATE rider SET wants_ride = False WHERE rider_id = %s"""
+        cur.execute(statement, [id])
         charge(id, info[4], cost, timestamp)
         
 
@@ -415,6 +388,8 @@ def rider_finish_ride(id, rating_of_driver=4.5, review_of_driver="they were good
         cur.execute(statement, [info[1]])
         charge(id, rider_name, cost/result[0], timestamp)
         #USE THE CARPOOL METHOD TO SHIFT DESTINATION FOR DRIVER
+
+    
 
     db_disconnect(conn)
     return True
@@ -528,8 +503,6 @@ def change_carpool(id, zipcode):
     """changes driver's carpool to the opposite of what it was, true -> false || false -> true"""
     conn, cur = db_connect()
 
-    update_zipcode("driver", 1, zipcode)
-
     statement = """SELECT carpool FROM driver WHERE driver_id = %s"""
     cur.execute(statement, [id])
     wants_carpool = cur.fetchone()
@@ -618,7 +591,7 @@ def fare_times(timestamp):
     cur.execute(statement, [timestamp])
     endtime = cur.fetchone()
 
-    #uses the bounds tp serch for all bills within constraints
+    #uses the bounds to serch for all bills within constraints
     statement = """SELECT date_part('hour',TIMESTAMP %s)::Integer, AVG(charge) FROM tab WHERE timestamp >= %s AND timestamp <= %s"""
     cur.execute(statement, [timestamp, starttime, endtime])
     result = cur.fetchall()

@@ -6,6 +6,8 @@ from api.management import *
 from api.accountinfo import *
 from api.rideinfo import *
 from api.transaction import *
+from api.account import *
+from api.ride import *
 
 app = Flask(__name__)
 api = Api(app)
@@ -31,13 +33,31 @@ api.add_resource(AccountRiderInfo, '/accountinfo/rider/<string:id>', methods=["P
 
 api.add_resource(AccountDriverInfo, '/accountinfo/driver/<string:id>', methods=["PUT", "POST", "GET", "DELETE"])
 
-api.add_resource(AccountInfoDrivers, '/accountinfo/drivers')
+api.add_resource(AccountInfoDrivers, '/accountinfo/drivers', methods=["GET"])
 
-api.add_resource(AccountInfoRiders, '/accountinfo/riders')
+api.add_resource(AccountInfoRiders, '/accountinfo/riders', methods=["GET"])
 
-api.add_resource(RideInfo, '/rideinfo')
+api.add_resource(AccountDriver, '/account/driver/<string:id>/', methods=["PUT", "POST", "GET"])
 
-api.add_resource(TransactionInfo, '/transaction/reciept')
+api.add_resource(AccountRider, '/account/rider/<string:id>/<int:zipcode>', methods=["PUT", "POST", "GET"])
+
+api.add_resource(RideInfo, '/rideinfo', methods=["GET"])
+
+api.add_resource(RideInfoDriver, '/rideinfo/driver', methods=["GET"])
+
+api.add_resource(RideInfoRider, '/rideinfo/rider', methods=["PUT", "GET"])
+
+api.add_resource(RideSingleRiderPre, '/singlerider/pre/<int:zipcode>', methods=[ "GET"]) 
+
+api.add_resource(RideSingleRider, '/singlerider/<string:id>/<int:zipcode>', methods=["PUT", "POST", "GET"]) #change req inputs
+
+api.add_resource(RideSingleDriver, '/account/rider/<string:id>/<int:zipcode>', methods=["PUT", "POST", "GET"]) #change req inputs
+
+api.add_resource(RideSingleRiderPost, '/singlerider/post/<int:zipcode>', methods=[ "GET", "PUT", "POST"]) #change req inputs
+
+api.add_resource(RideSingleRiderPost, '/singlerider/post/<int:zipcode>', methods=[ "GET", "PUT", "POST"]) #change req inputs
+
+api.add_resource(TransactionInfo, '/transaction/reciept', methods=["POST", "GET"])
 
 
 @app.after_request

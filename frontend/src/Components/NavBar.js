@@ -66,6 +66,13 @@ async function changeAccountStatus(accountRole, accountId) {
   update_Account_Status(); //doesnt work in the backend, flask isnt changing true to false and vise versa
 }
 
+async function updateLocation() {
+  const form = document.getElementById("accountForm");
+  const formacc = new FormData(form);
+
+  let tempLoc = formacc.get("zipcode");
+}
+
 function AccountForm(props) {
   let {
     accountRole,
@@ -78,7 +85,7 @@ function AccountForm(props) {
   console.log(accountRole);
   return (
     <div className="form-popup" id="myForm">
-      <form className="form-container" id="userForm">
+      <form className="form-container" id="accountForm">
         <h1 style={{ color: "black" }}>Account Info</h1>
 
         <label type="text">
@@ -90,13 +97,17 @@ function AccountForm(props) {
           type="text"
           inputMode="numeric"
           placeholder={accountLocation}
-          name="name"
+          name="zipcode"
           minLength="5"
           maxLength="5"
           required
         />
         <br></br>
-        <button type="button" className="userbtn">
+        <button
+          type="button"
+          className="userbtn"
+          onClick={() => updateLocation()}
+        >
           Change
         </button>
         <br></br>

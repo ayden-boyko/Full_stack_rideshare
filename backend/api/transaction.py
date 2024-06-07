@@ -20,3 +20,10 @@ class TransactionInfo(Resource):
         for i in range(max-1):
             receipts[i] = allreceipts[i]
         return receipts
+    
+    def post(self):
+        id = int(request.args['id'])
+        cost = int(request.args['amount'])
+        timestamp = request.args['timestamp']
+        rider = get_rider(id)
+        return charge(id, rider[1], cost, timestamp)
