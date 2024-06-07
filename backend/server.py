@@ -51,11 +51,11 @@ api.add_resource(RideSingleRiderPre, '/singlerider/pre/<int:zipcode>', methods=[
 
 api.add_resource(RideSingleRider, '/singlerider/<string:id>/<int:zipcode>', methods=["PUT", "POST", "GET"]) #change req inputs
 
-api.add_resource(RideSingleDriver, '/account/rider/<string:id>/<int:zipcode>', methods=["PUT", "POST", "GET"]) #change req inputs
+api.add_resource(RideSingleDriver, '/singledriver/<string:id>/<int:zipcode>', methods=["PUT", "POST", "GET"]) #change req inputs
 
 api.add_resource(RideSingleRiderPost, '/singlerider/post/<int:zipcode>', methods=[ "GET", "PUT", "POST"]) #change req inputs
 
-api.add_resource(RideSingleRiderPost, '/singlerider/post/<int:zipcode>', methods=[ "GET", "PUT", "POST"]) #change req inputs
+api.add_resource(RideSingleDriverPost, '/singledriver/post/<int:zipcode>', methods=[ "GET", "PUT", "POST"]) #change req inputs
 
 api.add_resource(TransactionInfo, '/transaction/reciept', methods=["POST", "GET"])
 
