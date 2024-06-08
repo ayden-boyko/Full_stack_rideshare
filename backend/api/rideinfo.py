@@ -23,6 +23,10 @@ class RideInfoRider(Resource):
 class RideInfoDriver(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('id')
+    parser.add_argument('instructions')
     
     def get(self, id):
         return get_past_rides_given(id)
+    
+    def put(self, id, instructions):
+        return update_instructions('driver', id, instructions)

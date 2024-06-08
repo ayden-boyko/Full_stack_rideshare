@@ -6,56 +6,28 @@ from db.rideshare import *
 
 class AccountDriver(Resource):
     parser = reqparse.RequestParser()
-    parser.add_argument('role')
-    parser.add_argument('name')
-    parser.add_argument('date')
     parser.add_argument('id')
-    parser.add_argument('instructions')
+    parser.add_argument('zipcode')
 
     def get(self, id):
-        args = self.parser.parse_args()
 
-        id = args['id']
         return get_reviews(id, 'driver')
 
-    def put(self, id):
-        args = self.parser.parse_args()
+    def put(self, id, zipcode):
 
-        id = args['id']
-        zipcode = args['zipcode']
         return update_zipcode('driver', id, zipcode)
 
-    def post(self, id):
-        args = self.parser.parse_args()
-
-        id = args['id']
-        instructions = args['instructions']
 
 
 class AccountRider(Resource):
     parser = reqparse.RequestParser()
-    parser.add_argument('role')
-    parser.add_argument('name')
-    parser.add_argument('date')
     parser.add_argument('id')
-    parser.add_argument('instructions')
+    parser.add_argument('zipcode')
 
     def get(self, id):
-        args = self.parser.parse_args()
 
-        id = args['id']
         return get_reviews(id, 'rider')
         
-    def put(self, id):
-        args = self.parser.parse_args()
+    def put(self, id, zipcode):
 
-        id = args['id']
-        zipcode = args['zipcode']
         return update_zipcode('rider', id, zipcode)
-
-    def post(self, id):
-        args = self.parser.parse_args()
-
-        id = args['id']
-        instructions = args['instructions']
-

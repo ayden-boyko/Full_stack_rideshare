@@ -66,11 +66,33 @@ async function changeAccountStatus(accountRole, accountId) {
   update_Account_Status(); //doesnt work in the backend, flask isnt changing true to false and vise versa
 }
 
-async function updateLocation() {
+async function updateLocation(accountRole, accountId) {
   const form = document.getElementById("accountForm");
   const formacc = new FormData(form);
 
   let tempLoc = formacc.get("zipcode");
+
+  let submitLink = `http://127.0.0.1:5000/account/${accountRole}/${accountId}/${tempLoc}`;
+
+  const update_Account_Location = async () => {
+    try {
+      const response = await fetch(submitLink, {
+        method: "PUT",
+        mode: "cors",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        credentials: "same-origin",
+      });
+      const result = await response.json();
+      console.log("success:", result);
+      return result;
+    } catch (error) {
+      console.log("Error:", error);
+    }
+  };
+  update_Account_Location();
 }
 
 function AccountForm(props) {
@@ -106,7 +128,7 @@ function AccountForm(props) {
         <button
           type="button"
           className="userbtn"
-          onClick={() => updateLocation()}
+          onClick={() => updateLocation(accountRole, accountId)}
         >
           Change
         </button>

@@ -37,25 +37,25 @@ api.add_resource(AccountInfoDrivers, '/accountinfo/drivers', methods=["GET"])
 
 api.add_resource(AccountInfoRiders, '/accountinfo/riders', methods=["GET"])
 
-api.add_resource(AccountDriver, '/account/driver/<string:id>/', methods=["PUT", "POST", "GET"])
+api.add_resource(AccountDriver, '/account/driver/<string:id>/<int:zipcode>', methods=["PUT", "GET"])
 
-api.add_resource(AccountRider, '/account/rider/<string:id>/<int:zipcode>', methods=["PUT", "POST", "GET"])
+api.add_resource(AccountRider, '/account/rider/<string:id>/<int:zipcode>', methods=["PUT", "GET"])
 
 api.add_resource(RideInfo, '/rideinfo', methods=["GET"])
 
-api.add_resource(RideInfoDriver, '/rideinfo/driver', methods=["GET"])
+api.add_resource(RideInfoDriver, '/rideinfo/driver/<string:id>/<string:instructions>', methods=["GET", "PUT"])
 
-api.add_resource(RideInfoRider, '/rideinfo/rider', methods=["PUT", "GET"])
+api.add_resource(RideInfoRider, '/rideinfo/rider/<string:id>/<string:instructions>', methods=["PUT", "GET"])
 
 api.add_resource(RideSingleRiderPre, '/singlerider/pre/<int:zipcode>', methods=[ "GET"]) 
 
-api.add_resource(RideSingleRider, '/singlerider/<string:id>/<int:zipcode>', methods=["PUT", "POST", "GET"]) #change req inputs
+api.add_resource(RideSingleRider, '/singlerider/<string:id>/<string:name>/<string:driver_id>/<int:zipcode>/<string:start>/<string:end>', methods=["PUT", "POST", "GET"]) 
 
-api.add_resource(RideSingleDriver, '/singledriver/<string:id>/<int:zipcode>', methods=["PUT", "POST", "GET"]) #change req inputs
+api.add_resource(RideSingleDriver, '/singledriver/<string:id>/<string:name>/<string:rider_id>/<int:zipcode>/<string:start>/<string:end>', methods=["PUT", "POST", "GET"]) 
 
-api.add_resource(RideSingleRiderPost, '/singlerider/post/<int:zipcode>', methods=[ "GET", "PUT", "POST"]) #change req inputs
+api.add_resource(RideSingleRiderPost, '/singlerider/post/<string:id>/<string:review>/<int:rating>/<string:rod>/<string:time>/<string:carpool>/<float:cost>', methods=[ "GET", "PUT", "POST"]) 
 
-api.add_resource(RideSingleDriverPost, '/singledriver/post/<int:zipcode>', methods=[ "GET", "PUT", "POST"]) #change req inputs
+api.add_resource(RideSingleDriverPost, '/singledriver/post//<string:id>/<string:rid>/<string:review>/<int:rating>/<string:ror>/<string:time>/<string:carpool>/<float:cost>', methods=[ "GET", "PUT", "POST"]) 
 
 api.add_resource(TransactionInfo, '/transaction/reciept', methods=["POST", "GET"])
 

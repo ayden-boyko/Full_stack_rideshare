@@ -8,8 +8,6 @@ class RideSingleRiderPre(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('zipcode')
 
-
-    
     """all methods accociated with rider info"""
     def get(self, zipcode):
         return get_new_drivers(zipcode)
