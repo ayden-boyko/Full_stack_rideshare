@@ -3,6 +3,9 @@ import React, { useState } from "react";
 import User from "./Components/User";
 import Accounts from "./Components/Accounts";
 import NavBar from "./Components/NavBar";
+import DriverPage from "./Components/DriverPage";
+import RiderPage from "./Components/RiderPage";
+
 /// TP RUN FRONTEND------------npm start
 
 function App() {
@@ -77,7 +80,28 @@ function App() {
           userStatus={data.is_active}
           passedFunction={func}
           logData={logOUT}
-        ></NavBar>
+        />
+        {data.role === "driver" ? (
+          <DriverPage
+            userId={data.id}
+            userName={data.name}
+            userRating={data.rating}
+            userInstructions={data.instructions}
+            userLocation={data.zipcode}
+            userStatus={data.is_active}
+            userCarpool={data.carpool}
+          />
+        ) : (
+          <RiderPage
+            userId={data.id}
+            userName={data.name}
+            userRating={data.rating}
+            userInstructions={data.instructions}
+            userLocation={data.zipcode}
+            userStatus={data.is_active}
+            userCarpool={data.carpool}
+          />
+        )}
       </body>
     );
   }

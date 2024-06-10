@@ -177,3 +177,26 @@ tr {
 .open-button:hover {
   opacity: 1;
 }
+
+.account-page {
+  display: flex;
+  width: 100vw;
+  height: 88vh;
+}
+
+.account-page-sidebar {
+  padding: 10px;
+  flex: 0 0 25%;
+  background-color: aqua;
+  display: grid;
+  grid-template-rows: 60% 20% 20%;
+  justify-content: center;
+}
+.account-page-main {
+  padding: 10px;
+  flex: 1;
+  background-color: cornflowerblue;
+  display: grid;
+  grid-template-rows: 60% 20% 20%;
+  justify-content: center;
+}
