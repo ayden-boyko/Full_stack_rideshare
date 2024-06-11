@@ -44,10 +44,16 @@ function RiderPage({
     <tr key={person[0]}>
       <th>{person[2]}</th>
       <th>{person[4]}</th>
+      <th>{person[5]}</th>
       <th>{person[6]}</th>
       <th>{person[7]}</th>
       <th>{person[8]}</th>
       <th>{person[9]}</th>
+      <th>{person[10]}</th>
+      <th>{person[11]}</th>
+      <th>{person[12]}</th>
+      <th>{person[13]}</th>
+      <th>{person[14]}</th>
     </tr>
   ));
 
@@ -64,10 +70,16 @@ function RiderPage({
             <tr>
               <th>Driver</th>
               <th>Rider</th>
+              <th>Instructions</th>
               <th>Start</th>
               <th>End</th>
               <th>Time</th>
-              <th>Rider's Comment</th>
+              <th>Review of Driver</th>
+              <th>Rating of Driver</th>
+              <th>Review of Rider</th>
+              <th>Rating of Rider</th>
+              <th>Driver's Response</th>
+              <th>Rider's Response</th>
             </tr>
             {listPastRides}
           </tbody>
