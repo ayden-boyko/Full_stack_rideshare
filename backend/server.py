@@ -43,9 +43,9 @@ api.add_resource(AccountRider, '/account/rider/<string:id>/<int:zipcode>', metho
 
 api.add_resource(RideInfo, '/rideinfo', methods=["GET"])
 
-api.add_resource(RideInfoDriver, '/rideinfo/driver/<string:id>/<string:instructions>', methods=["GET", "PUT"])
+api.add_resource(RideInfoDriver, '/rideinfo/driver/<string:id>/<string:instructions>/<string:name>', methods=["GET", "PUT"])
 
-api.add_resource(RideInfoRider, '/rideinfo/rider/<string:id>/<string:instructions>', methods=["PUT", "GET"])
+api.add_resource(RideInfoRider, '/rideinfo/rider/<string:id>/<string:instructions>/<string:name>', methods=["PUT", "GET"])
 
 api.add_resource(RideSingleRiderPre, '/singlerider/pre/<int:zipcode>', methods=[ "GET"]) 
 

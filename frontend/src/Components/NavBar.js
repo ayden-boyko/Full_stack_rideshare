@@ -10,7 +10,6 @@ function NavBar({
   passedFunction,
   logData,
 }) {
-  console.log(userType);
   return (
     <>
       <div className="navbar">
@@ -104,7 +103,6 @@ function AccountForm(props) {
     passedFunction,
     logData,
   } = props;
-  console.log(accountRole);
   return (
     <div className="form-popup" id="myForm">
       <form className="form-container" id="accountForm">

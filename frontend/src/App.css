@@ -186,10 +186,10 @@ tr {
 
 .account-page-sidebar {
   padding: 10px;
-  flex: 0 0 25%;
+  flex: 0 0 15%;
   background-color: aqua;
   display: grid;
-  grid-template-rows: 60% 20% 20%;
+  grid-template-rows: 20% 20% 20%;
   justify-content: center;
 }
 .account-page-main {

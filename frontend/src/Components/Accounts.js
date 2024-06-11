@@ -1,68 +1,5 @@
 import React, { useEffect, useState } from "react";
 
-function Accounts(props) {
-  let { userType } = props;
-  let text = `http://127.0.0.1:5000/accountinfo/${userType}`;
-  const [user, setUser] = useState();
-
-  useEffect(() => {
-    const fetch_Info = async () => {
-      const response = await fetch(text, {
-        mode: "cors",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      });
-      const json = await response.json();
-      if (response.ok) {
-        let info = JSON.parse(JSON.stringify(json));
-        setUser(info);
-      }
-    };
-    fetch_Info();
-  }, []);
-
-  const listUsers =
-    user &&
-    user[userType]?.map((person) => (
-      <tr key={person[0]}>
-        <th>{person[1]}</th>
-        <th>
-          <button
-            className="item"
-            onClick={() =>
-              selectUser(userType, person[0], props.passedFunction)
-            }
-          >
-            SELECT
-          </button>
-        </th>
-      </tr>
-    ));
-  return (
-    <>
-      <table style={{ width: "50%" }}>
-        <tbody>
-          <tr>
-            <th>Users</th>
-            <th>Select</th>
-          </tr>
-          {listUsers}
-          <tr>
-            <td colSpan="100%">
-              <button className="item" onClick={() => openForm()}>
-                Add New {userType}
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <NewUserform userType={userType} passedFunction={props.passedFunction} />
-    </>
-  );
-}
-
 function openForm() {
   document.getElementById("myForm").style.display = "block";
 }
@@ -87,7 +24,7 @@ async function selectUser(userType, id, func) {
         credentials: "same-origin",
       });
       const result = await response.json();
-      console.log("Success", result);
+      console.log("Success:", result);
       return result;
     } catch (error) {
       console.log("Error:", error);
@@ -197,6 +134,69 @@ function NewUserform(props) {
         </button>
       </form>
     </div>
+  );
+}
+
+function Accounts(props) {
+  let { userType } = props;
+  let text = `http://127.0.0.1:5000/accountinfo/${userType}`;
+  const [user, setUser] = useState();
+
+  useEffect(() => {
+    const fetch_Info = async () => {
+      const response = await fetch(text, {
+        mode: "cors",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      const json = await response.json();
+      if (response.ok) {
+        let info = JSON.parse(JSON.stringify(json));
+        setUser(info);
+      }
+    };
+    fetch_Info();
+  }, []);
+
+  const listUsers =
+    user &&
+    user[userType]?.map((person) => (
+      <tr key={person[0]}>
+        <th>{person[1]}</th>
+        <th>
+          <button
+            className="item"
+            onClick={() =>
+              selectUser(userType, person[0], props.passedFunction)
+            }
+          >
+            SELECT
+          </button>
+        </th>
+      </tr>
+    ));
+  return (
+    <>
+      <table style={{ width: "50%" }}>
+        <tbody>
+          <tr>
+            <th>Users</th>
+            <th>Select</th>
+          </tr>
+          {listUsers}
+          <tr>
+            <td colSpan="100%">
+              <button className="item" onClick={() => openForm()}>
+                Add New {userType}
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <NewUserform userType={userType} passedFunction={props.passedFunction} />
+    </>
   );
 }
 

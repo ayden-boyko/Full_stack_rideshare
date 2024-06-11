@@ -68,7 +68,6 @@ function App() {
       </body>
     );
   } else {
-    console.log(data);
     return (
       <body className="App">
         <NavBar

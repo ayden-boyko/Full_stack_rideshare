@@ -115,23 +115,23 @@ def get_past_rides():
     db_disconnect(conn)
     return jsonify(result)
 
-def get_past_rides_taken(id):
+def get_past_rides_taken(id, name):
     """returns past rides taken"""
     conn, cur = db_connect()
 
-    rides = """SELECT * FROM past_rides WHERE r_id = %s"""
+    rides = """SELECT * FROM past_rides WHERE r_id = %s AND rider_name = %s"""
 
-    cur.execute(rides, [id])
+    cur.execute(rides, [id, name])
     result = cur.fetchall()
     db_disconnect(conn)
     return jsonify(result)
 
-def get_past_rides_given(id):
+def get_past_rides_given(id, name):
     conn, cur = db_connect()
 
-    rides = """SELECT * FROM past_rides WHERE d_id = %s"""
+    rides = """SELECT * FROM past_rides WHERE d_id = %s AND driver_name = %s"""
 
-    cur.execute(rides, [id]) 
+    cur.execute(rides, [id, name]) 
     result = cur.fetchall()
     db_disconnect(conn)
     return jsonify(result)

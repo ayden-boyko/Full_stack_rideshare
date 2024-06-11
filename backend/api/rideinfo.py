@@ -13,20 +13,22 @@ class RideInfoRider(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('id')
     parser.add_argument('instructions')
+    parser.add_argument('name')
 
-    def get(self, id):
-        return get_past_rides_taken(id)
+    def get(self, id, instructions, name):
+        return get_past_rides_taken(id, name)
     
-    def put(self, id, instructions):
+    def put(self, id, instructions, name):
         return update_instructions('rider', id, instructions)
 
 class RideInfoDriver(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('id')
     parser.add_argument('instructions')
+    parser.add_argument('name')
     
-    def get(self, id):
-        return get_past_rides_given(id)
+    def get(self, id, instructions, name):
+        return get_past_rides_given(id, name)
     
-    def put(self, id, instructions):
+    def put(self, id, instructions, name):
         return update_instructions('driver', id, instructions)
