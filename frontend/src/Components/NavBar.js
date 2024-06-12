@@ -41,7 +41,6 @@ function toggleForm() {
 }
 
 async function changeAccountStatus(accountRole, accountId) {
-  console.log(accountId);
   let submitLink = `http://127.0.0.1:5000/accountinfo/${accountRole}/${accountId}`;
 
   const update_Account_Status = async () => {

@@ -6,6 +6,50 @@ const windows = Object.freeze({
   REQUEST_RIDE: Symbol("reuqest_ride"),
 });
 
+async function changeInstructions(id, name) {
+  const form = document.getElementById("InstructForm");
+  const formacc = new FormData(form);
+
+  let tempInstruct = formacc.get("instructions");
+
+  const submitLink = `http://127.0.0.1:5000/rideinfo/rider/${id}/${tempInstruct}/${name}`;
+  try {
+    const response = await fetch(submitLink, {
+      method: "PUT",
+      mode: "cors",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      credentials: "same-origin",
+    });
+    const result = await response.json();
+    console.log("Success:", result);
+    alert("Instructions Updated!");
+  } catch (error) {
+    console.log("Error:", error);
+  }
+}
+
+async function retrieveBills(id) {
+  const submitLink = `http://127.0.0.1:5000/transaction/reciept/${id}/${Number.MAX_SAFE_INTEGER}/0`;
+  try {
+    const response = await fetch(submitLink, {
+      method: "GET",
+      mode: "cors",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      credentials: "same-origin",
+    });
+    const result = await response.json();
+    console.log("Success:", result);
+  } catch (error) {
+    console.log("Error:", error);
+  }
+}
+
 function RiderPage({
   userType,
   userId,
@@ -97,18 +141,27 @@ function RiderPage({
       <div className=" account-page">
         <div className=" account-page-sidebar">
           <div>
-            <label type="text">Instructions</label>
-            <br></br>
-            <textarea
-              type="text"
-              name="instructions"
-              placeholder={
-                userInstructions == null ? "add instructions" : userInstructions
-              }
-              style={{ resize: "both", rows: 4, cols: 25 }}
-            ></textarea>
-            <br></br>
-            <button type="button">UPDATE</button>
+            <form id="InstructForm">
+              <label type="text">Instructions</label>
+              <br></br>
+              <textarea
+                type="text"
+                name="instructions"
+                placeholder={
+                  userInstructions == null
+                    ? "add instructions"
+                    : userInstructions
+                }
+                style={{ resize: "both", rows: 4, cols: 25 }}
+              ></textarea>
+              <br></br>
+              <button
+                type="button"
+                onClick={() => changeInstructions(userId, userName)}
+              >
+                UPDATE
+              </button>
+            </form>
           </div>
           <div>
             <button
@@ -119,7 +172,13 @@ function RiderPage({
             </button>
           </div>
           <div>
-            <button type="button" onClick={() => setWindow(windows.BILLS)}>
+            <button
+              type="button"
+              onClick={() => {
+                setWindow(windows.BILLS);
+                retrieveBills(userId);
+              }}
+            >
               VIEW BILLS
             </button>
           </div>
