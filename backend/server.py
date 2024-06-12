@@ -57,7 +57,7 @@ api.add_resource(RideSingleRiderPost, '/singlerider/post/<string:id>/<string:rev
 
 api.add_resource(RideSingleDriverPost, '/singledriver/post//<string:id>/<string:rid>/<string:review>/<int:rating>/<string:ror>/<string:time>/<string:carpool>/<float:cost>', methods=[ "GET", "PUT", "POST"]) 
 
-api.add_resource(TransactionInfo, '/transaction/reciept', methods=["POST", "GET"])
+api.add_resource(TransactionInfo, '/transaction/reciept/<string:id>/<string:amount>/<string:time>', methods=["POST", "GET"])
 
 
 @app.after_request

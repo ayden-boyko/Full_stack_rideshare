@@ -189,7 +189,7 @@ tr {
   flex: 0 0 15%;
   background-color: aqua;
   display: grid;
-  grid-template-rows: 20% 20% 20%;
+  grid-template-rows: 20% 20% 20% 20%;
   justify-content: center;
 }
 .account-page-main {

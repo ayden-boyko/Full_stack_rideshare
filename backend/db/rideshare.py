@@ -486,18 +486,12 @@ def get_bills(id, name, start = datetime(1, 1, 1), end = datetime(9999, 12, 31))
     """returns all bills associated with an account"""
     conn, cur = db_connect()
 
-    statement = """SELECT billed_id, name, timestamp::VARCHAR(21) FROM tab WHERE billed_id = %s AND name = %s AND timestamp > %s AND timestamp < %s"""
+    statement = """SELECT billed_id, name, charge, timestamp::VARCHAR(21) FROM tab WHERE billed_id = %s AND name = %s AND timestamp > %s AND timestamp < %s"""
     cur.execute(statement, [id, name, start, end])
     result = cur.fetchall()
 
-    statement = """SELECT charge FROM tab WHERE billed_id = %s AND name = %s AND timestamp > %s AND timestamp < %s"""
-    cur.execute(statement, [id, name, start, end])
-    money = cur.fetchall()
-    tablist = [i[0] for i in money]
-    tab = fsum(tablist)
-    
     db_disconnect(conn)
-    return result, tab
+    return jsonify(result)
 
 def change_carpool(id, zipcode):
     """changes driver's carpool to the opposite of what it was, true -> false || false -> true"""

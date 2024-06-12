@@ -31,25 +31,6 @@ async function changeInstructions(id, name) {
   }
 }
 
-async function retrieveBills(id) {
-  const submitLink = `http://127.0.0.1:5000/transaction/reciept/${id}/${Number.MAX_SAFE_INTEGER}/0`;
-  try {
-    const response = await fetch(submitLink, {
-      method: "GET",
-      mode: "cors",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      credentials: "same-origin",
-    });
-    const result = await response.json();
-    console.log("Success:", result);
-  } catch (error) {
-    console.log("Error:", error);
-  }
-}
-
 function RiderPage({
   userType,
   userId,
@@ -61,6 +42,7 @@ function RiderPage({
 }) {
   const [window, setWindow] = useState(windows.PAST_RIDES);
   const [rides, setRides] = useState([]);
+  const [bills, setBills] = useState([]);
   const submitLink = `http://127.0.0.1:5000/rideinfo/rider/${userId}/ignore/${userName}`;
   useEffect(() => {
     const fetch_Rides = async () => {
@@ -84,6 +66,26 @@ function RiderPage({
     fetch_Rides();
   }, []);
 
+  async function retrieveBills(id) {
+    const submitLink = `http://127.0.0.1:5000/transaction/reciept/${id}/${Number.MAX_SAFE_INTEGER}/0`;
+    try {
+      const response = await fetch(submitLink, {
+        method: "GET",
+        mode: "cors",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        credentials: "same-origin",
+      });
+      const result = await response.json();
+      console.log("Success:", result);
+      setBills(JSON.parse(JSON.stringify(result)));
+    } catch (error) {
+      console.log("Error:", error);
+    }
+  }
+
   const listPastRides = rides?.map((person) => (
     <tr key={person[0]}>
       <th>{person[2]}</th>
@@ -98,6 +100,14 @@ function RiderPage({
       <th>{person[12]}</th>
       <th>{person[13]}</th>
       <th>{person[14]}</th>
+    </tr>
+  ));
+
+  const listBills = bills?.map((person, index) => (
+    <tr key={index}>
+      <th>{person[1]}</th>
+      <th>{person[2]}</th>
+      <th>{person[3]}</th>
     </tr>
   ));
 
@@ -130,7 +140,18 @@ function RiderPage({
         </table>
       );
     } else if (window === windows.BILLS) {
-      return <></>;
+      return (
+        <table style={{ width: "auto" }}>
+          <tbody>
+            <tr>
+              <th>Rider</th>
+              <th>Cost</th>
+              <th>Time</th>
+            </tr>
+            {listBills}
+          </tbody>
+        </table>
+      );
     } else if (window === windows.REQUEST_RIDE) {
       return <></>;
     }
@@ -180,6 +201,16 @@ function RiderPage({
               }}
             >
               VIEW BILLS
+            </button>
+          </div>
+          <div>
+            <button
+              type="button"
+              onClick={() => {
+                setWindow(windows.PAST_RIDES);
+              }}
+            >
+              VIEW PAST RIDES
             </button>
           </div>
         </div>
