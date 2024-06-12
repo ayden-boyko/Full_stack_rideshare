@@ -18,6 +18,7 @@ INSERT INTO "rider" ("name", "rating", "birthday") VALUES
 --past_rides
 INSERT INTO "past_rides" ("d_id", "driver_name", "r_id", "rider_name", "rofd") VALUES
     (1, 'Ray Magliozzi', 1, 'Mike Easter', 'Hes a good driver'),
+    (1, 'Ray Magliozzi', 1, 'Mike Easter', 'Just as good as always'),
     (2, 'Tom Magliozzi', 1, 'Ray Magliozzi', 'He drove better than his brother, haha');
     
 --ongoing rides
