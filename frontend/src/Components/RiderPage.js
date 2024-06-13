@@ -153,9 +153,54 @@ function RiderPage({
         </table>
       );
     } else if (window === windows.REQUEST_RIDE) {
-      return <></>;
+      return (
+        <form id="RideForm">
+          <span>
+            <label>DESTINATION</label>
+            <br></br>
+            <input
+              type="text"
+              placeholder="DESTINATION"
+              name="destination"
+            ></input>
+          </span>
+          <br></br>
+          <span>
+            <label>CARPOOL?</label>
+            <br></br>
+            <button>YES</button> <button>NO</button>
+          </span>
+          <br></br>
+          <span>
+            <button onClick={() => request_ride()}>CONFIRM RIDE</button>
+          </span>
+        </form>
+      );
     }
   };
+
+  // async function request_ride() { ****************look at notepad, some changes must be made*****************
+  //   const form = document.getElementById("RideForm");
+  //   const formacc = new FormData(form);
+  //   let tempDest = formacc.get("destination");
+
+  //   const submitLink = `http://127.0.0.1:5000/singlerider/${userId}/${userName}/0/0/0/0`;
+  //   try {
+  //     const response = await fetch(submitLink, {
+  //       method: "GET",
+  //       mode: "cors",
+  //       headers: {
+  //         Accept: "application/json",
+  //         "Content-Type": "application/json",
+  //       },
+  //       credentials: "same-origin",
+  //     });
+  //     const result = await response.json();
+  //     console.log("Success:", JSON.parse(JSON.stringify(result)));
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
 
   return (
     <>
@@ -197,7 +242,10 @@ function RiderPage({
               type="button"
               onClick={() => {
                 setWindow(windows.BILLS);
-                retrieveBills(userId);
+                console.log(bills);
+                if (bills.length === 0) {
+                  retrieveBills(userId);
+                }
               }}
             >
               VIEW BILLS
