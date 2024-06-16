@@ -17,7 +17,6 @@ class RideSingleRider(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('id')
     parser.add_argument('name')
-    parser.add_argument('zipcode')
     parser.add_argument('start')
     parser.add_argument('end')
 

@@ -493,7 +493,7 @@ def get_bills(id, name, start = datetime(1, 1, 1), end = datetime(9999, 12, 31))
     db_disconnect(conn)
     return jsonify(result)
 
-def change_carpool(id, zipcode):
+def change_carpool(id):
     """changes driver's carpool to the opposite of what it was, true -> false || false -> true"""
     conn, cur = db_connect()
 

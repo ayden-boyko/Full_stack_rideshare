@@ -86,6 +86,45 @@ function RiderPage({
     }
   }
 
+  async function request_ride(event) {
+    const form = document.getElementById("RideForm");
+    const formacc = new FormData(form);
+    let tempDest = formacc.get("destination");
+    try {
+      const pattern = new RegExp("\\d\\.\\d");
+      console.log("pre submit");
+
+      if (!pattern.test(tempDest)) {
+        alert("not in correct format, must be (X.X)");
+        event.preventDefault();
+        console.log("post submit");
+        return false;
+      }
+    } catch (error) {
+      console.log("Error:", error);
+      event.preventDefault();
+      Promise.reject();
+      return false;
+    }
+
+    const submitLink = `http://127.0.0.1:5000/singlerider/${userId}/${userName}/${userLocation}/${tempDest}`;
+    try {
+      const response = await fetch(submitLink, {
+        method: "PUT",
+        mode: "cors",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        credentials: "same-origin",
+      });
+      const result = await response.json();
+      console.log("Success:", JSON.parse(JSON.stringify(result)));
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   const listPastRides = rides?.map((person) => (
     <tr key={person[0]}>
       <th>{person[2]}</th>
@@ -160,47 +199,31 @@ function RiderPage({
             <br></br>
             <input
               type="text"
-              placeholder="DESTINATION"
-              name="destination"
+              id="coordinate"
+              name="coordinate"
+              pattern="\(\d\.\d)"
+              title="Destination must be in the format (X.X)"
+              maxLength="3"
+              placeholder="X.X"
+              required
             ></input>
           </span>
           <br></br>
           <span>
             <label>CARPOOL?</label>
             <br></br>
-            <button>YES</button> <button>NO</button>
+            <button type="button">YES</button> <button type="button">NO</button>
           </span>
           <br></br>
           <span>
-            <button onClick={() => request_ride()}>CONFIRM RIDE</button>
+            <button type="submit" onClick={(event) => request_ride(event)}>
+              CONFIRM RIDE
+            </button>
           </span>
         </form>
       );
     }
   };
-
-  async function request_ride() {
-    const form = document.getElementById("RideForm");
-    const formacc = new FormData(form);
-    let tempDest = formacc.get("destination");
-
-    const submitLink = `http://127.0.0.1:5000/singlerider/${userId}/${userName}/0/0/0/0`;
-    try {
-      const response = await fetch(submitLink, {
-        method: "PUT",
-        mode: "cors",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        credentials: "same-origin",
-      });
-      const result = await response.json();
-      console.log("Success:", JSON.parse(JSON.stringify(result)));
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
   return (
     <>
