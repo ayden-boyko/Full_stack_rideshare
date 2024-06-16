@@ -17,20 +17,22 @@ class RideSingleRider(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('id')
     parser.add_argument('name')
-    parser.add_argument('driver_id')
     parser.add_argument('zipcode')
     parser.add_argument('start')
     parser.add_argument('end')
 
-    
-    """all methods accociated with rider info"""
+    """returns driver chosen"""
     def get(self, id):
-        return get_next_ride(id)
+        return get_current_ride(id)
+
+    """sets wants_ride to true"""
+    def put(self, id, start, end):
+        return get_next_ride(id, start, end)
     
     """creates new ride"""
-    def post(self, id, name,  driver_id, start, end):
-        driver = get_driver(driver_id)
-        return new_ride(id, name, driver[0], driver[1], driver[3], start, end)
+    def post(self, id, name, start, end):
+        drivers = get_available_driver() #returns list of all availabe driver, figure out how to choose one
+        return new_ride(id, name, drivers[0][0], drivers[0][1], drivers[0][3], start, end)
     
     """cancels ride"""
     def delete(self, id, name):

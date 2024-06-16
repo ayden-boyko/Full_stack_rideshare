@@ -49,7 +49,7 @@ api.add_resource(RideInfoRider, '/rideinfo/rider/<string:id>/<string:instruction
 
 api.add_resource(RideSingleRiderPre, '/singlerider/pre/<int:zipcode>', methods=[ "GET"]) 
 
-api.add_resource(RideSingleRider, '/singlerider/<string:id>/<string:name>/<string:driver_id>/<int:zipcode>/<string:start>/<string:end>', methods=["PUT", "POST", "GET"]) 
+api.add_resource(RideSingleRider, '/singlerider/<string:id>/<string:name>/<int:zipcode>/<string:start>/<string:end>', methods=["PUT", "POST", "GET"]) 
 
 api.add_resource(RideSingleDriver, '/singledriver/<string:id>/<string:name>/<string:rider_id>/<int:zipcode>/<string:start>/<string:end>', methods=["PUT", "POST", "GET"]) 
 

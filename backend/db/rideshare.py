@@ -92,7 +92,7 @@ def get_rider(id):
     conn, cur = db_connect()
 
     riders = """SELECT rider_id, name, rating, special_instructions,
-                        birthday::VARCHAR(10), is_active, wants_ride,
+                        birthday::VARCHAR(10), is_active,
                         zipcode, location FROM rider WHERE rider_id = %s"""
 
     cur.execute(riders, (id,))
@@ -254,12 +254,12 @@ def update_zipcode(role, id, zipcode):
     db_disconnect(conn)
     return jsonify({'Old_zip': pre, 'New_zip' : post})
 
-def get_next_ride( id):
-    """changes wants ride"""
+def get_next_ride(id, start, end):
+    """inserts rider into awaiting rides table"""
     conn, cur = db_connect()
-
-    statement = """UPDATE rider SET wants_ride = True WHERE rider_id = %s"""
-    cur.execute(statement, [id])
+    rider = get_rider(id)
+    statement = """INSERT %s INTO awaiting_rides"""
+    cur.execute(statement, [id, rider[1], rider[2], rider[3], start, end])
 
     db_disconnect(conn)
     return True
@@ -615,6 +615,13 @@ def get_driver_id(name):
     db_disconnect(conn)
     return jsonify(result)
 
-# create methods for adding riders to the awaitng rides table
+def get_available_driver():
+    conn, cur = db_connect()
+    driver = "SELECT A.driver_id FROM driver A LEFT JOIN current_rides B ON A.driver_id = B.driver_id WHERE B.driver_id IS NULL AND A.awaiting_rider IS true"
+    cur.execute(driver)
+    result = cur.fetchone()
+    db_disconnect(conn)
+    return jsonify(result)
+
 
 # create method for allowing the rider to enter their destination, for now just use points, later maybe have address -> converted to points/float?

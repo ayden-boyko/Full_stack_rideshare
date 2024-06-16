@@ -6,9 +6,9 @@ INSERT INTO example_table(id, foo) VALUES
 ALTER SEQUENCE example_table_id_seq RESTART 1000;
 
 --drivers
-INSERT INTO "driver" ("name", "rating", "special_instructions", "birthday", "zipcode") VALUES
-    ('Ray Magliozzi', 3.2, 'Dont drive like my brother.', '1995-10-16', '94131'),
-    ('Tom Magliozzi', 3.4, 'Dont drive like my brother.', '1995-10-15', '30301');
+INSERT INTO "driver" ("name", "rating", "special_instructions", "birthday", "zipcode", "awaiting_rider") VALUES
+    ('Ray Magliozzi', 3.2, 'Dont drive like my brother.', '1995-10-16', '94131', true),
+    ('Tom Magliozzi', 3.4, 'Dont drive like my brother.', '1995-10-15', '30301', true);
 
 --riders
 INSERT INTO "rider" ("name", "rating", "birthday") VALUES

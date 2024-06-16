@@ -179,28 +179,28 @@ function RiderPage({
     }
   };
 
-  // async function request_ride() { ****************look at notepad, some changes must be made*****************
-  //   const form = document.getElementById("RideForm");
-  //   const formacc = new FormData(form);
-  //   let tempDest = formacc.get("destination");
+  async function request_ride() {
+    const form = document.getElementById("RideForm");
+    const formacc = new FormData(form);
+    let tempDest = formacc.get("destination");
 
-  //   const submitLink = `http://127.0.0.1:5000/singlerider/${userId}/${userName}/0/0/0/0`;
-  //   try {
-  //     const response = await fetch(submitLink, {
-  //       method: "GET",
-  //       mode: "cors",
-  //       headers: {
-  //         Accept: "application/json",
-  //         "Content-Type": "application/json",
-  //       },
-  //       credentials: "same-origin",
-  //     });
-  //     const result = await response.json();
-  //     console.log("Success:", JSON.parse(JSON.stringify(result)));
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
+    const submitLink = `http://127.0.0.1:5000/singlerider/${userId}/${userName}/0/0/0/0`;
+    try {
+      const response = await fetch(submitLink, {
+        method: "PUT",
+        mode: "cors",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        credentials: "same-origin",
+      });
+      const result = await response.json();
+      console.log("Success:", JSON.parse(JSON.stringify(result)));
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <>

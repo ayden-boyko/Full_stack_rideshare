@@ -22,7 +22,8 @@ CREATE TABLE IF NOT EXISTS "driver"(
     "birthday" DATE,
     "is_active" BOOLEAN DEFAULT true,
     "zipcode" CHAR(5) DEFAULT '94131' CHECK ("zipcode" ~ '[0-9-]+' AND length("zipcode") = 5),
-    "carpool" BOOLEAN DEFAULT false
+    "carpool" BOOLEAN DEFAULT false,
+    "awaiting_rider" BOOLEAN DEFAULT true
 );
 
 CREATE TABLE IF NOT EXISTS "rider"(
@@ -33,7 +34,6 @@ CREATE TABLE IF NOT EXISTS "rider"(
     "birthday" DATE,
     "is_active" BOOLEAN DEFAULT true,
     "zipcode" CHAR(5) DEFAULT '94131' CHECK ("zipcode" ~ '[0-9-]+' AND length("zipcode") = 5),
-    "wants_ride" BOOLEAN DEFAULT false,
     "location" POINT DEFAULT '0,0'
 );
 
