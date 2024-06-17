@@ -64,7 +64,7 @@ function RiderPage({
       }
     };
     fetch_Rides();
-  }, []);
+  }, [submitLink]);
 
   async function retrieveBills(id) {
     const submitLink = `http://127.0.0.1:5000/transaction/reciept/${id}/${Number.MAX_SAFE_INTEGER}/0`;
@@ -89,15 +89,13 @@ function RiderPage({
   async function request_ride(event) {
     const form = document.getElementById("RideForm");
     const formacc = new FormData(form);
-    let tempDest = formacc.get("destination");
+    let tempDest = formacc.get("coordinate");
     try {
-      const pattern = new RegExp("\\d\\.\\d");
-      console.log("pre submit");
+      const pattern = new RegExp("\\d,\\d");
 
       if (!pattern.test(tempDest)) {
-        alert("not in correct format, must be (X.X)");
+        alert("not in correct format, must be (X,X)");
         event.preventDefault();
-        console.log("post submit");
         return false;
       }
     } catch (error) {
@@ -106,8 +104,8 @@ function RiderPage({
       Promise.reject();
       return false;
     }
-
-    const submitLink = `http://127.0.0.1:5000/singlerider/${userId}/${userName}/${userLocation}/${tempDest}`;
+    event.preventDefault();
+    const submitLink = `http://127.0.0.1:5000/singlerider/${userId}/${userName}/0,0/${tempDest}`;
     try {
       const response = await fetch(submitLink, {
         method: "PUT",
@@ -123,6 +121,7 @@ function RiderPage({
     } catch (error) {
       console.log(error);
     }
+    console.log("done");
   }
 
   const listPastRides = rides?.map((person) => (
@@ -201,10 +200,10 @@ function RiderPage({
               type="text"
               id="coordinate"
               name="coordinate"
-              pattern="\(\d\.\d)"
-              title="Destination must be in the format (X.X)"
+              pattern="\d,\d"
+              title="Destination must be in the format (X,X)"
               maxLength="3"
-              placeholder="X.X"
+              placeholder="X,X"
               required
             ></input>
           </span>

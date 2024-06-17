@@ -1,11 +1,11 @@
-import itertools
+import sys
 from db.db_utils import *
 import csv
 from datetime import datetime
 from math import fsum
 from flask import jsonify
 
-# TO DO FIGURE OUT FORMATTING of json,. id, role, name, etc
+# to print to console do sys.stderr.write(string)
 
 def create_tables():
     """drops, and then creates the sql and adds data to the sql tables"""
@@ -255,12 +255,18 @@ def update_zipcode(role, id, zipcode):
     return jsonify({'Old_zip': pre, 'New_zip' : post})
 
 def get_next_ride(id, start, end):
-    """inserts rider into awaiting rides table"""
+    """inserts rider into awaiting rides table and converts start and end into points"""
     conn, cur = db_connect()
     rider = get_rider(id)
-    statement = """INSERT %s INTO awaiting_rides"""
-    cur.execute(statement, [id, rider[1], rider[2], rider[3], start, end])
+    rider = rider.get_json()
+    convert = """SELECT CAST(%s AS POINT)"""
+    cur.execute(convert, [start])
+    start = cur.fetchone()[0]
+    cur.execute(convert, [end])
+    end = cur.fetchone()[0]
+    statement = """INSERT INTO awaiting_rides (r_id, rider_name, rider_rating, special_instructions, start, "end") VALUES (%s, %s, %s, %s, %s, %s)"""
 
+    cur.execute(statement, [id, rider[1], rider[2], rider[3], start, end])
     db_disconnect(conn)
     return True
 

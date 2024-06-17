@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS "rider"(
     "rider_id" SERIAL PRIMARY KEY,
     "name" TEXT NOT NULL,
     "rating" FLOAT DEFAULT 5.0,
-    "special_instructions" TEXT,
+    "special_instructions" TEXT DEFAULT 'I dont care',
     "birthday" DATE,
     "is_active" BOOLEAN DEFAULT true,
     "zipcode" CHAR(5) DEFAULT '94131' CHECK ("zipcode" ~ '[0-9-]+' AND length("zipcode") = 5),

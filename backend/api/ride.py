@@ -25,7 +25,7 @@ class RideSingleRider(Resource):
         return get_current_ride(id)
 
     """sets wants_ride to true"""
-    def put(self, id, start, end):
+    def put(self, id, name, start, end):
         return get_next_ride(id, start, end)
     
     """creates new ride"""
