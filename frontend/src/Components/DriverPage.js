@@ -89,7 +89,7 @@ function DriverPage({
     <tr key={person[0]}>
       <th>{person[2]}</th>
       <th>{person[4]}</th>
-      <th>{person[5]}</th>
+      <th>{person[5] == null ? "None" : person[5]}</th>
       <th>{person[6]}</th>
       <th>{person[7]}</th>
       <th>{person[8]}</th>
@@ -97,8 +97,8 @@ function DriverPage({
       <th>{person[10]}</th>
       <th>{person[11]}</th>
       <th>{person[12]}</th>
-      <th>{person[13]}</th>
       <th>{person[14]}</th>
+      <th>{person[13]}</th>
     </tr>
   ));
 
@@ -148,8 +148,8 @@ function DriverPage({
               <th>Rating of Driver</th>
               <th>Review of Rider</th>
               <th>Rating of Rider</th>
-              <th>Driver's Response</th>
               <th>Rider's Response</th>
+              <th>Driver's Response</th>
             </tr>
             {listPastRides}
           </tbody>
@@ -191,10 +191,10 @@ function DriverPage({
   return (
     <>
       <div className=" account-page">
-        <div className=" account-page-sidebar">
+        <div className=" account-page-sidebar-driver">
           <div>
             <button type="button" onClick={() => 0}>
-              CARPOOL?
+              CARPOOL
             </button>
           </div>
           <div>
@@ -231,7 +231,7 @@ function DriverPage({
                 setWindow(windows.PAST_RIDES);
               }}
             >
-              VIEW PAST RIDES
+              VIEW PAST RIDES GIVEN
             </button>
           </div>
         </div>

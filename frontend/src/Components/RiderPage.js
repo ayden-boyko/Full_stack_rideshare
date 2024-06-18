@@ -128,7 +128,7 @@ function RiderPage({
     <tr key={person[0]}>
       <th>{person[2]}</th>
       <th>{person[4]}</th>
-      <th>{person[5]}</th>
+      <th>{person[5] == null ? "None" : person[5]}</th>
       <th>{person[6]}</th>
       <th>{person[7]}</th>
       <th>{person[8]}</th>
@@ -136,8 +136,8 @@ function RiderPage({
       <th>{person[10]}</th>
       <th>{person[11]}</th>
       <th>{person[12]}</th>
-      <th>{person[13]}</th>
       <th>{person[14]}</th>
+      <th>{person[13]}</th>
     </tr>
   ));
 
