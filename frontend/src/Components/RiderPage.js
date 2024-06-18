@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 const windows = Object.freeze({
   PAST_RIDES: Symbol("past_rides"),
   BILLS: Symbol("bills"),
-  REQUEST_RIDE: Symbol("reuqest_ride"),
+  REQUEST_RIDE: Symbol("request_ride"),
 });
 
 async function changeInstructions(id, name) {

@@ -629,5 +629,13 @@ def get_available_driver():
     db_disconnect(conn)
     return jsonify(result)
 
+def get_available_riders():
+    conn, cur = db_connect()
+    driver = "SELECT * FROM awaiting_rides"
+    cur.execute(driver)
+    result = cur.fetchone()
+    db_disconnect(conn)
+    return jsonify(result)
+
 
 # create method for allowing the rider to enter their destination, for now just use points, later maybe have address -> converted to points/float?

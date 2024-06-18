@@ -11,6 +11,12 @@ class RideSingleRiderPre(Resource):
     """all methods accociated with rider info"""
     def get(self, zipcode):
         return get_new_drivers(zipcode)
+    
+class RideSingleDriverPre(Resource):
+
+    """all methods accociated with rider info"""
+    def get(self):
+        return get_available_riders()
 
 
 class RideSingleRider(Resource):
