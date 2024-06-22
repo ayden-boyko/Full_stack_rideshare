@@ -5,6 +5,8 @@ const windows = Object.freeze({
   PAST_RIDES: Symbol("past_rides"),
   BILLS: Symbol("bills"),
   REQUEST_RIDE: Symbol("request_ride"),
+  WAITING: Symbol("waiting"),
+  GETING_RIDE: Symbol("getting_ride"),
 });
 
 async function changeInstructions(id, name) {
@@ -45,6 +47,8 @@ function RiderPage({
   const [rides, setRides] = useState([]);
   const [bills, setBills] = useState([]);
   const [socktInstance, setSocketInstance] = useState("");
+  const [driver, setDriver] = useState(null);
+  const [destination, setDestination] = useState(null);
 
   const submitLink = `http://127.0.0.1:5000/rideinfo/rider/${userId}/ignore/${userName}`;
 
@@ -140,6 +144,7 @@ function RiderPage({
     }
     event.preventDefault();
     const submitLink = `http://127.0.0.1:5000/singlerider/${userId}/${userName}/0,0/${tempDest}`;
+    setDestination(tempDest);
     try {
       const response = await fetch(submitLink, {
         method: "PUT",
@@ -152,6 +157,7 @@ function RiderPage({
       });
       const result = await response.json();
       console.log("Success:", JSON.parse(JSON.stringify(result)));
+      setWindow(windows.WAITING);
     } catch (error) {
       console.log(error);
     }
@@ -189,72 +195,92 @@ function RiderPage({
    * 3.the request ride window. */
 
   const renderWindow = () => {
-    if (window === windows.PAST_RIDES) {
-      return (
-        <table style={{ width: "auto" }}>
-          <tbody>
-            <tr>
-              <th>Driver</th>
-              <th>Rider</th>
-              <th>Instructions</th>
-              <th>Start</th>
-              <th>End</th>
-              <th>Time</th>
-              <th>Review of Driver</th>
-              <th>Rating of Driver</th>
-              <th>Review of Rider</th>
-              <th>Rating of Rider</th>
-              <th>Driver's Response</th>
-              <th>Rider's Response</th>
-            </tr>
-            {listPastRides}
-          </tbody>
-        </table>
-      );
-    } else if (window === windows.BILLS) {
-      return (
-        <table style={{ width: "auto" }}>
-          <tbody>
-            <tr>
-              <th>Rider</th>
-              <th>Cost</th>
-              <th>Time</th>
-            </tr>
-            {listBills}
-          </tbody>
-        </table>
-      );
-    } else if (window === windows.REQUEST_RIDE) {
-      return (
-        <form id="RideForm">
-          <span>
-            <label>DESTINATION</label>
+    switch (window) {
+      case windows.PAST_RIDES:
+        return (
+          <table style={{ width: "auto" }}>
+            <tbody>
+              <tr>
+                <th>Driver</th>
+                <th>Rider</th>
+                <th>Instructions</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Time</th>
+                <th>Review of Driver</th>
+                <th>Rating of Driver</th>
+                <th>Review of Rider</th>
+                <th>Rating of Rider</th>
+                <th>Driver's Response</th>
+                <th>Rider's Response</th>
+              </tr>
+              {listPastRides}
+            </tbody>
+          </table>
+        );
+      case windows.BILLS:
+        return (
+          <table style={{ width: "auto" }}>
+            <tbody>
+              <tr>
+                <th>Rider</th>
+                <th>Cost</th>
+                <th>Time</th>
+              </tr>
+              {listBills}
+            </tbody>
+          </table>
+        );
+      case windows.REQUEST_RIDE:
+        return (
+          <form id="RideForm">
+            <span>
+              <label>DESTINATION</label>
+              <br></br>
+              <input
+                type="text"
+                id="coordinate"
+                name="coordinate"
+                pattern="\d,\d"
+                title="Destination must be in the format (X,X)"
+                maxLength="3"
+                placeholder="X,X"
+                required
+              ></input>
+            </span>
             <br></br>
-            <input
-              type="text"
-              id="coordinate"
-              name="coordinate"
-              pattern="\d,\d"
-              title="Destination must be in the format (X,X)"
-              maxLength="3"
-              placeholder="X,X"
-              required
-            ></input>
-          </span>
-          <br></br>
-          <span>
-            <label>CARPOOL?</label>
+            <span>
+              <label>CARPOOL?</label>
+              <br></br>
+              <button type="button">YES</button>{" "}
+              <button type="button">NO</button>
+            </span>
             <br></br>
-            <button type="button">YES</button> <button type="button">NO</button>
-          </span>
-          <br></br>
-          <span>
-            <button type="submit" onClick={(event) => request_ride(event)}>
-              CONFIRM RIDE
-            </button>
-          </span>
-        </form>
-      );
+            <span>
+              <button type="submit" onClick={(event) => request_ride(event)}>
+                CONFIRM RIDE
+              </button>
+            </span>
+          </form>
+        );
+      case windows.WAITING:
+        return <h1>WAITING FOR DRIVER</h1>;
+      case windows.GETING_RIDE:
+        return (
+          <>
+            <span>RIDE INFO</span>
+            <br></br>
+            <p>DRIVER NAME: {driver[1]}</p>
+            <br></br>
+            <p>DRIVER RATING: {driver[2]}</p>
+            <br></br>
+            <p>DESTINATION: {destination}</p>
+            <br></br>
+            <p>COST: IMPLEMENT COST</p>
+          </>
+        );
+      default:
+        return <h1>SOMETHINGS WRONG...</h1>;
     }
   };
 
@@ -290,7 +316,9 @@ function RiderPage({
               type="button"
               onClick={() => setWindow(windows.REQUEST_RIDE)}
             >
-              REQUEST RIDE
+              {window === windows.WAITING || window === windows.GETING_RIDE
+                ? "RIDE REQUESTED"
+                : "REQUEST RIDE"}
             </button>
           </div>
           <div>

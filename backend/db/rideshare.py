@@ -303,12 +303,11 @@ def update_rating(role, id, rating):
     db_disconnect(conn)
     return True
 
-def new_ride(d_id, d_name, r_id, r_name, special_instructions = "No special instructions", start = '0,0', end = '0,0'):
+def new_ride(d_id, d_name, r_id, start = '0,0', end = '0,0'):
     """Adds a new ride to current rides"""
     conn, cur = db_connect()
-
-    statement = """INSERT INTO current_rides (driver_id, d_name, rider_id, r_name, s_instructions, start, end) VALUES (%s, %s, %s, %s, %s, %s, %s)"""
-    cur.execute(statement, [d_id, d_name, r_id, r_name, special_instructions, start, end])
+    statement = """INSERT INTO current_rides (driver_id, d_name, rider_id, r_name, s_instructions, start, "end") SELECT %s, %s, %s, rider_name, special_instructions, %s, %s FROM awaiting_rides WHERE r_id = %s"""
+    cur.execute(statement, [d_id, d_name, r_id, start, end, r_id])
 
     db_disconnect(conn)
     return True

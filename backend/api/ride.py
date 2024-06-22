@@ -34,7 +34,7 @@ class RideSingleRider(Resource):
     def put(self, id, name, start, end):
         return get_next_ride(id, start, end)
     
-    """creates new ride"""
+    """USELESS FOR RIDER THEY CANT CREATE RIDES"""
     def post(self, id, name, start, end):
         drivers = get_available_driver() #returns list of all availabe driver, figure out how to choose one
         return new_ride(id, name, drivers[0][0], drivers[0][1], drivers[0][3], start, end)
@@ -60,12 +60,12 @@ class RideSingleDriver(Resource):
     
     
     """creates new ride"""
-    def post(self, id, name,  rider_id, start, end):
-        rider = get_rider(rider_id)
-        return new_ride(id, name, rider[0], rider[1], rider[3], start, end)
+    def post(self, id, name,  rider_id, start, end, zipcode):
+        sys
+        return new_ride(id, name, rider_id, start, end)
     
     """cancels ride"""
-    def delete(self, rider_id):
+    def delete(self, rider_id, zipcode):
         rider = get_rider(rider_id)
         return cancel_ride(rider[0], rider[1])
     

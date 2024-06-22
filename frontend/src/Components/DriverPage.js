@@ -5,6 +5,7 @@ const windows = Object.freeze({
   PAST_RIDES: Symbol("past_rides"),
   BILLS: Symbol("bills"),
   REQUEST_RIDER: Symbol("request_riders"),
+  GIVING_RIDE: Symbol("giving_ride"),
 });
 
 function DriverPage({
@@ -20,6 +21,7 @@ function DriverPage({
   const [rides, setRides] = useState([]);
   const [bills, setBills] = useState([]);
   const [riders, setRiders] = useState([]);
+  const [passengers, setPassengers] = useState([]);
   const [socktInstance, setSocketInstance] = useState("");
   const socket = io("http://127.0.0.1:5000/driver", {
     transports: ["websocket"],
@@ -96,6 +98,27 @@ function DriverPage({
       console.log("Error:", error);
     }
   }
+  //USER RIDER 1,2,4,5,6
+  async function selectRider(id, name, rider) {
+    const submitLink = `http://127.0.0.1:5000/singledriver/${id}/${name}/${rider[1]}/0/${rider[5]}/${rider[6]}`;
+    try {
+      const response = await fetch(submitLink, {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        credentials: "same-origin",
+      });
+      const result = await response.json();
+      console.log("Success:", result);
+      setPassengers(...passengers, rider);
+      setWindow(windows.GIVING_RIDE);
+    } catch (error) {
+      console.log("error:", error);
+    }
+  }
 
   async function retrieveRiders() {
     const submitLink = `http://127.0.0.1:5000/singledriver/pre`;
@@ -133,7 +156,6 @@ function DriverPage({
       <th>{person[13]}</th>
     </tr>
   ));
-
   const listBills = bills?.map((person, index) => (
     <tr key={index}>
       <th>{person[1]}</th>
@@ -144,19 +166,35 @@ function DriverPage({
   const listRiders = riders?.map((person, index) => {
     console.log(riders);
     console.log(person);
-    return (
-      <tr key={index}>
-        <th>{person[1]}</th>
-        <th>{person[2]}</th>
-        <th>{person[3]}</th>
-        <th>{person[4]}</th>
-        <th>{person[5]}</th>
-        <th>{person[6]}</th>
-        <th>
-          <button>SELECT</button>
-        </th>
-      </tr>
-    );
+    if (person != null) {
+      return (
+        <tr key={index}>
+          <th>{person[1]}</th>
+          <th>{person[2]}</th>
+          <th>{person[3]}</th>
+          <th>{person[4]}</th>
+          <th>{person[5]}</th>
+          <th>{person[6]}</th>
+          <th>
+            <button onClick={() => selectRider(userId, userName, person)}>
+              SELECT
+            </button>
+          </th>
+        </tr>
+      );
+    } else {
+      return (
+        <tr key={1}>
+          <th>None</th>
+          <th>None</th>
+          <th>None</th>
+          <th>None</th>
+          <th>None</th>
+          <th>None</th>
+          <th>None</th>
+        </tr>
+      );
+    }
   });
 
   /** conditionally renders either
@@ -165,58 +203,77 @@ function DriverPage({
    * 3.the request ride window. */
 
   const renderWindow = () => {
-    if (window === windows.PAST_RIDES) {
-      return (
-        <table style={{ width: "auto" }}>
-          <tbody>
-            <tr>
-              <th>Driver</th>
-              <th>Rider</th>
-              <th>Instructions</th>
-              <th>Start</th>
-              <th>End</th>
-              <th>Time</th>
-              <th>Review of Driver</th>
-              <th>Rating of Driver</th>
-              <th>Review of Rider</th>
-              <th>Rating of Rider</th>
-              <th>Rider's Response</th>
-              <th>Driver's Response</th>
-            </tr>
-            {listPastRides}
-          </tbody>
-        </table>
-      );
-    } else if (window === windows.BILLS) {
-      return (
-        <table style={{ width: "auto" }}>
-          <tbody>
-            <tr>
-              <th>Rider</th>
-              <th>Cost</th>
-              <th>Time</th>
-            </tr>
-            {listBills}
-          </tbody>
-        </table>
-      );
-    } else if (window === windows.REQUEST_RIDER) {
-      return (
-        <table style={{ width: "auto" }}>
-          <tbody>
-            <tr>
-              <th>Rider_Id</th>
-              <th>Name</th>
-              <th>Rating</th>
-              <th>Instructions</th>
-              <th>Start</th>
-              <th>End</th>
-              <th>choose</th>
-            </tr>
-            {listRiders}
-          </tbody>
-        </table>
-      );
+    switch (window) {
+      case windows.PAST_RIDES:
+        return (
+          <table style={{ width: "auto" }}>
+            <tbody>
+              <tr>
+                <th>Driver</th>
+                <th>Rider</th>
+                <th>Instructions</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Time</th>
+                <th>Review of Driver</th>
+                <th>Rating of Driver</th>
+                <th>Review of Rider</th>
+                <th>Rating of Rider</th>
+                <th>Rider's Response</th>
+                <th>Driver's Response</th>
+              </tr>
+              {listPastRides}
+            </tbody>
+          </table>
+        );
+      case windows.BILLS:
+        return (
+          <table style={{ width: "auto" }}>
+            <tbody>
+              <tr>
+                <th>Rider</th>
+                <th>Cost</th>
+                <th>Time</th>
+              </tr>
+              {listBills}
+            </tbody>
+          </table>
+        );
+      case windows.REQUEST_RIDER:
+        return (
+          <table style={{ width: "auto" }}>
+            <tbody>
+              <tr>
+                <th>Rider_Id</th>
+                <th>Name</th>
+                <th>Rating</th>
+                <th>Instructions</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>choose</th>
+              </tr>
+              {listRiders}
+            </tbody>
+          </table>
+        );
+      case windows.GIVING_RIDE:
+        return (
+          <>
+            <span>RIDE INFO</span>
+            <br></br>
+            <p>RIDER NAME: {passengers[2]}</p>
+            <br></br>
+            <p>RDIER RATING: {passengers[3]}</p>
+            <br></br>
+            <p>PICKUP LOCATION: {passengers[5]}</p>
+            <br></br>
+            <p>DESTINATION: {passengers[6]}</p>
+            <br></br>
+            <p>COST: IMPLEMENT COST</p>
+          </>
+        );
+      default:
+        return <h1>SOMETHINGS WRONG...</h1>;
     }
   };
 
