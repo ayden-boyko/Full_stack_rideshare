@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { io } from "socket.io-client";
 
 const windows = Object.freeze({
   PAST_RIDES: Symbol("past_rides"),
@@ -19,6 +20,19 @@ function DriverPage({
   const [rides, setRides] = useState([]);
   const [bills, setBills] = useState([]);
   const [riders, setRiders] = useState([]);
+  const [socktInstance, setSocketInstance] = useState("");
+  const socket = io("http://127.0.0.1:5000/driver", {
+    transports: ["websocket"],
+    cors: {
+      origin: "http://localhost:3000/",
+      methods: ["GET", "POST", "PUT", "DELETE"],
+      allowedHeaders: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    },
+  });
 
   const submitLink = `http://127.0.0.1:5000/rideinfo/driver/${userId}/ignore/${userName}`;
 
@@ -43,6 +57,24 @@ function DriverPage({
       }
     };
     fetch_Rides();
+
+    setSocketInstance(socket);
+
+    socket.on("connect", (data) => {
+      console.log("connected", data);
+    });
+
+    socket.on("connect_error", (error) => {
+      if (socket.active) {
+        console.log("trying to reconnect");
+      } else {
+        console.log(error.message);
+      }
+    });
+
+    socket.on("disconnect", (data) => {
+      console.log("disconnected", data);
+    });
   }, [submitLink]);
 
   async function retrieveBills(id) {

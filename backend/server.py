@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_restful import Resource, Api
 from flask_cors import CORS
+from flask_socketio import namespace, emit, send, SocketIO
 from api.hello_world import HelloWorld
 from api.management import *
 from api.accountinfo import *
@@ -8,18 +9,25 @@ from api.rideinfo import *
 from api.transaction import *
 from api.account import *
 from api.ride import *
+from api.sockets import *
 
 app = Flask(__name__)
 api = Api(app)
 cors = CORS(app, resources={
      r'/*': {
-         'origins': ["http://127.0.0.1:3000", "http://127.0.0.1:5000"], 
+         'origins': ["http://127.0.0.1:3000", "http://127.0.0.1:5000", "http://localhost:3000", "http://localhost:5000"], 
          #supabase databse url, links to localport:3000 or 5000
          'methods': ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS']
      }
  })
  
-app.config['CORS_HEADERS'] = 'Content-Type'
+# app.config['CORS_HEADERS'] = 'Content-Type'
+# app.config['SECRET KEY'] = os.getenv('SECRET_KEY') or VVVVV
+app.config.update(
+                CORS_HEADERS='Content-Type', 
+                SECRET_KEY=os.getenv('SECRET_KEY')
+                )
+socketio = SocketIO(app,cors_allowed_origins="*")
 
 #--------TO RUN BACKEND----python server.py--------------------
 
@@ -70,6 +78,9 @@ def after_request(response):
     return response
 
 
+socketio.on_namespace(RiderNamespace('/rider'))
+socketio.on_namespace(DriverNamespace('/driver'))
+
 if __name__ == '__main__':
     rebuild_tables()
-    app.run(debug=True)
+    socketio.run(app, debug=True, host='127.0.0.1', port=5000)

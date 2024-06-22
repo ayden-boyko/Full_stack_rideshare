@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { io } from "socket.io-client";
 
 const windows = Object.freeze({
   PAST_RIDES: Symbol("past_rides"),
@@ -43,7 +44,10 @@ function RiderPage({
   const [window, setWindow] = useState(windows.PAST_RIDES);
   const [rides, setRides] = useState([]);
   const [bills, setBills] = useState([]);
+  const [socktInstance, setSocketInstance] = useState("");
+
   const submitLink = `http://127.0.0.1:5000/rideinfo/rider/${userId}/ignore/${userName}`;
+
   useEffect(() => {
     const fetch_Rides = async () => {
       try {
@@ -64,6 +68,36 @@ function RiderPage({
       }
     };
     fetch_Rides();
+    const socket = io("http://127.0.0.1:5000/rider", {
+      transports: ["websocket"],
+      withCredentials: true,
+      // cors: {
+      //   origin: "http://localhost:3000/",
+      //   methods: ["GET", "POST", "PUT", "DELETE"],
+      //   allowedHeaders: {
+      //     Accept: "application/json",
+      //     "Content-Type": "application/json",
+      //   },
+      // },
+    });
+
+    setSocketInstance(socket);
+
+    socket.on("connect", (data) => {
+      console.log("connected", data);
+    });
+
+    socket.on("connect_error", (error) => {
+      if (socket.active) {
+        console.log("trying to reconnect:", error);
+      } else {
+        console.log(error);
+      }
+    });
+
+    socket.on("disconnect", (data) => {
+      console.log("disconnected", data);
+    });
   }, [submitLink]);
 
   async function retrieveBills(id) {
