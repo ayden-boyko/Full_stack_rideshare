@@ -46,7 +46,10 @@ function RiderPage({
   const [window, setWindow] = useState(windows.PAST_RIDES);
   const [rides, setRides] = useState([]);
   const [bills, setBills] = useState([]);
-  const [socktInstance, setSocketInstance] = useState("");
+  const [socktInstance, setSocketInstance] = useState({
+    instance: null,
+    id: null,
+  });
   const [driver, setDriver] = useState(null);
   const [destination, setDestination] = useState(null);
 
@@ -85,10 +88,9 @@ function RiderPage({
       // },
     });
 
-    setSocketInstance(socket);
-
     socket.on("connect", (data) => {
       console.log("connected", data);
+      setSocketInstance({ instance: socket, id: socket.id });
     });
 
     socket.on("connect_error", (error) => {
@@ -143,8 +145,9 @@ function RiderPage({
       return false;
     }
     event.preventDefault();
-    const submitLink = `http://127.0.0.1:5000/singlerider/${userId}/${userName}/0,0/${tempDest}`;
+    const submitLink = `http://127.0.0.1:5000/singlerider/${userId}/${userName}/0,0/${tempDest}/${socktInstance.id}`;
     setDestination(tempDest);
+    console.log("socket ID:", socktInstance.id);
     try {
       const response = await fetch(submitLink, {
         method: "PUT",

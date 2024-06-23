@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { io } from "socket.io-client";
+import { io, emit, send, of, to } from "socket.io-client";
 
 const windows = Object.freeze({
   PAST_RIDES: Symbol("past_rides"),
@@ -22,7 +22,7 @@ function DriverPage({
   const [bills, setBills] = useState([]);
   const [riders, setRiders] = useState([]);
   const [passengers, setPassengers] = useState([]);
-  const [socktInstance, setSocketInstance] = useState("");
+  const [socketInstance, setSocketInstance] = useState();
   const socket = io("http://127.0.0.1:5000/driver", {
     transports: ["websocket"],
     cors: {
@@ -112,8 +112,15 @@ function DriverPage({
         credentials: "same-origin",
       });
       const result = await response.json();
-      console.log("Success:", result);
+      console.log("Success:", result); //use result to create room and add rider and driver to it
       setPassengers(...passengers, rider);
+      socketInstance.emit("join", [
+        userName,
+        JSON.stringify(result[0]),
+        result[1],
+        rider[2],
+      ]);
+
       setWindow(windows.GIVING_RIDE);
     } catch (error) {
       console.log("error:", error);
@@ -263,7 +270,7 @@ function DriverPage({
             <br></br>
             <p>RIDER NAME: {passengers[2]}</p>
             <br></br>
-            <p>RDIER RATING: {passengers[3]}</p>
+            <p>RIDER RATING: {passengers[3]}</p>
             <br></br>
             <p>PICKUP LOCATION: {passengers[5]}</p>
             <br></br>

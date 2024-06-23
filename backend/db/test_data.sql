@@ -16,8 +16,8 @@ INSERT INTO "rider" ("name", "rating", "birthday") VALUES
     ('Ayden Boyko', 4.5, '2003-11-24');
 
 --awaiting rides
-INSERT INTO "awaiting_rides" ("r_id", "rider_name", "rider_rating", "special_instructions", "start", "end") VALUES
-    (2, 'Ayden Boyko', 4.5, 'I dont care', '0,0', '7,9');
+-- INSERT INTO "awaiting_rides" ("r_id", "rider_name", "rider_rating", "special_instructions", "start", "end") VALUES
+--     (2, 'Ayden Boyko', 4.5, 'I dont care', '0,0', '7,9');
 
 --past_rides
 INSERT INTO "past_rides" ("d_id", "driver_name", "r_id", "rider_name", "rofd") VALUES

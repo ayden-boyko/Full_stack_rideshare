@@ -9,7 +9,7 @@ from api.rideinfo import *
 from api.transaction import *
 from api.account import *
 from api.ride import *
-from api.sockets import *
+from api.namespaces import RiderNamespace, DriverNamespace
 
 app = Flask(__name__)
 api = Api(app)
@@ -27,6 +27,7 @@ app.config.update(
                 CORS_HEADERS='Content-Type', 
                 SECRET_KEY=os.getenv('SECRET_KEY')
                 )
+
 socketio = SocketIO(app,cors_allowed_origins="*")
 
 #--------TO RUN BACKEND----python server.py--------------------
@@ -59,7 +60,7 @@ api.add_resource(RideSingleRiderPre, '/singlerider/pre', methods=[ "GET"])
 
 api.add_resource(RideSingleDriverPre, '/singledriver/pre', methods=[ "GET"]) 
 
-api.add_resource(RideSingleRider, '/singlerider/<string:id>/<string:name>/<string:start>/<string:end>', methods=["PUT", "POST", "GET"]) 
+api.add_resource(RideSingleRider, '/singlerider/<string:id>/<string:name>/<string:start>/<string:end>/<string:socket>', methods=["PUT", "POST", "GET"]) 
 
 api.add_resource(RideSingleDriver, '/singledriver/<string:id>/<string:name>/<string:rider_id>/<int:zipcode>/<string:start>/<string:end>', methods=["PUT", "POST", "GET"]) 
 
@@ -80,6 +81,7 @@ def after_request(response):
 
 socketio.on_namespace(RiderNamespace('/rider'))
 socketio.on_namespace(DriverNamespace('/driver'))
+#socketio.on_event('join', RiderNamespace.on_join ,namespace='/rider')
 
 if __name__ == '__main__':
     rebuild_tables()

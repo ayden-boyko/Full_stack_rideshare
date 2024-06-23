@@ -4,6 +4,8 @@ from db.db_utils import *
 
 from db.rideshare import *
 
+
+
 class RideSingleRiderPre(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('zipcode')
@@ -25,18 +27,20 @@ class RideSingleRider(Resource):
     parser.add_argument('name')
     parser.add_argument('start')
     parser.add_argument('end')
+    parser.add_argument('socket')
 
     """returns driver chosen"""
     def get(self, id):
         return get_current_ride(id)
 
     """sets wants_ride to true"""
-    def put(self, id, name, start, end):
-        return get_next_ride(id, start, end)
+    def put(self, id, name, start, end, socket):
+        return get_next_ride(id, start, end, socket)
     
     """USELESS FOR RIDER THEY CANT CREATE RIDES"""
     def post(self, id, name, start, end):
         drivers = get_available_driver() #returns list of all availabe driver, figure out how to choose one
+        # use sockets to notify rider
         return new_ride(id, name, drivers[0][0], drivers[0][1], drivers[0][3], start, end)
     
     """cancels ride"""

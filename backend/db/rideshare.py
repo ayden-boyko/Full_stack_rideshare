@@ -254,7 +254,7 @@ def update_zipcode(role, id, zipcode):
     db_disconnect(conn)
     return jsonify({'Old_zip': pre, 'New_zip' : post})
 
-def get_next_ride(id, start, end):
+def get_next_ride(id, start, end, socket):
     """inserts rider into awaiting rides table and converts start and end into points"""
     conn, cur = db_connect()
     rider = get_rider(id)
@@ -264,9 +264,9 @@ def get_next_ride(id, start, end):
     start = cur.fetchone()[0]
     cur.execute(convert, [end])
     end = cur.fetchone()[0]
-    statement = """INSERT INTO awaiting_rides (r_id, rider_name, rider_rating, special_instructions, start, "end") VALUES (%s, %s, %s, %s, %s, %s)"""
+    statement = """INSERT INTO awaiting_rides (r_id, rider_name, rider_rating, special_instructions, start, "end", socket_id) VALUES (%s, %s, %s, %s, %s, %s, %s)"""
 
-    cur.execute(statement, [id, rider[1], rider[2], rider[3], start, end])
+    cur.execute(statement, [id, rider[1], rider[2], rider[3], start, end, socket])
     db_disconnect(conn)
     return True
 
@@ -306,11 +306,20 @@ def update_rating(role, id, rating):
 def new_ride(d_id, d_name, r_id, start = '0,0', end = '0,0'):
     """Adds a new ride to current rides"""
     conn, cur = db_connect()
-    statement = """INSERT INTO current_rides (driver_id, d_name, rider_id, r_name, s_instructions, start, "end") SELECT %s, %s, %s, rider_name, special_instructions, %s, %s FROM awaiting_rides WHERE r_id = %s"""
-    cur.execute(statement, [d_id, d_name, r_id, start, end, r_id])
-
+    statement = """WITH inserted_rides AS (INSERT INTO current_rides (driver_id, d_name, rider_id, r_name, s_instructions, start, "end") 
+                SELECT %s, %s, %s, rider_name, special_instructions, %s, %s 
+                FROM awaiting_rides
+                WHERE NOT EXISTS (SELECT rider_id FROM current_rides WHERE r_id = %s)
+                RETURNING current_rides_id)
+                SELECT inserted_rides.current_rides_id, awaiting_rides.socket_id
+                FROM inserted_rides, awaiting_rides
+                WHERE awaiting_rides.r_id = %s"""
+    cur.execute(statement, [d_id, d_name, r_id, start, end, r_id, r_id])
+    row = cur.fetchone()
+    statement = """DELETE FROM awaiting_rides WHERE r_id = %s"""
+    cur.execute(statement, [r_id])
     db_disconnect(conn)
-    return True
+    return jsonify(row)
 
 def cancel_ride(id, name):
     """removes ride from current_rides list this list is for upcoming or ongoing rides"""

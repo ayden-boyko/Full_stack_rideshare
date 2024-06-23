@@ -47,7 +47,8 @@ CREATE TABLE IF NOT EXISTS "awaiting_rides"(
     "rider_rating" FLOAT DEFAULT '4.5',
     "special_instructions" TEXT,
     "start" POINT NOT NULL,
-    "end" POINT NOT NULL
+    "end" POINT NOT NULL,
+    "socket_id" VARCHAR(20) NOT NULL
 );
 
 
