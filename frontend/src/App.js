@@ -5,6 +5,8 @@ import Accounts from "./Components/Accounts";
 import NavBar from "./Components/NavBar";
 import DriverPage from "./Components/DriverPage";
 import RiderPage from "./Components/RiderPage";
+import { ReactComponent as DriverLogo } from "./Images/driver.svg";
+import { ReactComponent as RiderLogo } from "./Images/rider.svg";
 
 /// TP RUN FRONTEND------------npm start
 
@@ -38,7 +40,7 @@ function App() {
         <div className="start">
           <div className="bar">
             {data.role == null ? (
-              <h1>SELECT ROLE</h1>
+              <h1 style={{ color: "black" }}>SELECT ROLE</h1>
             ) : (
               <button
                 className="button-select"
@@ -50,14 +52,28 @@ function App() {
           </div>
           {data.role == null ? (
             <div className="menu">
-              <User
-                type="Rider"
-                event={() => setData({ ...data, role: "riders" })}
-              />
-              <User
-                type="Driver"
-                event={() => setData({ ...data, role: "drivers" })}
-              />
+              <div className="box">
+                <RiderLogo />
+                <p style={{ color: "black" }}>
+                  The Rider is only allowed to request rides, comment on them
+                  and rate drivers.
+                </p>
+                <User
+                  type="Select"
+                  event={() => setData({ ...data, role: "riders" })}
+                />
+              </div>
+              <div className="box">
+                <DriverLogo />
+                <p style={{ color: "black" }}>
+                  The Driver is only allowed to give rides, comment on the
+                  riders and rate riders.
+                </p>
+                <User
+                  type="Select"
+                  event={() => setData({ ...data, role: "drivers" })}
+                />
+              </div>
             </div>
           ) : (
             <>
