@@ -14,8 +14,8 @@ function NavBar({
     <>
       <div className="navbar">
         <p className="navtext">{userName}</p>
-        <p className="navtext">{userRating}</p>
-        <button className="item" onClick={() => toggleForm()}>
+        <p className="navtext">Rating: {userRating}</p>
+        <button className="button-select" onClick={() => toggleForm()}>
           Account
         </button>
       </div>
@@ -117,6 +117,7 @@ function AccountForm(props) {
           inputMode="numeric"
           placeholder={accountLocation}
           name="zipcode"
+          className="input-box"
           minLength="5"
           maxLength="5"
           required

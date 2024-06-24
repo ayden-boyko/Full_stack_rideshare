@@ -28,15 +28,16 @@
 
 .navbar {
   display: grid;
-  grid-template-columns: 33% 33% 33%;
-  grid-gap: 33%;
+  grid-template-columns: 20% 20% 20%;
+  grid-gap: 15vw;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  width: 55%;
+  width: 100vw;
   height: 50%;
   margin-left: auto;
   margin-right: auto;
+  background-color: #16181b;
 }
 
 .navtext {
@@ -58,7 +59,7 @@
 }
 .App {
   min-height: 100vh;
-  background-color: #282c34;
+  /* background-color: #282c34; */
 }
 
 .start {
@@ -73,10 +74,60 @@
   color: white;
 }
 
-.table,
-th,
-tr {
-  border: 1px solid black;
+.input-box {
+  border-radius: 10px;
+}
+
+.mychoice:focus {
+  outline: 0;
+  border-color: #2260ff;
+  box-shadow: 0 0 0 4px #b5c9fc;
+}
+
+.mychoice div {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+  justify-content: center;
+}
+
+.mychoice input[type="radio"] {
+  clip: rect(0 0 0 0);
+  clip-path: inset(100%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.mychoice input[type="radio"]:checked + span {
+  box-shadow: 0 0 0 0.0625em #0043ed;
+  background-color: #dee7ff;
+  z-index: 1;
+  color: #0043ed;
+}
+
+label span {
+  display: block;
+  cursor: pointer;
+  background-color: #fff;
+  padding: 0.375em 0.75em;
+  position: relative;
+  margin-left: 0.0625em;
+  box-shadow: 0 0 0 0.0625em #b5bfd9;
+  letter-spacing: 0.05em;
+  color: #3e4963;
+  text-align: center;
+  transition: background-color 0.5s ease;
+}
+
+label:first-child span {
+  border-radius: 0.375em 0 0 0.375em;
+}
+
+label:last-child span {
+  border-radius: 0 0.375em 0.375em 0;
 }
 
 .form-popup {
@@ -84,7 +135,6 @@ tr {
   position: fixed;
   bottom: 30%;
   right: 10%;
-  border: 3px solid #f1f1f1;
   z-index: 9;
 }
 
@@ -92,6 +142,7 @@ tr {
   min-width: 75vw;
   padding: 10px;
   background-color: lightgray;
+  border-radius: 10px;
 }
 
 /* Full-width input fields */
@@ -127,6 +178,7 @@ tr {
   margin-left: 1vw;
   margin-right: 1vw;
   font-size: calc(10px + 2vmin);
+  border-radius: 10px;
 }
 
 .userbtn {
@@ -140,6 +192,7 @@ tr {
   opacity: 0.8;
   margin-right: 1vw;
   font-size: calc(10px + 2vmin);
+  border-radius: 10px;
 }
 
 .accounttoggleon {
@@ -153,6 +206,7 @@ tr {
   opacity: 0.8;
   margin-right: 1vw;
   font-size: calc(10px + 2vmin);
+  border-radius: 10px;
 }
 .accounttoggleoff {
   background-color: #aa0404;
@@ -165,6 +219,7 @@ tr {
   opacity: 0.8;
   margin-right: 1vw;
   font-size: calc(10px + 2vmin);
+  border-radius: 10px;
 }
 
 /* Add a red background color to the cancel button */
@@ -187,24 +242,142 @@ tr {
 .account-page-sidebar {
   padding: 10px;
   flex: 0 0 15%;
-  background-color: aqua;
   display: grid;
-  grid-template-rows: 40% 20% 20% 20%;
+  grid-template-rows: 30% 10% 10% 10%;
   justify-content: center;
+  align-items: center;
+  justify-items: center;
+  background-color: #16181b;
+  height: 87.8vh;
 }
+
+.InstructForm {
+  display: grid;
+  justify-items: center; /* Center items horizontally */
+  align-items: center; /* Center items vertically */
+  grid-template-columns: 1fr;
+}
+
+.InstructForm textarea {
+  border-radius: 8px;
+  height: 100px;
+  width: 90%;
+  resize: none;
+  overflow: auto;
+  outline: 0;
+  padding: 8px 14px;
+  border: 1px solid rgb(219, 213, 213);
+}
+
+.InstructForm label,
+.InstructForm input,
+.InstructForm button {
+  width: 100%; /* Full width elements */
+  max-width: 300px; /* Max width for elements */
+  text-align: center; /* Center text inside elements */
+}
+
 .account-page-sidebar-driver {
   padding: 10px;
   flex: 0 0 15%;
-  background-color: aqua;
   display: grid;
   grid-template-rows: 25% 25% 25% 25%;
   justify-content: center;
+  align-items: center;
+  justify-items: center;
+  background-color: #16181b;
+  height: 87.8vh;
 }
 .account-page-main {
   padding: 10px;
   flex: 1;
-  background-color: cornflowerblue;
   display: grid;
   grid-template-rows: 60% 20% 20%;
   justify-content: center;
+}
+
+.button-select {
+  padding: 15px 30px;
+  border: 2px solid #2c2c2c;
+  background-color: #1a1a1a;
+  color: #ffffff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  border-radius: 30px;
+  transition: all 0.4s ease;
+  outline: none;
+  position: relative;
+  overflow: hidden;
+  font-weight: bold;
+}
+
+.button-select::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(255, 255, 255, 0) 70%
+  );
+  transform: scale(0);
+  transition: transform 0.5s ease;
+}
+
+.button-select:hover::after {
+  transform: scale(4);
+}
+
+.button-select:hover {
+  border-color: #666666;
+  background: #292929;
+}
+
+.infotable,
+tr,
+td,
+th {
+  width: auto;
+  border-collapse: collapse;
+  border: 1px solid black;
+}
+
+.infotable th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: center;
+  background-color: #666666;
+}
+
+.infotable td {
+  padding: 8px;
+  text-align: center;
+  background-color: white;
+}
+
+.container {
+  width: 100%;
+  height: 100%;
+
+  background: #000000;
+  --gap: 5em;
+  --line: 1px;
+  --color: rgba(255, 255, 255, 0.2);
+
+  background-image: linear-gradient(
+      -90deg,
+      transparent calc(var(--gap) - var(--line)),
+      var(--color) calc(var(--gap) - var(--line) + 1px),
+      var(--color) var(--gap)
+    ),
+    linear-gradient(
+      0deg,
+      transparent calc(var(--gap) - var(--line)),
+      var(--color) calc(var(--gap) - var(--line) + 1px),
+      var(--color) var(--gap)
+    );
+  background-size: var(--gap) var(--gap);
 }

@@ -147,58 +147,74 @@ function DriverPage({
     }
   }
 
-  const listPastRides = rides?.map((person) => (
-    <tr key={person[0]}>
-      <th>{person[2]}</th>
-      <th>{person[4]}</th>
-      <th>{person[5] == null ? "None" : person[5]}</th>
-      <th>{person[6]}</th>
-      <th>{person[7]}</th>
-      <th>{person[8]}</th>
-      <th>{person[9]}</th>
-      <th>{person[10]}</th>
-      <th>{person[11]}</th>
-      <th>{person[12]}</th>
-      <th>{person[14]}</th>
-      <th>{person[13]}</th>
-    </tr>
-  ));
-  const listBills = bills?.map((person, index) => (
-    <tr key={index}>
-      <th>{person[1]}</th>
-      <th>{person[2]}</th>
-      <th>{person[3]}</th>
-    </tr>
-  ));
-  const listRiders = riders?.map((person, index) => {
-    console.log(riders);
-    console.log(person);
-    if (person != null) {
+  const listPastRides = rides?.map((person) => {
+    if (person !== null) {
+      return (
+        <tr key={person[0]}>
+          <td>{person[2]}</td>
+          <td>{person[4]}</td>
+          <td>{person[5] == null ? "None" : person[5]}</td>
+          <td>{person[6]}</td>
+          <td>{person[7]}</td>
+          <td>{person[8]}</td>
+          <td>{person[9]}</td>
+          <td>{person[10]}</td>
+          <td>{person[11]}</td>
+          <td>{person[12]}</td>
+          <td>{person[14]}</td>
+          <td>{person[13]}</td>
+        </tr>
+      );
+    } else {
+      return <tr>NO PAST RIDES YET</tr>;
+    }
+  });
+  const listBills = bills?.map((person, index) => {
+    if (person !== null) {
       return (
         <tr key={index}>
-          <th>{person[1]}</th>
-          <th>{person[2]}</th>
-          <th>{person[3]}</th>
-          <th>{person[4]}</th>
-          <th>{person[5]}</th>
-          <th>{person[6]}</th>
-          <th>
-            <button onClick={() => selectRider(userId, userName, person)}>
-              SELECT
-            </button>
-          </th>
+          <td>{person[1]}</td>
+          <td>{person[2]}</td>
+          <td>{person[3]}</td>
         </tr>
       );
     } else {
       return (
         <tr key={1}>
-          <th>None</th>
-          <th>None</th>
-          <th>None</th>
-          <th>None</th>
-          <th>None</th>
-          <th>None</th>
-          <th>None</th>
+          <td>None</td>
+          <td>None</td>
+          <td>None</td>
+        </tr>
+      );
+    }
+  });
+  const listRiders = riders?.map((person, index) => {
+    if (person) {
+      return (
+        <tr key={index}>
+          <td>{person[1]}</td>
+          <td>{person[2]}</td>
+          <td>{person[3]}</td>
+          <td>{person[4]}</td>
+          <td>{person[5]}</td>
+          <td>{person[6]}</td>
+          <td>
+            <button onClick={() => selectRider(userId, userName, person)}>
+              SELECT
+            </button>
+          </td>
+        </tr>
+      );
+    } else {
+      return (
+        <tr key={1}>
+          <td>None</td>
+          <td>None</td>
+          <td>None</td>
+          <td>None</td>
+          <td>None</td>
+          <td>None</td>
+          <td>None</td>
         </tr>
       );
     }
@@ -213,7 +229,7 @@ function DriverPage({
     switch (window) {
       case windows.PAST_RIDES:
         return (
-          <table style={{ width: "auto" }}>
+          <table className="infotable">
             <tbody>
               <tr>
                 <th>Driver</th>
@@ -234,21 +250,39 @@ function DriverPage({
           </table>
         );
       case windows.BILLS:
-        return (
-          <table style={{ width: "auto" }}>
-            <tbody>
-              <tr>
-                <th>Rider</th>
-                <th>Cost</th>
-                <th>Time</th>
-              </tr>
-              {listBills}
-            </tbody>
-          </table>
-        );
+        if (bills.length !== 0) {
+          return (
+            <table className="infotable">
+              <tbody>
+                <tr>
+                  <th>Rider</th>
+                  <th>Cost</th>
+                  <th>Time</th>
+                </tr>
+                {listBills}
+              </tbody>
+            </table>
+          );
+        } else
+          return (
+            <table className="infotable">
+              <tbody>
+                <tr>
+                  <th>Rider</th>
+                  <th>Cost</th>
+                  <th>Time</th>
+                </tr>
+                <tr key={1}>
+                  <td>None</td>
+                  <td>None</td>
+                  <td>None</td>
+                </tr>
+              </tbody>
+            </table>
+          );
       case windows.REQUEST_RIDER:
         return (
-          <table style={{ width: "auto" }}>
+          <table className="infotable">
             <tbody>
               <tr>
                 <th>Rider_Id</th>
@@ -289,13 +323,14 @@ function DriverPage({
       <div className=" account-page">
         <div className=" account-page-sidebar-driver">
           <div>
-            <button type="button" onClick={() => 0}>
+            <button type="button" className="button-select" onClick={() => 0}>
               CARPOOL
             </button>
           </div>
           <div>
             <button
               type="button"
+              className="button-select"
               name="get_riders"
               onClick={() => {
                 setWindow(windows.REQUEST_RIDER);
@@ -308,6 +343,7 @@ function DriverPage({
           <div>
             <button
               type="button"
+              className="button-select"
               name="get_bills"
               onClick={() => {
                 setWindow(windows.BILLS);
@@ -322,6 +358,7 @@ function DriverPage({
           <div>
             <button
               type="button"
+              className="button-select"
               name="get_past_rides "
               onClick={() => {
                 setWindow(windows.PAST_RIDES);

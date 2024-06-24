@@ -41,7 +41,7 @@ function App() {
               <h1>SELECT ROLE</h1>
             ) : (
               <button
-                className="item"
+                className="button-select"
                 onClick={() => setData({ ...data, role: null })}
               >
                 HOME

@@ -105,14 +105,26 @@ function NewUserform(props) {
           <b style={{ color: "black" }}>Name</b>
         </label>
         <br></br>
-        <input type="text" placeholder="Enter Name" name="name" required />
+        <input
+          type="text"
+          placeholder="Enter Name"
+          name="name"
+          className="input-box"
+          required
+        />
         <br></br>
 
         <label type="date">
           <b style={{ color: "black" }}>Birthday</b>
         </label>
         <br></br>
-        <input type="date" style={{ color: "grey" }} name="date" required />
+        <input
+          type="date"
+          style={{ color: "grey" }}
+          name="date"
+          className="input-box"
+          required
+        />
         <br></br>
 
         <button
@@ -164,22 +176,22 @@ function Accounts(props) {
     user &&
     user[userType]?.map((person) => (
       <tr key={person[0]}>
-        <th>{person[1]}</th>
-        <th>
+        <td>{person[1]}</td>
+        <td>
           <button
-            className="item"
+            className="button-select"
             onClick={() =>
               selectUser(userType, person[0], props.passedFunction)
             }
           >
             SELECT
           </button>
-        </th>
+        </td>
       </tr>
     ));
   return (
     <>
-      <table style={{ width: "50%" }}>
+      <table className="account-table">
         <tbody>
           <tr>
             <th>Users</th>
@@ -188,7 +200,7 @@ function Accounts(props) {
           {listUsers}
           <tr>
             <td colSpan="100%">
-              <button className="item" onClick={() => openForm()}>
+              <button className="button-select" onClick={() => openForm()}>
                 Add New {userType}
               </button>
             </td>

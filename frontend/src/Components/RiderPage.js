@@ -169,28 +169,44 @@ function RiderPage({
 
   const listPastRides = rides?.map((person) => (
     <tr key={person[0]}>
-      <th>{person[2]}</th>
-      <th>{person[4]}</th>
-      <th>{person[5] == null ? "None" : person[5]}</th>
-      <th>{person[6]}</th>
-      <th>{person[7]}</th>
-      <th>{person[8]}</th>
-      <th>{person[9]}</th>
-      <th>{person[10]}</th>
-      <th>{person[11]}</th>
-      <th>{person[12]}</th>
-      <th>{person[14]}</th>
-      <th>{person[13]}</th>
+      <td>{person[2]}</td>
+      <td>{person[4]}</td>
+      <td>{person[5] == null ? "None" : person[5]}</td>
+      <td>{person[6]}</td>
+      <td>{person[7]}</td>
+      <td>{person[8]}</td>
+      <td>{person[9]}</td>
+      <td>{person[10]}</td>
+      <td>{person[11]}</td>
+      <td>{person[12]}</td>
+      <td>{person[14]}</td>
+      <td>{person[13]}</td>
     </tr>
   ));
 
-  const listBills = bills?.map((person, index) => (
-    <tr key={index}>
-      <th>{person[1]}</th>
-      <th>{person[2]}</th>
-      <th>{person[3]}</th>
-    </tr>
-  ));
+  const listBills = bills?.map((person, index) => {
+    if (person != null) {
+      return (
+        <tbody>
+          <tr key={index}>
+            <td>{person[1]}</td>
+            <td>{person[2]}</td>
+            <td>{person[3]}</td>
+          </tr>
+        </tbody>
+      );
+    } else {
+      return (
+        <tbody>
+          <tr key={1}>
+            <td>None</td>
+            <td>None</td>
+            <td>None</td>
+          </tr>
+        </tbody>
+      );
+    }
+  });
 
   /** conditionally renders either
    * 1. past rides, in order to allow user to coment on them.
@@ -200,9 +216,9 @@ function RiderPage({
   const renderWindow = () => {
     switch (window) {
       case windows.PAST_RIDES:
-        return (
-          <table style={{ width: "auto" }}>
-            <tbody>
+        if (rides.length !== 0) {
+          return (
+            <table className="infotable">
               <tr>
                 <th>Driver</th>
                 <th>Rider</th>
@@ -217,50 +233,115 @@ function RiderPage({
                 <th>Driver's Response</th>
                 <th>Rider's Response</th>
               </tr>
-              {listPastRides}
-            </tbody>
-          </table>
-        );
-      case windows.BILLS:
-        return (
-          <table style={{ width: "auto" }}>
-            <tbody>
+              <tbody>{listPastRides}</tbody>
+            </table>
+          );
+        } else {
+          return (
+            <table className="infotable">
               <tr>
+                <th>Driver</th>
                 <th>Rider</th>
-                <th>Cost</th>
+                <th>Instructions</th>
+                <th>Start</th>
+                <th>End</th>
                 <th>Time</th>
+                <th>Review of Driver</th>
+                <th>Rating of Driver</th>
+                <th>Review of Rider</th>
+                <th>Rating of Rider</th>
+                <th>Driver's Response</th>
+                <th>Rider's Response</th>
               </tr>
-              {listBills}
-            </tbody>
-          </table>
-        );
+              <tbody>
+                <tr>
+                  <td colSpan={"100%"}>NO PAST RIDES YET</td>
+                </tr>
+              </tbody>
+            </table>
+          );
+        }
+      case windows.BILLS:
+        if (bills.length !== 0) {
+          return (
+            <table className="infotable">
+              <tbody>
+                <tr>
+                  <th>Rider</th>
+                  <th>Cost</th>
+                  <th>Time</th>
+                </tr>
+                {listBills}
+              </tbody>
+            </table>
+          );
+        } else
+          return (
+            <table className="infotable">
+              <tbody>
+                <tr>
+                  <th>Rider</th>
+                  <th>Cost</th>
+                  <th>Time</th>
+                </tr>
+                <tr key={1}>
+                  <td>None</td>
+                  <td>None</td>
+                  <td>None</td>
+                </tr>
+              </tbody>
+            </table>
+          );
       case windows.REQUEST_RIDE:
         return (
           <form id="RideForm">
+            <div className="mychoice">
+              <span>
+                <div style={{ justifyContent: "center" }}>
+                  <label style={{ fontWeight: "bold", color: "white" }}>
+                    LOCATION
+                  </label>
+                </div>
+                <div style={{ justifyContent: "center" }}>
+                  <input
+                    type="text"
+                    id="coordinate"
+                    name="coordinate"
+                    pattern="\d,\d"
+                    title="Destination must be in the format (X,X)"
+                    maxLength="3"
+                    placeholder="X,X"
+                    required
+                  ></input>
+                </div>
+              </span>
+            </div>
             <span>
-              <label>DESTINATION</label>
-              <br></br>
-              <input
-                type="text"
-                id="coordinate"
-                name="coordinate"
-                pattern="\d,\d"
-                title="Destination must be in the format (X,X)"
-                maxLength="3"
-                placeholder="X,X"
-                required
-              ></input>
+              <div className="mychoice">
+                <div style={{ justifyContent: "center" }}>
+                  <label style={{ fontWeight: "bold", color: "white" }}>
+                    CARPOOL?
+                  </label>
+                </div>
+                <div>
+                  <label>
+                    <input type="radio" name="check" defaultChecked />
+                    <span>Yes</span>
+                  </label>
+                  <label>
+                    <input type="radio" name="check" />
+                    <span>No</span>
+                  </label>
+                </div>
+              </div>
             </span>
             <br></br>
             <span>
-              <label>CARPOOL?</label>
-              <br></br>
-              <button type="button">YES</button>{" "}
-              <button type="button">NO</button>
-            </span>
-            <br></br>
-            <span>
-              <button type="submit" onClick={(event) => request_ride(event)}>
+              <button
+                type="submit"
+                className="button-select"
+                onClick={(event) => request_ride(event)}
+              >
                 CONFIRM RIDE
               </button>
             </span>
@@ -291,32 +372,44 @@ function RiderPage({
     <>
       <div className=" account-page">
         <div className=" account-page-sidebar">
-          <div>
-            <form id="InstructForm">
-              <label type="text">Instructions</label>
-              <br></br>
-              <textarea
-                type="text"
-                name="instructions"
-                placeholder={
-                  userInstructions == null
-                    ? "add instructions"
-                    : userInstructions
-                }
-                style={{ resize: "both", rows: 4, cols: 25 }}
-              ></textarea>
-              <br></br>
-              <button
-                type="button"
-                onClick={() => changeInstructions(userId, userName)}
-              >
-                UPDATE
-              </button>
-            </form>
-          </div>
+          <form id="Form" className="InstructForm">
+            <label
+              type="text"
+              style={{
+                fontWeight: "bold",
+                marginTop: "10%",
+                color: "white",
+                padding: "10px",
+              }}
+            >
+              Instructions
+            </label>
+            <textarea
+              type="text"
+              name="instructions"
+              placeholder={
+                userInstructions == null ? "add instructions" : userInstructions
+              }
+            ></textarea>
+            <br></br>
+            <button
+              type="button"
+              className="button-select"
+              onClick={() => changeInstructions(userId, userName)}
+              style={{
+                marginBottom: "10%",
+                fontSize: "99%",
+                fontWeight: "bold",
+              }}
+            >
+              UPDATE INSTRUCTIONS
+            </button>
+          </form>
+
           <div>
             <button
               type="button"
+              className="button-select"
               onClick={() => setWindow(windows.REQUEST_RIDE)}
             >
               {window === windows.WAITING || window === windows.GETING_RIDE
@@ -327,6 +420,7 @@ function RiderPage({
           <div>
             <button
               type="button"
+              className="button-select"
               onClick={() => {
                 setWindow(windows.BILLS);
                 console.log(bills);
@@ -341,6 +435,7 @@ function RiderPage({
           <div>
             <button
               type="button"
+              className="button-select"
               onClick={() => {
                 setWindow(windows.PAST_RIDES);
               }}

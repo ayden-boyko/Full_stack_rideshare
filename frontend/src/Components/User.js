@@ -4,7 +4,7 @@ function User(props) {
   let { type, event } = props;
 
   return (
-    <button type="button" className="item" onClick={event}>
+    <button type="button" className="button-select" onClick={event}>
       {type}
     </button>
   );
