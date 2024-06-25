@@ -55,8 +55,9 @@ function App() {
               <div className="box">
                 <RiderLogo />
                 <p style={{ color: "black" }}>
-                  The Rider is only allowed to request rides, comment on them
-                  and rate drivers.
+                  Rider <li>Request rides</li>
+                  <li>Comment on them</li> <li>Rate drivers</li>
+                  <li>Respond to comments</li>
                 </p>
                 <User
                   type="Select"
@@ -66,8 +67,9 @@ function App() {
               <div className="box">
                 <DriverLogo />
                 <p style={{ color: "black" }}>
-                  The Driver is only allowed to give rides, comment on the
-                  riders and rate riders.
+                  Driver <li>Give rides</li>
+                  <li>Comment on them</li> <li>Rate drivers</li>
+                  <li>Respond to comments</li>
                 </p>
                 <User
                   type="Select"
