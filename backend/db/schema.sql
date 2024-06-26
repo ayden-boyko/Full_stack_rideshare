@@ -22,8 +22,7 @@ CREATE TABLE IF NOT EXISTS "driver"(
     "birthday" DATE,
     "is_active" BOOLEAN DEFAULT true,
     "zipcode" CHAR(5) DEFAULT '94131' CHECK ("zipcode" ~ '[0-9-]+' AND length("zipcode") = 5),
-    "carpool" BOOLEAN DEFAULT false,
-    "awaiting_rider" BOOLEAN DEFAULT true
+    "carpool" BOOLEAN DEFAULT false
 );
 
 CREATE TABLE IF NOT EXISTS "rider"(
@@ -42,10 +41,10 @@ CREATE TABLE IF NOT EXISTS "rider"(
  riders DB every time a driver wants to find a new rider*/
 CREATE TABLE IF NOT EXISTS "awaiting_rides"(
     "awaiting_rides_id" SERIAL PRIMARY KEY,
-    "r_id" INTEGER REFERENCES "rider"("rider_id"),
-    "rider_name" TEXT DEFAULT 'John Doe',
-    "rider_rating" FLOAT DEFAULT '4.5',
-    "special_instructions" TEXT,
+    "rider_id" INTEGER REFERENCES "rider"("rider_id"),
+    "rider_name" TEXT REFERENCES "rider"("name"),
+    "rider_rating" FLOAT REFERENCES "rider"("rating"),
+    "special_instructions" TEXT REFERENCES "rider"("special_instructions"),
     "start" POINT NOT NULL,
     "end" POINT NOT NULL,
     "socket_id" VARCHAR(20) NOT NULL
@@ -58,32 +57,32 @@ if its cancled early its deleted from this table*/
 CREATE TABLE IF NOT EXISTS "current_rides"(
     "current_rides_id" SERIAL PRIMARY KEY,
     "driver_id" INTEGER REFERENCES "driver"("driver_id"),
-    "d_name" TEXT DEFAULT 'John Doe', 
+    "d_name" TEXT REFERENCES "driver"("name"), 
     "rider_id" INTEGER REFERENCES "rider"("rider_id"),
-    "r_name" TEXT DEFAULT 'John Doe',
-    "s_instructions" TEXT,
-    "start" POINT NOT NULL DEFAULT '0,0',
-    "end" POINT NOT NULL DEFAULT '0,0', 
+    "r_name" TEXT REFERENCES "rider"("name"),
+    "s_instructions" TEXT REFERENCES "rider"("special_instructions"),
+    "start" POINT REFERENCES "awaiting_rides"("start"),
+    "end" POINT REFERENCES "awaiting_rides"("end"), 
     "time" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(2),
     "zipcode" CHAR(5) DEFAULT '94131' CHECK ("zipcode" ~ '[0-9-]+' AND length("zipcode") = 5),
     "carpool" BOOLEAN DEFAULT false,
-    "passengers" INTEGER DEFAULT 0
+    "passengers" INTEGER DEFAULT 1
 );
 
 CREATE TABLE IF NOT EXISTS "past_rides"(
     "past_rides_id" SERIAL PRIMARY KEY,
     "d_id" INTEGER REFERENCES "driver"("driver_id"),
-    "driver_name" TEXT DEFAULT 'John Doe', 
-    "r_id" INTEGER REFERENCES "rider"("rider_id"),
-    "rider_name" TEXT DEFAULT 'John Doe',
-    "special_instructions" TEXT ,
-    "start" POINT NOT NULL DEFAULT '0,0', 
-    "end" POINT NOT NULL DEFAULT '0,0',
-    "finish_time" TIMESTAMP NOT NULL DEFAULT  CURRENT_TIMESTAMP(2),
+    "driver_name" TEXT REFERENCES "driver"("name"), 
+    "rider_id" INTEGER REFERENCES "rider"("rider_id"),
+    "rider_name" TEXT REFERENCES "rider"("name"),
+    "special_instructions" TEXT REFERENCES "rider"("special_instructions"),
+    "start" POINT REFERENCES "current_rides"("start"), 
+    "end" POINT REFERENCES "current_rides"("end"),
+    "finish_time" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(2),
     "rofd" VARCHAR(100),
-    "driver_rating" FLOAT DEFAULT 4.5,
+    "driver_rating" FLOAT REFERENCES "driver"("rating"),
     "rofr" VARCHAR(100),
-    "rider_rating" FLOAT DEFAULT 4.5,
+    "rider_rating" FLOAT REFERENCES "rider"("rating"),
     "r_response" VARCHAR(100),
     "d_response" VARCHAR(100),
     "carpool" BOOLEAN DEFAULT false,
@@ -92,8 +91,8 @@ CREATE TABLE IF NOT EXISTS "past_rides"(
 
 CREATE TABLE IF NOT EXISTS "tab"(
     "tab_id" SERIAL PRIMARY KEY,
-    "billed_id" INTEGER,
-    "name" TEXT NOT NULL,
+    "billed_id" INTEGER REFERENCES "rider"("rider_id"),
+    "name" TEXT REFERENCES "rider"("name"),
     "charge" FLOAT DEFAULT 0.0,
-    "timestamp" TIMESTAMP DEFAULT  CURRENT_TIMESTAMP(2)
+    "timestamp" TIMESTAMP DEFAULT CURRENT_TIMESTAMP(2)
 )

@@ -105,7 +105,7 @@ def get_past_rides():
     conn, cur = db_connect()
 
     rides = """SELECT past_rides_id, d_id, driver_name,
-                    r_id, rider_name, special_instructions,
+                    rider_id, rider_name, special_instructions,
                     start, finish_time::VARCHAR(21), rofd,
                     driver_rating, rofr, rider_rating, 
                     r_response, d_response, carpool, passengers FROM past_rides """
@@ -119,7 +119,7 @@ def get_past_rides_taken(id, name):
     """returns past rides taken"""
     conn, cur = db_connect()
 
-    rides = """SELECT * FROM past_rides WHERE r_id = %s AND rider_name = %s"""
+    rides = """SELECT * FROM past_rides WHERE rider_id = %s AND rider_name = %s"""
 
     cur.execute(rides, [id, name])
     result = cur.fetchall()
@@ -253,7 +253,8 @@ def update_zipcode(role, id, zipcode):
 
     db_disconnect(conn)
     return jsonify({'Old_zip': pre, 'New_zip' : post})
-
+# Maybe change by adding map api and changing address -> to points/float? 
+# which are then translated back into drivers map as destination?
 def get_next_ride(id, start, end, socket):
     """inserts rider into awaiting rides table and converts start and end into points"""
     conn, cur = db_connect()
@@ -303,21 +304,21 @@ def update_rating(role, id, rating):
     db_disconnect(conn)
     return True
 
-def new_ride(d_id, d_name, r_id, start = '0,0', end = '0,0'):
+def new_ride(d_id, d_name, rider_id, start = '0,0', end = '0,0'):
     """Adds a new ride to current rides"""
     conn, cur = db_connect()
     statement = """WITH inserted_rides AS (INSERT INTO current_rides (driver_id, d_name, rider_id, r_name, s_instructions, start, "end") 
                 SELECT %s, %s, %s, rider_name, special_instructions, %s, %s 
                 FROM awaiting_rides
-                WHERE NOT EXISTS (SELECT rider_id FROM current_rides WHERE r_id = %s)
+                WHERE NOT EXISTS (SELECT rider_id FROM current_rides WHERE rider_id = %s)
                 RETURNING current_rides_id)
                 SELECT inserted_rides.current_rides_id, awaiting_rides.socket_id
                 FROM inserted_rides, awaiting_rides
                 WHERE awaiting_rides.r_id = %s"""
-    cur.execute(statement, [d_id, d_name, r_id, start, end, r_id, r_id])
+    cur.execute(statement, [d_id, d_name, rider_id, start, end, rider_id, rider_id])
     row = cur.fetchone()
-    statement = """DELETE FROM awaiting_rides WHERE r_id = %s"""
-    cur.execute(statement, [r_id])
+    statement = """DELETE FROM awaiting_rides WHERE rider_id = %s"""
+    cur.execute(statement, [rider_id])
     db_disconnect(conn)
     return jsonify(row)
 
@@ -373,7 +374,7 @@ def rider_finish_ride(id, rating_of_driver=4.5, review_of_driver="they were good
     info = cur.fetchone()
 
     if info != None:
-        statement2 = """ INSERT INTO past_rides (d_id, driver_name, r_id, rider_name, special_instructions, start, end, finish_time, rofd, driver_rating) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+        statement2 = """ INSERT INTO past_rides (d_id, driver_name, rider_id, rider_name, special_instructions, start, end, finish_time, rofd, driver_rating) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
         cur.execute(statement2, [info[1], info[2], info[3], info[4], info[5], info[6], info[7], timestamp, review_of_driver, rating_of_driver])
         statement = """DELETE FROM current_rides WHERE rider_id = %s"""
         cur.execute(statement, [id])
@@ -383,7 +384,7 @@ def rider_finish_ride(id, rating_of_driver=4.5, review_of_driver="they were good
         
 
     #updates the driver rating
-    statement = """SELECT (d_id, rider_name) FROM past_rides WHERE r_id = %s"""
+    statement = """SELECT (d_id, rider_name) FROM past_rides WHERE rider_id = %s"""
     cur.execute(statement, [id])
     result = cur.fetchone()
     result = result[0]
@@ -417,7 +418,7 @@ def driver_finish_ride(id, rid, rating_of_rider=4.5, review_of_rider="they were 
     info = cur.fetchone()
 
     if info != None:
-        statement2 = """ INSERT INTO past_rides (d_id, driver_name, r_id, rider_name, special_instructions, start, end, finish_time, rofd, driver_rating) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+        statement2 = """ INSERT INTO past_rides (d_id, driver_name, rider_id, rider_name, special_instructions, start, end, finish_time, rofd, driver_rating) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
         cur.execute(statement2, [info[1], info[2], info[3], info[4], info[5], info[6], info[7], timestamp, review_of_rider, rating_of_rider])
         
         statement = """DELETE FROM current_rides WHERE rider_id = %s"""
@@ -468,7 +469,7 @@ def respond(id, role, review):
         statement = """UPDATE past_rides SET d_response = %s WHERE d_id = %s"""
         cur.execute(statement, [review, id])
     else:
-        statement = """UPDATE past_rides SET r_response = %s WHERE r_id = %s"""
+        statement = """UPDATE past_rides SET r_response = %s WHERE rider_id = %s"""
         cur.execute(statement, [review, id])
     db_disconnect(conn)
     return True
@@ -479,7 +480,7 @@ def get_reviews(id, role):
     if role == "driver":
         statement = """SELECT rofd, d_response, rofr, r_response FROM past_rides WHERE d_id = %s """
     else:
-        statement = """SELECT rofd, d_response, rofr, r_response FROM past_rides WHERE r_id = %s"""
+        statement = """SELECT rofd, d_response, rofr, r_response FROM past_rides WHERE rider_id = %s"""
     
     cur.execute(statement, [id])
     result = cur.fetchall()
@@ -629,14 +630,6 @@ def get_driver_id(name):
     db_disconnect(conn)
     return jsonify(result)
 
-def get_available_driver():
-    conn, cur = db_connect()
-    driver = "SELECT A.driver_id FROM driver A LEFT JOIN current_rides B ON A.driver_id = B.driver_id WHERE B.driver_id IS NULL AND A.awaiting_rider IS true"
-    cur.execute(driver)
-    result = cur.fetchone()
-    db_disconnect(conn)
-    return jsonify(result)
-
 def get_available_riders():
     conn, cur = db_connect()
     driver = "SELECT * FROM awaiting_rides"
@@ -646,4 +639,3 @@ def get_available_riders():
     return jsonify(result)
 
 
-# create method for allowing the rider to enter their destination, for now just use points, later maybe have address -> converted to points/float?
