@@ -348,12 +348,15 @@ label:last-child span {
 }
 
 .infotable,
-tr,
-td,
-th {
+.infotable tr,
+.infotable td,
+.infotable th {
   width: auto;
   border-collapse: collapse;
   border: 1px solid black;
+  padding: 8px;
+  text-align: center;
+  background-color: white;
 }
 
 .infotable th {
@@ -369,5 +372,83 @@ th {
   background-color: white;
 }
 
-.account-table {
+.account-table,
+.account-table td,
+.account-table tr {
+  border: 0px solid;
+  color: black;
+  border-spacing: 5vh;
+}
+
+.review-form-popup {
+  display: none;
+  position: fixed;
+  bottom: 40%;
+  right: 15%;
+  z-index: 9;
+}
+
+.review-form-container {
+  min-width: 50vw;
+  padding: 10px;
+  background-color: lightgray;
+  border-radius: 10px;
+  /* place header and textarea in center of popup */
+  text-align: center;
+  margin: 10px;
+}
+
+/* Full-width input fields */
+.review-form-container input[type="text"],
+.review-form-container input[type="location"],
+.review-form-container input[type="date"] {
+  width: 75%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  border: none;
+  background: #f1f1f1;
+  font-size: calc(10px + 2vmin);
+}
+
+/* When the inputs get focus, do something */
+.review-form-container input[type="text"]:focus,
+.review-form-container input[type="location"],
+.review-form-container input[type="date"]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+/* Set a style for the submit/login button */
+.review-form-container .btn {
+  background-color: #04aa6d;
+  color: lightgray;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  width: 25%;
+  margin-bottom: 10px;
+  opacity: 0.8;
+  margin-left: 1vw;
+  margin-right: 1vw;
+  font-size: calc(10px + 2vmin);
+  border-radius: 10px;
+}
+
+/* Add a red background color to the cancel button */
+.review-form-container .cancel {
+  background-color: red;
+}
+
+.review-box {
+  /* make textarea half the width of the popup */
+  width: 75%;
+  height: 10vh;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  border: none;
+  background: #f1f1f1;
+  font-size: calc(10px + 2vmin);
+  resize: none;
+  min-height: 3em;
+  max-height: 10em;
 }

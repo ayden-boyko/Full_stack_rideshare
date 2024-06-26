@@ -15,6 +15,11 @@ async function changeInstructions(id, name) {
 
   let tempInstruct = formacc.get("instructions");
 
+  if (tempInstruct === "") {
+    alert("Please enter instructions!");
+    return;
+  }
+
   const submitLink = `http://127.0.0.1:5000/rideinfo/rider/${id}/${tempInstruct}/${name}`;
   try {
     const response = await fetch(submitLink, {
@@ -52,28 +57,30 @@ function RiderPage({
   });
   const [driver, setDriver] = useState(null);
   const [destination, setDestination] = useState(null);
+  const [review_id, setReview_id] = useState(1); //review_id
 
   const submitLink = `http://127.0.0.1:5000/rideinfo/rider/${userId}/ignore/${userName}`;
 
+  const fetch_Rides = async () => {
+    try {
+      const response = await fetch(submitLink, {
+        method: "GET",
+        mode: "cors",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        credentials: "same-origin",
+      });
+      const result = await response.json();
+      console.log("Success:", JSON.parse(JSON.stringify(result)));
+      setRides(JSON.parse(JSON.stringify(result)));
+    } catch (error) {
+      console.log("Error:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetch_Rides = async () => {
-      try {
-        const response = await fetch(submitLink, {
-          method: "GET",
-          mode: "cors",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          credentials: "same-origin",
-        });
-        const result = await response.json();
-        console.log("Success:", JSON.parse(JSON.stringify(result)));
-        setRides(JSON.parse(JSON.stringify(result)));
-      } catch (error) {
-        console.log("Error:", error);
-      }
-    };
     fetch_Rides();
     const socket = io("http://127.0.0.1:5000/rider", {
       transports: ["websocket"],
@@ -167,33 +174,75 @@ function RiderPage({
     console.log("done");
   }
 
+  async function respond_to_review() {
+    const form = document.getElementById("reviewForm");
+    const formacc = new FormData(form);
+    const review = formacc.get("review");
+    if (review === "") {
+      alert("Please enter a review");
+      return;
+    }
+    console.log("review:", review);
+    const submitLink = `http://127.0.0.1:5000/singlerider/post/${review_id}/${review}/0/good/00:00:00/no/0.0`;
+    try {
+      const response = await fetch(submitLink, {
+        method: "PUT",
+        mode: "cors",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        credentials: "same-origin",
+      });
+      const result = await response.json();
+      console.log("Success:", result);
+      /* upon success, get new list of past rides*/
+      //await fetch_Rides();
+    } catch (error) {
+      console.log("Error:", error);
+    }
+  }
+
   const listPastRides = rides?.map((person) => (
     <tr key={person[0]}>
-      <td>{person[2]}</td>
-      <td>{person[4]}</td>
-      <td>{person[5] == null ? "None" : person[5]}</td>
-      <td>{person[6]}</td>
-      <td>{person[7]}</td>
-      <td>{person[8]}</td>
-      <td>{person[9]}</td>
-      <td>{person[10]}</td>
-      <td>{person[11]}</td>
-      <td>{person[12]}</td>
-      <td>{person[14]}</td>
-      <td>{person[13]}</td>
+      <td>{person[2]}</td> {/*driver name*/}
+      <td>{person[4]}</td> {/*rider name*/}
+      <td>{person[5] == null ? "None" : person[5]}</td> {/*isntructions*/}
+      <td>{person[6]}</td> {/*start*/}
+      <td>{person[7]}</td> {/*end*/}
+      <td>{person[8]}</td> {/*time*/}
+      <td>{person[9]}</td> {/*review of driver*/}
+      <td>{person[10]}</td> {/*rating of driver*/}
+      <td>{person[11]}</td> {/*review of rider*/}
+      <td>{person[12]}</td> {/*rating of rider*/}
+      <td>{person[14] === null ? "No Response Yet" : person[14]}</td>{" "}
+      {/*Drivers response*/}
+      <td>
+        {person[13] === null ? (
+          <button
+            onClick={() => {
+              openForm();
+              setReview_id(person[0]);
+            }}
+          >
+            Respond
+          </button>
+        ) : (
+          person[13]
+        )}
+      </td>{" "}
+      {/*Riders response*/}
     </tr>
   ));
 
   const listBills = bills?.map((person, index) => {
     if (person != null) {
       return (
-        <tbody>
-          <tr key={index}>
-            <td>{person[1]}</td>
-            <td>{person[2]}</td>
-            <td>{person[3]}</td>
-          </tr>
-        </tbody>
+        <tr key={index}>
+          <td>{person[1]}</td>
+          <td>{person[2]}</td>
+          <td>{person[3]}</td>
+        </tr>
       );
     } else {
       return (
@@ -207,6 +256,50 @@ function RiderPage({
       );
     }
   });
+
+  function openForm() {
+    document.getElementById("myReview").style.display = "block";
+  }
+
+  function closeForm() {
+    document.getElementById("myReview").style.display = "none";
+  }
+
+  function ResponseForm() {
+    return (
+      <div className="review-form-popup" id="myReview">
+        <form className="review-form-container" id="reviewForm">
+          <h1 style={{ color: "black" }}>Response To Review</h1>
+          <br></br>
+          <textarea
+            type="text"
+            name="review"
+            className="review-box"
+            placeholder={"Add Review"}
+            maxLength={100}
+          ></textarea>
+          <br></br>
+          <button
+            type="button"
+            className="btn"
+            onClick={() => {
+              respond_to_review();
+              closeForm();
+            }}
+          >
+            Submit Review
+          </button>
+          <button
+            type="button"
+            className="btn cancel"
+            onClick={() => closeForm()}
+          >
+            Close
+          </button>
+        </form>
+      </div>
+    );
+  }
 
   /** conditionally renders either
    * 1. past rides, in order to allow user to coment on them.
@@ -298,7 +391,7 @@ function RiderPage({
             <div className="mychoice">
               <span>
                 <div style={{ justifyContent: "center" }}>
-                  <label style={{ fontWeight: "bold", color: "white" }}>
+                  <label style={{ fontWeight: "bold", color: "black" }}>
                     LOCATION
                   </label>
                 </div>
@@ -319,17 +412,17 @@ function RiderPage({
             <span>
               <div className="mychoice">
                 <div style={{ justifyContent: "center" }}>
-                  <label style={{ fontWeight: "bold", color: "white" }}>
+                  <label style={{ fontWeight: "bold", color: "black" }}>
                     CARPOOL?
                   </label>
                 </div>
                 <div>
                   <label>
-                    <input type="radio" name="check" defaultChecked />
+                    <input type="radio" name="check" />
                     <span>Yes</span>
                   </label>
                   <label>
-                    <input type="radio" name="check" />
+                    <input type="radio" name="check" defaultChecked />
                     <span>No</span>
                   </label>
                 </div>
@@ -372,7 +465,7 @@ function RiderPage({
     <>
       <div className=" account-page">
         <div className=" account-page-sidebar">
-          <form id="Form" className="InstructForm">
+          <form id="InstructForm" className="InstructForm">
             <label
               type="text"
               style={{
@@ -448,6 +541,7 @@ function RiderPage({
           <div>{renderWindow()}</div>
         </div>
       </div>
+      <ResponseForm />
     </>
   );
 }

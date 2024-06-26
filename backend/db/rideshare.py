@@ -104,7 +104,7 @@ def get_past_rides():
     """returns all past rides"""
     conn, cur = db_connect()
 
-    rides = """SELECT past_rides_id, d_id, driver_name,
+    rides = """SELECT past_rides_id, driver_id, driver_name,
                     rider_id, rider_name, special_instructions,
                     start, finish_time::VARCHAR(21), rofd,
                     driver_rating, rofr, rider_rating, 
@@ -129,7 +129,7 @@ def get_past_rides_taken(id, name):
 def get_past_rides_given(id, name):
     conn, cur = db_connect()
 
-    rides = """SELECT * FROM past_rides WHERE d_id = %s AND driver_name = %s"""
+    rides = """SELECT * FROM past_rides WHERE driver_id = %s AND driver_name = %s"""
 
     cur.execute(rides, [id, name]) 
     result = cur.fetchall()
@@ -363,7 +363,7 @@ def get_new_drivers(zipcode):
     db_disconnect(conn)
     result = result[0]
     (id, name, rating) = result
-    return jsonify({'d_id' : id, 'name' : name, 'rating' : rating})
+    return jsonify({'driver_id' : id, 'name' : name, 'rating' : rating})
 
 def rider_finish_ride(id, rating_of_driver=4.5, review_of_driver="they were good", timestamp='1999-01-01 00:00:00', carpool = False, cost = 5.0):
     """finishes the riders current ride and adds ride to past rides"""
@@ -374,7 +374,7 @@ def rider_finish_ride(id, rating_of_driver=4.5, review_of_driver="they were good
     info = cur.fetchone()
 
     if info != None:
-        statement2 = """ INSERT INTO past_rides (d_id, driver_name, rider_id, rider_name, special_instructions, start, end, finish_time, rofd, driver_rating) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+        statement2 = """ INSERT INTO past_rides (driver_id, driver_name, rider_id, rider_name, special_instructions, start, end, finish_time, rofd, driver_rating) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
         cur.execute(statement2, [info[1], info[2], info[3], info[4], info[5], info[6], info[7], timestamp, review_of_driver, rating_of_driver])
         statement = """DELETE FROM current_rides WHERE rider_id = %s"""
         cur.execute(statement, [id])
@@ -384,7 +384,7 @@ def rider_finish_ride(id, rating_of_driver=4.5, review_of_driver="they were good
         
 
     #updates the driver rating
-    statement = """SELECT (d_id, rider_name) FROM past_rides WHERE rider_id = %s"""
+    statement = """SELECT (driver_id, rider_name) FROM past_rides WHERE rider_id = %s"""
     cur.execute(statement, [id])
     result = cur.fetchone()
     result = result[0]
@@ -418,7 +418,7 @@ def driver_finish_ride(id, rid, rating_of_rider=4.5, review_of_rider="they were 
     info = cur.fetchone()
 
     if info != None:
-        statement2 = """ INSERT INTO past_rides (d_id, driver_name, rider_id, rider_name, special_instructions, start, end, finish_time, rofd, driver_rating) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+        statement2 = """ INSERT INTO past_rides (driver_id, driver_name, rider_id, rider_name, special_instructions, start, end, finish_time, rofd, driver_rating) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
         cur.execute(statement2, [info[1], info[2], info[3], info[4], info[5], info[6], info[7], timestamp, review_of_rider, rating_of_rider])
         
         statement = """DELETE FROM current_rides WHERE rider_id = %s"""
@@ -430,7 +430,7 @@ def driver_finish_ride(id, rid, rating_of_rider=4.5, review_of_rider="they were 
     cur.execute(statement, [id])
 
     #updates the rider rating
-    statement = """SELECT (r_id, rider_name) FROM past_rides WHERE d_id = %s"""
+    statement = """SELECT (r_id, rider_name) FROM past_rides WHERE driver_id = %s"""
     cur.execute(statement, [id])
     result = cur.fetchone()
     result = result[0]
@@ -462,14 +462,14 @@ def get_current_ride(id):
     return jsonify(result)
 
 def respond(id, role, review):
-    """Allows the rider or driver to leave a responce the the rating/review given to them"""
+    """Allows the rider or driver to leave a response the the rating/review given to them"""
     conn, cur = db_connect()
 
     if role == "driver":
-        statement = """UPDATE past_rides SET d_response = %s WHERE d_id = %s"""
+        statement = """UPDATE past_rides SET d_response = %s WHERE past_rides_id = %s"""
         cur.execute(statement, [review, id])
     else:
-        statement = """UPDATE past_rides SET r_response = %s WHERE rider_id = %s"""
+        statement = """UPDATE past_rides SET r_response = %s WHERE past_rides_id = %s"""
         cur.execute(statement, [review, id])
     db_disconnect(conn)
     return True
@@ -478,7 +478,7 @@ def get_reviews(id, role):
     conn, cur = db_connect()
 
     if role == "driver":
-        statement = """SELECT rofd, d_response, rofr, r_response FROM past_rides WHERE d_id = %s """
+        statement = """SELECT rofd, d_response, rofr, r_response FROM past_rides WHERE driver_id = %s """
     else:
         statement = """SELECT rofd, d_response, rofr, r_response FROM past_rides WHERE rider_id = %s"""
     
@@ -581,7 +581,7 @@ def full_ride_info(date):
     cur.execute(statement, [date])
     date = cur.fetchone()
 
-    statement = """SELECT d_id, driver_name, array_agg(rider_name), avg(driver_rating) FROM past_rides WHERE (finish_time)::date = %s GROUP BY d_id, driver_name ORDER BY d_id, driver_name"""
+    statement = """SELECT driver_id, driver_name, array_agg(rider_name), avg(driver_rating) FROM past_rides WHERE (finish_time)::date = %s GROUP BY driver_id, driver_name ORDER BY driver_id, driver_name"""
     cur.execute(statement, [date[0]])
     result = cur.fetchone()
 

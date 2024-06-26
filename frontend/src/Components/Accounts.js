@@ -194,8 +194,7 @@ function Accounts(props) {
       <table className="account-table">
         <tbody>
           <tr>
-            <th>Users</th>
-            <th>Select</th>
+            <th colSpan="100%">Users</th>
           </tr>
           {listUsers}
           <tr>

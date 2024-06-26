@@ -42,57 +42,59 @@ CREATE TABLE IF NOT EXISTS "rider"(
 CREATE TABLE IF NOT EXISTS "awaiting_rides"(
     "awaiting_rides_id" SERIAL PRIMARY KEY,
     "rider_id" INTEGER REFERENCES "rider"("rider_id"),
-    "rider_name" TEXT REFERENCES "rider"("name"),
-    "rider_rating" FLOAT REFERENCES "rider"("rating"),
-    "special_instructions" TEXT REFERENCES "rider"("special_instructions"),
+    "rider_name" TEXT,
+    "rider_rating" FLOAT,
+    "special_instructions" TEXT,
     "start" POINT NOT NULL,
     "end" POINT NOT NULL,
     "socket_id" VARCHAR(20) NOT NULL
 );
 
 
-/*This table STRICTLY exists as a limbo for rides,
-if the ride is completed then its added to past rides,
-if its cancled early its deleted from this table*/
+/* This table STRICTLY exists as a limbo for rides,
+   if the ride is completed then it's added to past rides,
+   if it's canceled early it's deleted from this table */
 CREATE TABLE IF NOT EXISTS "current_rides"(
     "current_rides_id" SERIAL PRIMARY KEY,
     "driver_id" INTEGER REFERENCES "driver"("driver_id"),
-    "d_name" TEXT REFERENCES "driver"("name"), 
+    "d_name" TEXT, 
     "rider_id" INTEGER REFERENCES "rider"("rider_id"),
-    "r_name" TEXT REFERENCES "rider"("name"),
-    "s_instructions" TEXT REFERENCES "rider"("special_instructions"),
-    "start" POINT REFERENCES "awaiting_rides"("start"),
-    "end" POINT REFERENCES "awaiting_rides"("end"), 
+    "r_name" TEXT,
+    "s_instructions" TEXT,
+    "start" POINT,
+    "end" POINT, 
     "time" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(2),
     "zipcode" CHAR(5) DEFAULT '94131' CHECK ("zipcode" ~ '[0-9-]+' AND length("zipcode") = 5),
     "carpool" BOOLEAN DEFAULT false,
     "passengers" INTEGER DEFAULT 1
 );
 
+/* This table records past rides */
 CREATE TABLE IF NOT EXISTS "past_rides"(
     "past_rides_id" SERIAL PRIMARY KEY,
-    "d_id" INTEGER REFERENCES "driver"("driver_id"),
-    "driver_name" TEXT REFERENCES "driver"("name"), 
+    "driver_id" INTEGER REFERENCES "driver"("driver_id"),
+    "driver_name" TEXT, 
     "rider_id" INTEGER REFERENCES "rider"("rider_id"),
-    "rider_name" TEXT REFERENCES "rider"("name"),
-    "special_instructions" TEXT REFERENCES "rider"("special_instructions"),
-    "start" POINT REFERENCES "current_rides"("start"), 
-    "end" POINT REFERENCES "current_rides"("end"),
+    "rider_name" TEXT,
+    "special_instructions" TEXT,
+    "start" POINT, 
+    "end" POINT,
     "finish_time" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(2),
-    "rofd" VARCHAR(100),
-    "driver_rating" FLOAT REFERENCES "driver"("rating"),
-    "rofr" VARCHAR(100),
-    "rider_rating" FLOAT REFERENCES "rider"("rating"),
+    "rofd" VARCHAR(100) DEFAULT 'OKAY',
+    "driver_rating" FLOAT DEFAULT 4.5,
+    "rofr" VARCHAR(100) DEFAULT 'OKAY',
+    "rider_rating" FLOAT DEFAULT 4.5,
     "r_response" VARCHAR(100),
     "d_response" VARCHAR(100),
     "carpool" BOOLEAN DEFAULT false,
     "passengers" INTEGER DEFAULT 1
 );
 
+/* This table records billing information */
 CREATE TABLE IF NOT EXISTS "tab"(
     "tab_id" SERIAL PRIMARY KEY,
     "billed_id" INTEGER REFERENCES "rider"("rider_id"),
-    "name" TEXT REFERENCES "rider"("name"),
+    "name" TEXT,
     "charge" FLOAT DEFAULT 0.0,
     "timestamp" TIMESTAMP DEFAULT CURRENT_TIMESTAMP(2)
-)
+);
