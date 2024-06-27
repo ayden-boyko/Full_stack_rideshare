@@ -1,3 +1,14 @@
+:root {
+  --driver-color-dark: #661c00;
+  --driver-color: #ff4500;
+  --driver-color-slight: #ff6a33;
+  --driver-color-slightest: #ff7d4d;
+  --rider-color-dark: #062a30;
+  --rider-color: #17a2b8;
+  --rider-color-slight: #1cc2dd;
+  --rider-color-slightest: #29cbe4;
+}
+
 .menu {
   display: grid;
   grid-template-columns: 50% 50%;
@@ -16,8 +27,7 @@
   border-radius: 10px;
   width: 90%;
   height: 90%;
-  border: 1px solid black;
-  box-shadow: 5px 5px 5px #7f8183;
+  border: 2px solid black;
   padding: 5px;
   background-color: #ffffff;
   font-size: x-large;
@@ -38,7 +48,7 @@
   margin-right: auto;
 }
 
-.navbar {
+.navbar-driver {
   display: grid;
   grid-template-columns: 20% 20% 20%;
   grid-gap: 15vw;
@@ -49,7 +59,21 @@
   height: 50%;
   margin-left: auto;
   margin-right: auto;
-  background-color: #16181b;
+  background-color: var(--driver-color-dark);
+}
+
+.navbar-rider {
+  display: grid;
+  grid-template-columns: 20% 20% 20%;
+  grid-gap: 15vw;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100vw;
+  height: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: var(--rider-color-dark);
 }
 
 .navtext {
@@ -83,6 +107,36 @@
   align-items: center;
   font-size: calc(10px + 2vmin);
   color: white;
+}
+
+.account-option-drivers tr,
+.account-option-riders tr {
+  border-radius: 10px;
+  border: 2px solid black;
+  color: black;
+  padding: 10px;
+  background-color: white;
+}
+
+.account-option-drivers td,
+.account-option-riders td {
+  border-radius: 10px;
+  border: 2px solid black;
+  color: black;
+  padding: 10px;
+  background-color: white;
+}
+
+.account-option-drivers td:hover {
+  cursor: pointer;
+  background-color: var(--driver-color-slight);
+  border: 2px solid var(--driver-color-slight);
+}
+
+.account-option-riders td:hover {
+  cursor: pointer;
+  background-color: var(--rider-color-slight);
+  border: 2px solid var(--rider-color-slight);
 }
 
 .input-box {
@@ -258,7 +312,7 @@ label:last-child span {
   justify-content: center;
   align-items: center;
   justify-items: center;
-  background-color: #16181b;
+  background-color: var(--rider-color-dark);
   height: 87.8vh;
 }
 
@@ -296,7 +350,7 @@ label:last-child span {
   justify-content: center;
   align-items: center;
   justify-items: center;
-  background-color: #16181b;
+  background-color: var(--driver-color-dark);
   height: 87.8vh;
 }
 .account-page-main {
@@ -372,11 +426,7 @@ label:last-child span {
   background-color: white;
 }
 
-.account-table,
-.account-table td,
-.account-table tr {
-  border: 0px solid;
-  color: black;
+.account-table {
   border-spacing: 5vh;
 }
 

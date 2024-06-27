@@ -10,9 +10,10 @@ function NavBar({
   passedFunction,
   logData,
 }) {
+  const style = userType === "driver" ? "navbar-driver" : `navbar-${userType}`;
   return (
     <>
-      <div className="navbar">
+      <div className={style}>
         <p className="navtext">{userName}</p>
         <p className="navtext">Rating: {userRating}</p>
         <button className="button-select" onClick={() => toggleForm()}>

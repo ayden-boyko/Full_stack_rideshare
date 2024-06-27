@@ -44,6 +44,7 @@ function App() {
             ) : (
               <button
                 className="button-select"
+                style={{ marginTop: "10px" }}
                 onClick={() => setData({ ...data, role: null })}
               >
                 HOME
@@ -55,7 +56,8 @@ function App() {
               <div className="box">
                 <RiderLogo />
                 <p style={{ color: "black" }}>
-                  Rider <li>Request rides</li>
+                  <b>Rider </b>
+                  <li>Request rides</li>
                   <li>Comment on them</li> <li>Rate drivers</li>
                   <li>Respond to comments</li>
                 </p>
@@ -67,7 +69,7 @@ function App() {
               <div className="box">
                 <DriverLogo />
                 <p style={{ color: "black" }}>
-                  Driver <li>Give rides</li>
+                  <b>Driver</b> <li>Give rides</li>
                   <li>Comment on them</li> <li>Rate drivers</li>
                   <li>Respond to comments</li>
                 </p>

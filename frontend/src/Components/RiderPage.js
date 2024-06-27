@@ -57,7 +57,7 @@ function RiderPage({
   });
   const [driver, setDriver] = useState(null);
   const [destination, setDestination] = useState(null);
-  const [review_id, setReview_id] = useState(1); //review_id
+  const [review_id, setReview_id] = useState(null); //review_id
 
   const submitLink = `http://127.0.0.1:5000/rideinfo/rider/${userId}/ignore/${userName}`;
 
@@ -197,11 +197,26 @@ function RiderPage({
       const result = await response.json();
       console.log("Success:", result);
       /* upon success, get new list of past rides*/
-      //await fetch_Rides();
+      updateResponse(review_id, review);
     } catch (error) {
       console.log("Error:", error);
     }
   }
+
+  // Function to update a specific row's person[13] based on key updates when the review gets responded to, no need to fetch data again
+  const updateResponse = (key, newResponse) => {
+    // Find the index of the ride in the rides array based on key
+    const index = rides.findIndex((person) => person[0] === key);
+
+    if (index !== -1) {
+      // Use spread operator for immutability
+      const updatedRides = [...rides];
+      // Update person[14] for the specific row
+      updatedRides[index][13] = newResponse;
+      // Update state to trigger re-render
+      setRides(updatedRides);
+    }
+  };
 
   const listPastRides = rides?.map((person) => (
     <tr key={person[0]}>

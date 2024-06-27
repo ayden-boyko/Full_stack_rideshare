@@ -175,17 +175,12 @@ function Accounts(props) {
   const listUsers =
     user &&
     user[userType]?.map((person) => (
-      <tr key={person[0]}>
-        <td>{person[1]}</td>
-        <td>
-          <button
-            className="button-select"
-            onClick={() =>
-              selectUser(userType, person[0], props.passedFunction)
-            }
-          >
-            SELECT
-          </button>
+      <tr key={person[0]} className={`account-option-${userType}`}>
+        <td
+          onClick={() => selectUser(userType, person[0], props.passedFunction)}
+          onMouseOver={() => console.log(`account-option-${userType}`)}
+        >
+          {person[1]}
         </td>
       </tr>
     ));
@@ -194,7 +189,9 @@ function Accounts(props) {
       <table className="account-table">
         <tbody>
           <tr>
-            <th colSpan="100%">Users</th>
+            <th colSpan="100%" style={{ color: "black" }}>
+              Users
+            </th>
           </tr>
           {listUsers}
           <tr>

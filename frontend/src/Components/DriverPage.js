@@ -22,6 +22,7 @@ function DriverPage({
   const [bills, setBills] = useState([]);
   const [riders, setRiders] = useState([]);
   const [passengers, setPassengers] = useState([]);
+  const [review_id, setReview_id] = useState(null); //review_id
   const [socketInstance, setSocketInstance] = useState();
   const socket = io("http://127.0.0.1:5000/driver", {
     transports: ["websocket"],
@@ -147,6 +148,58 @@ function DriverPage({
     }
   }
 
+  async function respond_to_review() {
+    const form = document.getElementById("reviewForm");
+    const formacc = new FormData(form);
+    const review = formacc.get("review");
+    if (review === "") {
+      alert("Please enter a review");
+      return;
+    }
+    console.log("review:", review);
+    const submitLink = `http://127.0.0.1:5000/singledriver/post/${review_id}/${review}/0/good/00:00:00/no/0.0`;
+    try {
+      const response = await fetch(submitLink, {
+        method: "PUT",
+        mode: "cors",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        credentials: "same-origin",
+      });
+      const result = await response.json();
+      console.log("Success:", result);
+      /* upon success, get new list of past rides*/
+      updateResponse(review_id, review);
+    } catch (error) {
+      console.log("Error:", error);
+    }
+  }
+
+  // Function to update a specific row's person[13] based on key updates when the review gets responded to, no need to fetch data again
+  const updateResponse = (key, newResponse) => {
+    // Find the index of the ride in the rides array based on key
+    const index = rides.findIndex((person) => person[0] === key);
+
+    if (index !== -1) {
+      // Use spread operator for immutability
+      const updatedRides = [...rides];
+      // Update person[14] for the specific row
+      updatedRides[index][13] = newResponse;
+      // Update state to trigger re-render
+      setRides(updatedRides);
+    }
+  };
+
+  function openForm() {
+    document.getElementById("myReview").style.display = "block";
+  }
+
+  function closeForm() {
+    document.getElementById("myReview").style.display = "none";
+  }
+
   const listPastRides = rides?.map((person) => {
     if (person !== null) {
       return (
@@ -161,8 +214,23 @@ function DriverPage({
           <td>{person[10]}</td>
           <td>{person[11]}</td>
           <td>{person[12]}</td>
-          <td>{person[14]}</td>
-          <td>{person[13]}</td>
+          <td>
+            {person[14] === null ? (
+              <button
+                onClick={() => {
+                  openForm();
+                  setReview_id(person[0]);
+                }}
+              >
+                Respond
+              </button>
+            ) : (
+              person[14]
+            )}
+          </td>{" "}
+          {/*Riders response*/}
+          <td>{person[13] === null ? "No Response Yet" : person[13]}</td>{" "}
+          {/*Drivers response*/}
         </tr>
       );
     } else {
