@@ -2,7 +2,6 @@ from flask import Flask
 from flask_restful import Resource, Api
 from flask_cors import CORS
 from flask_socketio import namespace, emit, send, SocketIO
-from api.hello_world import HelloWorld
 from api.management import *
 from api.accountinfo import *
 from api.rideinfo import *
@@ -36,8 +35,6 @@ api.add_resource(Init, '/manage/init') #Management API for initializing the DB
 
 api.add_resource(Version, '/manage/version') #Management API for checking DB version
 
-api.add_resource(HelloWorld, '/hello') 
-
 api.add_resource(AccountInfoRider, '/accountinfo/rider/<string:id>', methods=["PUT", "POST", "GET", "DELETE"])
 
 api.add_resource(AccountInfoDriver, '/accountinfo/driver/<string:id>', methods=["PUT", "POST", "GET", "DELETE"])
@@ -54,7 +51,7 @@ api.add_resource(RideInfo, '/rideinfo', methods=["GET"])
 
 api.add_resource(RideInfoDriver, '/rideinfo/driver/<string:id>/<string:instructions>/<string:name>', methods=["GET", "PUT"])
 
-api.add_resource(RideInfoRider, '/rideinfo/rider/<string:id>/<string:instructions>/<string:name>', methods=["PUT", "GET"])
+api.add_resource(RideInfoRider, '/rideinfo/rider/<string:id>/<string:instructions>/<string:name>', methods=[ "GET", "PUT"])
 
 api.add_resource(RideSingleRiderPre, '/singlerider/pre', methods=[ "GET"]) 
 
@@ -88,5 +85,5 @@ socketio.on_namespace(DriverNamespace('/driver'))
 if __name__ == '__main__':
     rebuild_tables()
     #add_data_CSV('data/users.csv')
-    #dd_data_JSON('data/users.json')
+    #add_data_JSON('data/users.json')
     socketio.run(app, debug=True, host='127.0.0.1', port=5000)
