@@ -6,8 +6,8 @@ from db.rideshare import *
 
 class AccountDriver(Resource):
     parser = reqparse.RequestParser()
-    parser.add_argument('id')
-    parser.add_argument('zipcode')
+    parser.add_argument('driver_id')
+    parser.add_argument('new_zipcode')
 
     def get(self, driver_id):
         if driver_id is None:
@@ -25,8 +25,8 @@ class AccountDriver(Resource):
 
 class AccountRider(Resource):
     parser = reqparse.RequestParser()
-    parser.add_argument('id')
-    parser.add_argument('zipcode')
+    parser.add_argument('rider_id')
+    parser.add_argument('new_zipcode')
 
     def get(self, rider_id):
         """Retrieve the reviews for a rider."""

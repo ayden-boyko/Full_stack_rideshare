@@ -35,11 +35,11 @@ class RideSingleDriverPre(Resource):
 
 class RideSingleRider(Resource):
     parser = reqparse.RequestParser()
-    parser.add_argument('id')
-    parser.add_argument('name')
+    parser.add_argument('rider_id')
+    parser.add_argument('rider_name')
     parser.add_argument('start')
     parser.add_argument('end')
-    parser.add_argument('socket')
+    parser.add_argument('socket_id')
 
     """returns driver chosen"""
     def get(self, rider_id):
@@ -67,11 +67,11 @@ class RideSingleRider(Resource):
         #return new_ride(id, name, drivers[0][0], drivers[0][1], drivers[0][3], start, end)
     
     """cancels ride"""
-    def delete(self, rider_identifier, rider_name):
-        if not rider_identifier or not rider_name:
+    def delete(self, rider_id, rider_name):
+        if not rider_id or not rider_name:
             abort(400, message="Rider identifier and name are required.")
         try:
-            return cancel_ride(rider_identifier, rider_name)
+            return cancel_ride(rider_id, rider_name)
         except Exception:
             abort(500, message="Failed to cancel ride.")
 
@@ -79,8 +79,8 @@ class RideSingleRider(Resource):
     
 class RideSingleDriver(Resource):
     parser = reqparse.RequestParser()
-    parser.add_argument('id')
-    parser.add_argument('name')
+    parser.add_argument('driver_id')
+    parser.add_argument('driver_name')
     parser.add_argument('rider_id')
     parser.add_argument('zipcode')
     parser.add_argument('start')
@@ -99,11 +99,11 @@ class RideSingleDriver(Resource):
     
     
     """creates new ride"""
-    def post(self, id, name, rider_id, start, end, zipcode):
-        if any(param is None for param in (id, name, rider_id, start, end, zipcode)):
+    def post(self, driver_id, name, rider_id, start, end, zipcode):
+        if any(param is None for param in (driver_id, name, rider_id, start, end, zipcode)):
             abort(400, message="All parameters cannot be null.")
         try:
-            return new_ride(id, name, rider_id, start, end)
+            return new_ride(driver_id, name, rider_id, start, end)
         except Exception as error:
             abort(500, message=f"Failed to create new ride: {error}")
     
@@ -119,10 +119,10 @@ class RideSingleDriver(Resource):
     
 class RideSingleRiderPost(Resource):
     parser = reqparse.RequestParser()
-    parser.add_argument('id')
+    parser.add_argument('rider_id')
     parser.add_argument('review')
     parser.add_argument('rating')
-    parser.add_argument('rod')
+    parser.add_argument('review_of_driver')
     parser.add_argument('time')
     parser.add_argument('carpool')
     parser.add_argument('cost')
@@ -135,16 +135,16 @@ class RideSingleRiderPost(Resource):
         return get_reviews(rider_id, 'rider')
     
     """creates new ride"""
-    def post(self, rider_id, rating, review_of_driver, ride_time, carpool, cost):
-        if any(param is None for param in (rider_id, rating, review_of_driver, ride_time, carpool, cost)):
+    def post(self, rider_id, rating, review_of_driver, time, carpool, cost):
+        if any(param is None for param in (rider_id, rating, review_of_driver, time, carpool, cost)):
             abort(400, message="All parameters cannot be null.")
         try:
-            return rider_finish_ride(rider_id, rating, review_of_driver, ride_time, carpool, cost)
+            return rider_finish_ride(rider_id, rating, review_of_driver, time, carpool, cost)
         except Exception:
             abort(500, message="Failed to finish ride")
     
     """cancels ride"""
-    def put(self, rider_id, review, rating=None, ride_on=None, ride_time=None, carpool=None, cost=None):
+    def put(self, rider_id, review, rating=None, review_of_driver=None, time=None, carpool=None, cost=None):
         if any(param is None for param in (rider_id, review)):
             abort(400, message="Rider ID and review cannot be null.")
         try:
@@ -155,11 +155,11 @@ class RideSingleRiderPost(Resource):
 
 class RideSingleDriverPost(Resource):
     parser = reqparse.RequestParser()
-    parser.add_argument('id')
-    parser.add_argument('rid')
+    parser.add_argument('driver_id')
+    parser.add_argument('rider_id')
     parser.add_argument('review')
     parser.add_argument('rating')
-    parser.add_argument('ror')
+    parser.add_argument('review_of_rider')
     parser.add_argument('time')
     parser.add_argument('carpool')
     parser.add_argument('cost')
@@ -172,22 +172,20 @@ class RideSingleDriverPost(Resource):
         return get_reviews(driver_id, 'driver')
     
     """creates new ride"""
-    def post(self, driver_id, ride_id, rating, review_of_rider, ride_time, carpool_enabled, cost):
-        if any(param is None for param in (driver_id, ride_id, rating, review_of_rider, ride_time, carpool_enabled, cost)):
+    def post(self, driver_id, rider_id, rating, review_of_rider, time, carpool, cost):
+        if any(param is None for param in (driver_id, rider_id, rating, review_of_rider, time, carpool, cost)):
             abort(400, message="All parameters cannot be null.")
         try:
-            return driver_finish_ride(driver_id, ride_id, rating, review_of_rider, ride_time, carpool_enabled, cost)
+            return driver_finish_ride(driver_id, rider_id, rating, review_of_rider, time, carpool, cost)
         except Exception as error:
             abort(500, message=f"Failed to finish ride: {error}")
     
     """cancels ride"""
-    def put(self, id, review):
-        if id is None:
-            abort(400, message="Driver id cannot be null.")
-        if review is None:
-            abort(400, message="Review cannot be null.")
+    def put(self, driver_id, review, rider_id=None, rating=None, review_of_rider=None, time=None, carpool=None, cost=None):
+        if any(param is None for param in (driver_id, review)):
+            abort(400, message="Rider ID and review cannot be null.")
         try:
-            return respond(id, 'driver', review)
+            return respond(driver_id, 'driver', review)
         except Exception as error:
             abort(500, message=f"Failed to leave review: {error}")
     

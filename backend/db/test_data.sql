@@ -22,10 +22,9 @@ INSERT INTO "rider" ("name", "rating", "birthday") VALUES
 --past_rides
 INSERT INTO "past_rides" ("driver_id", "driver_name", "rider_id", "rider_name", "rofd") VALUES
     (1, 'Ray Magliozzi', 1, 'Mike Easter', 'Hes a good driver'),
-    (1, 'Ray Magliozzi', 1, 'Mike Easter', 'Just as good as always'),
-    (2, 'Tom Magliozzi', 1, 'Ray Magliozzi', 'He drove better than his brother, haha');
+    (1, 'Ray Magliozzi', 1, 'Mike Easter', 'Just as good as always');
     
 --finished rides
-INSERT INTO "tab" ("billed_id", "name", "charge") VALUES
-    (1, 'Mike Easter', 5.00),
-    (1, 'Mike Easter', 4.50);
+INSERT INTO "tab" ("billed_id", "ride_id", "name", "charge") VALUES
+    (1, 1, 'Mike Easter', 5.00),
+    (1, 2, 'Mike Easter', 4.50);

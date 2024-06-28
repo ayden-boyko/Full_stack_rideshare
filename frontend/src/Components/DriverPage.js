@@ -81,7 +81,7 @@ function DriverPage({
   }, [submitLink]);
 
   async function retrieveBills(id) {
-    const submitLink = `http://127.0.0.1:5000/transaction/reciept/${id}/${Number.MAX_SAFE_INTEGER}/0`;
+    const submitLink = `http://127.0.0.1:5000/transaction/reciept/driver/${id}/${Number.MAX_SAFE_INTEGER}`;
     try {
       const response = await fetch(submitLink, {
         method: "GET",
@@ -157,7 +157,7 @@ function DriverPage({
       return;
     }
     console.log("review:", review);
-    const submitLink = `http://127.0.0.1:5000/singledriver/post/${review_id}/${review}/0/good/00:00:00/no/0.0`;
+    const submitLink = `http://127.0.0.1:5000/singledriver/post/${review_id}/0/${review}/0/None/00:00:00/no/0.0`;
     try {
       const response = await fetch(submitLink, {
         method: "PUT",
@@ -175,6 +175,42 @@ function DriverPage({
     } catch (error) {
       console.log("Error:", error);
     }
+  }
+
+  function ResponseForm() {
+    return (
+      <div className="review-form-popup" id="myReview">
+        <form className="review-form-container" id="reviewForm">
+          <h1 style={{ color: "black" }}>Response To Review</h1>
+          <br></br>
+          <textarea
+            type="text"
+            name="review"
+            className="review-box"
+            placeholder={"Add Review"}
+            maxLength={100}
+          ></textarea>
+          <br></br>
+          <button
+            type="button"
+            className="btn"
+            onClick={() => {
+              respond_to_review();
+              closeForm();
+            }}
+          >
+            Submit Review
+          </button>
+          <button
+            type="button"
+            className="btn cancel"
+            onClick={() => closeForm()}
+          >
+            Close
+          </button>
+        </form>
+      </div>
+    );
   }
 
   // Function to update a specific row's person[13] based on key updates when the review gets responded to, no need to fetch data again
@@ -214,8 +250,11 @@ function DriverPage({
           <td>{person[10]}</td>
           <td>{person[11]}</td>
           <td>{person[12]}</td>
+
+          <td>{person[14] === null ? "No Response Yet" : person[14]}</td>
+          {/*Riders response*/}
           <td>
-            {person[14] === null ? (
+            {person[13] === null ? (
               <button
                 onClick={() => {
                   openForm();
@@ -225,11 +264,9 @@ function DriverPage({
                 Respond
               </button>
             ) : (
-              person[14]
+              person[13]
             )}
-          </td>{" "}
-          {/*Riders response*/}
-          <td>{person[13] === null ? "No Response Yet" : person[13]}</td>{" "}
+          </td>
           {/*Drivers response*/}
         </tr>
       );
@@ -241,9 +278,9 @@ function DriverPage({
     if (person !== null) {
       return (
         <tr key={index}>
+          <td>{person[0]}</td>
           <td>{person[1]}</td>
           <td>{person[2]}</td>
-          <td>{person[3]}</td>
         </tr>
       );
     } else {
@@ -440,6 +477,7 @@ function DriverPage({
           <div>{renderWindow()}</div>
         </div>
       </div>
+      <ResponseForm />
     </>
   );
 }

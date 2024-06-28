@@ -114,7 +114,7 @@ function RiderPage({
   }, [submitLink]);
 
   async function retrieveBills(id) {
-    const submitLink = `http://127.0.0.1:5000/transaction/reciept/${id}/${Number.MAX_SAFE_INTEGER}/0`;
+    const submitLink = `http://127.0.0.1:5000/transaction/reciept/rider/${id}/${Number.MAX_SAFE_INTEGER}/0`;
     try {
       const response = await fetch(submitLink, {
         method: "GET",
@@ -230,7 +230,7 @@ function RiderPage({
       <td>{person[10]}</td> {/*rating of driver*/}
       <td>{person[11]}</td> {/*review of rider*/}
       <td>{person[12]}</td> {/*rating of rider*/}
-      <td>{person[14] === null ? "No Response Yet" : person[14]}</td>{" "}
+      <td>{person[14] === null ? "No Response Yet" : person[14]}</td>
       {/*Drivers response*/}
       <td>
         {person[13] === null ? (
@@ -245,7 +245,7 @@ function RiderPage({
         ) : (
           person[13]
         )}
-      </td>{" "}
+      </td>
       {/*Riders response*/}
     </tr>
   ));

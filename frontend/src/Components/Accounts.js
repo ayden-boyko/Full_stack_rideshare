@@ -10,7 +10,7 @@ function closeForm() {
 
 async function selectUser(userType, id, func) {
   let submitRole = String(userType).slice(0, -1);
-  let submitLink = `http://127.0.0.1:5000/accountinfo/${submitRole}/${id}`;
+  let submitLink = `http://127.0.0.1:5000/accountinfo/${submitRole}/none/0/${id}/none`;
 
   const getUser = async () => {
     try {
@@ -44,22 +44,19 @@ async function selectUser(userType, id, func) {
   });
 }
 
-function submitUser(props) {
+async function submitUser(props) {
   let { userType } = props;
   let submitRole = String(userType).slice(0, -1);
-  let submitLink = `http://127.0.0.1:5000/accountinfo/${submitRole}/1`;
 
   const form = document.getElementById("userForm");
   const formuser = new FormData(form);
 
   let tempDate = formuser.get("date").split("-");
 
-  const userInfo = {
-    name: formuser.get("name"),
-    date: tempDate[1] + "-" + tempDate[2] + "-" + tempDate[0], //reformat to mm-dd-yyyy
-  };
+  const name = formuser.get("name");
+  const date = tempDate[1] + "-" + tempDate[2] + "-" + tempDate[0]; //reformat to mm-dd-yyyy
 
-  console.log(JSON.stringify(userInfo));
+  let submitLink = `http://127.0.0.1:5000/accountinfo/${submitRole}/${name}/${date}/1/None`;
 
   const post_Info = async () => {
     try {
@@ -70,7 +67,6 @@ function submitUser(props) {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(userInfo),
         credentials: "same-origin",
       });
       const result = await response.json();
@@ -80,13 +76,14 @@ function submitUser(props) {
       console.log("Error:", error);
     }
   };
-  let id = post_Info();
+  let id = await post_Info();
+  console.log("\nid:", id);
   //changes data from app to user that has just been created, this assums that when a user creates an account they want to select it
   props.passedFunction({
     role: submitRole,
     id: id,
-    name: userInfo.name,
-    date: userInfo.date,
+    name: name,
+    date: date,
     rating: 4,
     instructions: null,
     zipcode: null,

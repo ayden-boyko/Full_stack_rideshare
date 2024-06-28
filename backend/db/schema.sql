@@ -93,6 +93,7 @@ CREATE TABLE IF NOT EXISTS "past_rides"(
 /* This table records billing information */
 CREATE TABLE IF NOT EXISTS "tab"(
     "tab_id" SERIAL PRIMARY KEY,
+    "ride_id" INTEGER REFERENCES "past_rides"("past_rides_id"),
     "billed_id" INTEGER REFERENCES "rider"("rider_id"),
     "name" TEXT,
     "charge" FLOAT DEFAULT 0.0,

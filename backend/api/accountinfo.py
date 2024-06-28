@@ -6,14 +6,13 @@ from db.rideshare import *
 
 class AccountInfoRider(Resource):
     parser = reqparse.RequestParser()
-    parser.add_argument('role')
     parser.add_argument('name')
     parser.add_argument('date')
-    parser.add_argument('id')
-    parser.add_argument('instructions')
+    parser.add_argument('rider_id')
+    parser.add_argument('new_instructions')
     
     """all methods accociated with rider info"""
-    def get(self, rider_id):
+    def get(self,name, date, rider_id, new_instructions):
         """Retrieve a rider's information."""
         rider = get_rider(rider_id)
         if not rider:
@@ -22,7 +21,7 @@ class AccountInfoRider(Resource):
     
 
     """changes a riders info"""
-    def put(self, rider_id, new_instructions):
+    def put(self,name, date, rider_id, new_instructions):
         if rider_id is None:
             abort(400, message="Rider id cannot be null.")
         if new_instructions is None:
@@ -30,15 +29,15 @@ class AccountInfoRider(Resource):
         return update_instructions('rider', rider_id, new_instructions)
     
     """adds a rider"""
-    def post(self, name, registration_date):
+    def post(self, name, date, rider_id, new_instructions):
         if not name:
             abort(400, message="Name cannot be empty.")
-        if not registration_date:
+        if not date:
             abort(400, message="Registration date cannot be empty.")
-        return create_account("rider", name, registration_date)
+        return create_account("rider", name, date)
     
     """deactivates a users account(deletes it)"""
-    def delete(self, rider_id):
+    def delete(self, rider_id, name, date, new_instructions):
         rider = get_rider(rider_id)
         if rider is None:
             abort(404, message="Rider not found.")
@@ -49,14 +48,13 @@ class AccountInfoRider(Resource):
     
 class AccountInfoDriver(Resource):
     parser = reqparse.RequestParser()
-    parser.add_argument('role')
     parser.add_argument('name')
     parser.add_argument('date')
-    parser.add_argument('id')
-    parser.add_argument('instructions')
+    parser.add_argument('driver_id')
+    parser.add_argument('driver_instructions>')
 
     """all methods accociated with  driver info"""
-    def get(self, driver_id):
+    def get(self, driver_id, name, date, driver_instructions):
         if driver_id is None:
             raise abort(404, message="Driver Id cannot be null.")
         driver = get_driver(driver_id)
@@ -66,7 +64,7 @@ class AccountInfoDriver(Resource):
     
     ##
     """changes a drivers info"""
-    def put(self, driver_id, driver_instructions):
+    def put(self, driver_id,name, date, driver_instructions):
         if driver_id is None:
             abort(400, message="Driver id cannot be null.")
         if driver_instructions is None:
@@ -75,7 +73,7 @@ class AccountInfoDriver(Resource):
     
     ##
     """adds a driver"""
-    def post(self, driver_id, name, date):
+    def post(self, driver_id, name, date, driver_instructions):
         if driver_id is None or name is None or date is None:
             abort(400, message="Driver id, name, and registration date cannot be null.")
         return create_account("driver", name, date)
