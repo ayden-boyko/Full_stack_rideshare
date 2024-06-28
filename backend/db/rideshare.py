@@ -1,6 +1,6 @@
 import sys
 from db.db_utils import *
-import csv
+import csv, json
 from datetime import datetime
 from math import fsum
 from flask import jsonify
@@ -29,7 +29,7 @@ def db_disconnect(conn):
         print("could not disconnect")
         return False
 
-def add_data(file):
+def add_data_CSV(file):
     """adds data from a csv file into driver or rider tables"""
     conn, cur = db_connect()
     try:
@@ -37,19 +37,33 @@ def add_data(file):
             csv_reader = csv.reader(csv_file, delimiter=",")
             next(csv_reader)
             for row in csv_reader:
-                if row[1] == 'rider':
-                    statement = """INSERT INTO rider (name, birthday) VALUES (%s, %s)"""
-                    cur.execute(statement, [row[0], row[2]])
-                elif row[1] == 'driver':
-                    statement = """INSERT INTO driver (name, birthday) VALUES (%s, %s)"""
-                    cur.execute(statement, [row[0], row[2]])
+                statement = """INSERT INTO {} (name, birthday) VALUES (%s, %s)""".format(row[1])
+                cur.execute(statement, [row[0], row[2]])
         db_disconnect(conn)
+        print("\n ***** CSV Data Entered ***** \n")
         return 0
     except FileNotFoundError:
-        print("csv file not found")
+        print("\n ***** CSV file not found ***** \n")
         db_disconnect(conn)
         return None
     
+def add_data_JSON(data):
+    """adds data from a JSON file into driver or rider tables"""
+    conn, cur = db_connect()
+    try:
+        with open(data) as data:
+            users = json.load(data)
+            for users in users:
+                statement = """INSERT INTO {} (name, birthday) VALUES (%s, %s)""".format(users["riderordriver"])
+                cur.execute(statement, [ users["name"], users["joiningDate"]])
+            db_disconnect(conn)
+            print("\n ***** JSON Data Entered ***** \n")
+            return 0
+    except FileNotFoundError:
+        print("\n ***** JSON file not found ***** \n")
+        db_disconnect(conn)
+        return None
+        
 def get_riders():
     """returns all riders"""
     conn, cur = db_connect()

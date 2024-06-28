@@ -38,9 +38,9 @@ api.add_resource(Version, '/manage/version') #Management API for checking DB ver
 
 api.add_resource(HelloWorld, '/hello') 
 
-api.add_resource(AccountRiderInfo, '/accountinfo/rider/<string:id>', methods=["PUT", "POST", "GET", "DELETE"])
+api.add_resource(AccountInfoRider, '/accountinfo/rider/<string:id>', methods=["PUT", "POST", "GET", "DELETE"])
 
-api.add_resource(AccountDriverInfo, '/accountinfo/driver/<string:id>', methods=["PUT", "POST", "GET", "DELETE"])
+api.add_resource(AccountInfoDriver, '/accountinfo/driver/<string:id>', methods=["PUT", "POST", "GET", "DELETE"])
 
 api.add_resource(AccountInfoDrivers, '/accountinfo/drivers', methods=["GET"])
 
@@ -83,7 +83,10 @@ def after_request(response):
 socketio.on_namespace(RiderNamespace('/rider'))
 socketio.on_namespace(DriverNamespace('/driver'))
 #socketio.on_event('join', RiderNamespace.on_join ,namespace='/rider')
+#
 
 if __name__ == '__main__':
     rebuild_tables()
+    #add_data_CSV('data/users.csv')
+    #dd_data_JSON('data/users.json')
     socketio.run(app, debug=True, host='127.0.0.1', port=5000)

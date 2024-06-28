@@ -1,0 +1,107 @@
+[
+  {
+    "name": "Travis Bickell",
+    "riderordriver": "driver",
+    "joiningDate": "10/1/1976"
+  },
+  {
+    "name": "Alex Reger",
+    "riderordriver": "driver",
+    "joiningDate": "9/1/1979"
+  },
+  {
+    "name": "Elaine Nardo",
+    "riderordriver": "driver",
+    "joiningDate": "9/5/1980"
+  },
+  {
+    "name": "Louie DePalma",
+    "riderordriver": "rider",
+    "joiningDate": "9/3/1979"
+  },
+  {
+    "name": "Tony Banta",
+    "riderordriver": "driver",
+    "joiningDate": "10/1/1980"
+  },
+  {
+    "name": "Jim Ignatowski",
+    "riderordriver": "driver",
+    "joiningDate": "10/23/1990"
+  },
+  {
+    "name": "Latka Gravas",
+    "riderordriver": "driver",
+    "joiningDate": "7/1/1978"
+  },
+  {
+    "name": "Bobby Wheeler",
+    "riderordriver": "driver",
+    "joiningDate": "11/1/2001"
+  },
+  {
+    "name": "Bryan Mills",
+    "riderordriver": "rider",
+    "joiningDate": "7/1/2008"
+  },
+  {
+    "name": "John McClane",
+    "riderordriver": "rider",
+    "joiningDate": "6/1/1988"
+  },
+  {
+    "name": "Artie Lange",
+    "riderordriver": "driver",
+    "joiningDate": "8/7/1994"
+  },
+  {
+    "name": "Ben Bailey",
+    "riderordriver": "driver",
+    "joiningDate": "3/5/1989"
+  },
+  {
+    "name": "Aldred Collins",
+    "riderordriver": "driver",
+    "joiningDate": "2/1/2000"
+  },
+  {
+    "name": "Mitchell Winehouse",
+    "riderordriver": "driver",
+    "joiningDate": "4/15/2011"
+  },
+  {
+    "name": "Les Turner",
+    "riderordriver": "driver",
+    "joiningDate": "8/2/2003"
+  },
+  {
+    "name": "Short Round",
+    "riderordriver": "driver",
+    "joiningDate": "9/1/1921"
+  },
+  {
+    "name": "Henry Jones",
+    "riderordriver": "rider",
+    "joiningDate": "11/3/1920"
+  },
+  {
+    "name": "Ben Hur",
+    "riderordriver": "driver",
+    "joiningDate": "5/6/2016"
+  },
+  {
+    "name": "Ravi Dopinder",
+    "riderordriver": "driver",
+    "joiningDate": "6/1/2016"
+  },
+  {
+    "name": "Wade Wilson",
+    "riderordriver": "rider",
+    "joiningDate": "5/2/2016"
+  },
+  {
+    "name": "Korben Dallas",
+    "riderordriver": "driver",
+    "joiningDate": "5/18/2263"
+  }
+]

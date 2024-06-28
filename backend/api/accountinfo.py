@@ -4,7 +4,7 @@ from db.db_utils import *
 
 from db.rideshare import *
 
-class AccountRiderInfo(Resource):
+class AccountInfoRider(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('role')
     parser.add_argument('name')
@@ -41,7 +41,7 @@ class AccountRiderInfo(Resource):
             abort(400)
         return change_account_status('rider', id)
     
-class AccountDriverInfo(Resource):
+class AccountInfoDriver(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('role')
     parser.add_argument('name')
