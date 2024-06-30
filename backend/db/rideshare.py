@@ -328,7 +328,7 @@ def new_ride(d_id, d_name, rider_id, start = '0,0', end = '0,0'):
                 RETURNING current_rides_id)
                 SELECT inserted_rides.current_rides_id, awaiting_rides.socket_id
                 FROM inserted_rides, awaiting_rides
-                WHERE awaiting_rides.r_id = %s"""
+                WHERE awaiting_rides.rider_id = %s"""
     cur.execute(statement, [d_id, d_name, rider_id, start, end, rider_id, rider_id])
     row = cur.fetchone()
     statement = """DELETE FROM awaiting_rides WHERE rider_id = %s"""

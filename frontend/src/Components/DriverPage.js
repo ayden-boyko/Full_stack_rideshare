@@ -99,7 +99,7 @@ function DriverPage({
       });
       const result = await response.json();
       console.log("Success:", result); //use result to create room and add rider and driver to it
-      setPassengers(...passengers, rider);
+      setPassengers(...passengers, [rider]);
       socktInstance.current.emit("join", [
         userName,
         JSON.stringify(result[0]),
@@ -241,11 +241,14 @@ function DriverPage({
   const listPassengers = passengers?.map((person, index) => {
     return (
       <tr key={index}>
-        <td>{person[1]}</td>
         <td>{person[2]}</td>
         <td>{person[3]}</td>
-        <td>{person[4]}</td>
         <td>{person[5]}</td>
+        <td>{person[6]}</td>
+        <td>IMPLEMENT COST</td>
+        <td>
+          <button>FINISH</button>
+        </td>
       </tr>
     );
   });
@@ -327,8 +330,9 @@ function DriverPage({
           </table>
         );
       case windows.GIVING_RIDE:
+        //Change info table to be more detailed
         return (
-          <table className="passengers">
+          <table className="infotable">
             <tbody>
               <tr>
                 <th colSpan={"100%"}>RIDE INFO</th>
@@ -336,9 +340,10 @@ function DriverPage({
               <tr>
                 <th>RIDER NAME</th>
                 <th>RIDER RATING</th>
-                <th>PICKUP LOCATION</th>
+                <th>PICKUP</th>
                 <th>DESTINATION</th>
                 <th>COST</th>
+                <th>STATUS</th>
               </tr>
               {listPassengers}
             </tbody>
