@@ -1,5 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { io, emit, send, of, to } from "socket.io-client";
+import {
+  fetch_Rides,
+  retrieveBills,
+  openForm,
+  closeForm,
+} from "../Shared_Functions/retrieve";
+
+import ResponseForm from "./ResponseForm";
 
 const windows = Object.freeze({
   PAST_RIDES: Symbol("past_rides"),
@@ -9,13 +17,13 @@ const windows = Object.freeze({
 });
 
 function DriverPage({
-  userType,
   userId,
   userName,
   userRating,
   userInstructions,
   userLocation,
   userStatus,
+  userCarpool,
 }) {
   const [window, setWindow] = useState(windows.PAST_RIDES);
   const [rides, setRides] = useState([]);
@@ -23,87 +31,60 @@ function DriverPage({
   const [riders, setRiders] = useState([]);
   const [passengers, setPassengers] = useState([]);
   const [review_id, setReview_id] = useState(null); //review_id
-  const [socketInstance, setSocketInstance] = useState();
-  const socket = io("http://127.0.0.1:5000/driver", {
-    transports: ["websocket"],
-    cors: {
-      origin: "http://localhost:3000/",
-      methods: ["GET", "POST", "PUT", "DELETE"],
-      allowedHeaders: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      withCredentials: true,
-    },
-  });
+  const socktInstance = useRef(null);
 
   const submitLink = `http://127.0.0.1:5000/rideinfo/driver/${userId}/ignore/${userName}`;
 
+  const loadData = async () => {
+    setRides(await fetch_Rides(submitLink));
+  };
+
+  const loadBills = async () => {
+    setBills(await retrieveBills("driver", userId));
+  };
+
   //SHOULD RETRIEVE PAST RIDES GIVEN NOT TAKEN
   useEffect(() => {
-    const fetch_Rides = async () => {
-      try {
-        const response = await fetch(submitLink, {
-          method: "GET",
-          mode: "cors",
-          headers: {
+    loadData();
+
+    if (socktInstance.current === null) {
+      const socket = io("http://127.0.0.1:5000/driver", {
+        transports: ["websocket"],
+        cors: {
+          origin: "http://localhost:3000/",
+          methods: ["GET", "POST", "PUT", "DELETE"],
+          allowedHeaders: {
             Accept: "application/json",
             "Content-Type": "application/json",
           },
-          credentials: "same-origin",
-        });
-        const result = await response.json();
-        console.log("Success:", JSON.parse(JSON.stringify(result)));
-        setRides(JSON.parse(JSON.stringify(result)));
-      } catch (error) {
-        console.log("Error:", error);
-      }
-    };
-    fetch_Rides();
+          withCredentials: true,
+        },
+      });
+      socktInstance.current = socket;
+    }
 
-    setSocketInstance(socket);
-
-    socket.on("connect", (data) => {
+    socktInstance.current.on("connect", (data) => {
       console.log("connected", data);
     });
 
-    socket.on("connect_error", (error) => {
-      if (socket.active) {
+    socktInstance.current.on("connect_error", (error) => {
+      if (socktInstance.current.active) {
         console.log("trying to reconnect");
       } else {
         console.log(error.message);
       }
     });
 
-    socket.on("disconnect", (data) => {
+    socktInstance.current.on("disconnect", (data) => {
       console.log("disconnected", data);
     });
   }, [submitLink]);
 
-  async function retrieveBills(id) {
-    const submitLink = `http://127.0.0.1:5000/transaction/reciept/driver/${id}/${Number.MAX_SAFE_INTEGER}`;
-    try {
-      const response = await fetch(submitLink, {
-        method: "GET",
-        mode: "cors",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        credentials: "same-origin",
-      });
-      const result = await response.json();
-      console.log("Success:", result);
-      setBills(JSON.parse(JSON.stringify(result)));
-    } catch (error) {
-      console.log("Error:", error);
-    }
-  }
   //USER RIDER 1,2,4,5,6
   async function selectRider(id, name, rider) {
-    const submitLink = `http://127.0.0.1:5000/singledriver/${id}/${name}/${rider[1]}/0/${rider[5]}/${rider[6]}`;
+    let tempLink = `http://127.0.0.1:5000/singledriver/${id}/${name}/${rider[1]}/0/${rider[5]}/${rider[6]}`;
     try {
-      const response = await fetch(submitLink, {
+      const response = await fetch(tempLink, {
         method: "POST",
         mode: "cors",
         headers: {
@@ -115,7 +96,7 @@ function DriverPage({
       const result = await response.json();
       console.log("Success:", result); //use result to create room and add rider and driver to it
       setPassengers(...passengers, rider);
-      socketInstance.emit("join", [
+      socktInstance.current.emit("join", [
         userName,
         JSON.stringify(result[0]),
         result[1],
@@ -129,9 +110,9 @@ function DriverPage({
   }
 
   async function retrieveRiders() {
-    const submitLink = `http://127.0.0.1:5000/singledriver/pre`;
+    let tempLink = `http://127.0.0.1:5000/singledriver/pre`;
     try {
-      const response = await fetch(submitLink, {
+      const response = await fetch(tempLink, {
         method: "GET",
         mode: "cors",
         headers: {
@@ -148,71 +129,6 @@ function DriverPage({
     }
   }
 
-  async function respond_to_review() {
-    const form = document.getElementById("reviewForm");
-    const formacc = new FormData(form);
-    const review = formacc.get("review");
-    if (review === "") {
-      alert("Please enter a review");
-      return;
-    }
-    console.log("review:", review);
-    const submitLink = `http://127.0.0.1:5000/singledriver/post/${review_id}/0/${review}/0/None/00:00:00/no/0.0`;
-    try {
-      const response = await fetch(submitLink, {
-        method: "PUT",
-        mode: "cors",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        credentials: "same-origin",
-      });
-      const result = await response.json();
-      console.log("Success:", result);
-      /* upon success, get new list of past rides*/
-      updateResponse(review_id, review);
-    } catch (error) {
-      console.log("Error:", error);
-    }
-  }
-
-  function ResponseForm() {
-    return (
-      <div className="review-form-popup" id="myReview">
-        <form className="review-form-container" id="reviewForm">
-          <h1 style={{ color: "black" }}>Response To Review</h1>
-          <br></br>
-          <textarea
-            type="text"
-            name="review"
-            className="review-box"
-            placeholder={"Add Review"}
-            maxLength={100}
-          ></textarea>
-          <br></br>
-          <button
-            type="button"
-            className="btn"
-            onClick={() => {
-              respond_to_review();
-              closeForm();
-            }}
-          >
-            Submit Review
-          </button>
-          <button
-            type="button"
-            className="btn cancel"
-            onClick={() => closeForm()}
-          >
-            Close
-          </button>
-        </form>
-      </div>
-    );
-  }
-
   // Function to update a specific row's person[13] based on key updates when the review gets responded to, no need to fetch data again
   const updateResponse = (key, newResponse) => {
     // Find the index of the ride in the rides array based on key
@@ -227,14 +143,6 @@ function DriverPage({
       setRides(updatedRides);
     }
   };
-
-  function openForm() {
-    document.getElementById("myReview").style.display = "block";
-  }
-
-  function closeForm() {
-    document.getElementById("myReview").style.display = "none";
-  }
 
   const listPastRides = rides?.map((person) => {
     if (person !== null) {
@@ -453,7 +361,7 @@ function DriverPage({
               onClick={() => {
                 setWindow(windows.BILLS);
                 if (bills.length === 0) {
-                  retrieveBills(userId);
+                  loadBills();
                 }
               }}
             >
@@ -477,7 +385,11 @@ function DriverPage({
           <div>{renderWindow()}</div>
         </div>
       </div>
-      <ResponseForm />
+      <ResponseForm
+        passedrole="driver"
+        reviewee={review_id}
+        updateResponse={updateResponse}
+      />
     </>
   );
 }

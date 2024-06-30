@@ -99,11 +99,11 @@ class RideSingleDriver(Resource):
     
     
     """creates new ride"""
-    def post(self, driver_id, name, rider_id, start, end, zipcode):
-        if any(param is None for param in (driver_id, name, rider_id, start, end, zipcode)):
+    def post(self, driver_id, driver_name, rider_id, start, end, zipcode):
+        if any(param is None for param in (driver_id, driver_name, rider_id, start, end, zipcode)):
             abort(400, message="All parameters cannot be null.")
         try:
-            return new_ride(driver_id, name, rider_id, start, end)
+            return new_ride(driver_id, driver_name, rider_id, start, end)
         except Exception as error:
             abort(500, message=f"Failed to create new ride: {error}")
     

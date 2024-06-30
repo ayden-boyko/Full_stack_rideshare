@@ -1,5 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
+import {
+  fetch_Rides,
+  retrieveBills,
+  openForm,
+  closeForm,
+} from "../Shared_Functions/retrieve.js";
+import ResponseForm from "./ResponseForm";
 
 const windows = Object.freeze({
   PAST_RIDES: Symbol("past_rides"),
@@ -9,115 +16,88 @@ const windows = Object.freeze({
   GETING_RIDE: Symbol("getting_ride"),
 });
 
-async function changeInstructions(id, name) {
-  const form = document.getElementById("InstructForm");
-  const formacc = new FormData(form);
-
-  let tempInstruct = formacc.get("instructions");
-
-  if (tempInstruct === "") {
-    alert("Please enter instructions!");
-    return;
-  }
-
-  const submitLink = `http://127.0.0.1:5000/rideinfo/rider/${id}/${tempInstruct}/${name}`;
-  try {
-    const response = await fetch(submitLink, {
-      method: "PUT",
-      mode: "cors",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      credentials: "same-origin",
-    });
-    const result = await response.json();
-    console.log("Success:", result);
-    alert("Instructions Updated!");
-  } catch (error) {
-    console.log("Error:", error);
-  }
-}
-
 function RiderPage({
-  userType,
   userId,
   userName,
   userRating,
   userInstructions,
   userLocation,
   userStatus,
+  userCarpool,
 }) {
   const [window, setWindow] = useState(windows.PAST_RIDES);
   const [rides, setRides] = useState([]);
   const [bills, setBills] = useState([]);
-  const [socktInstance, setSocketInstance] = useState({
-    instance: null,
-    id: null,
-  });
+  const socktInstance = useRef(null);
   const [driver, setDriver] = useState(null);
   const [destination, setDestination] = useState(null);
   const [review_id, setReview_id] = useState(null); //review_id
 
   const submitLink = `http://127.0.0.1:5000/rideinfo/rider/${userId}/ignore/${userName}`;
 
-  const fetch_Rides = async () => {
-    try {
-      const response = await fetch(submitLink, {
-        method: "GET",
-        mode: "cors",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        credentials: "same-origin",
-      });
-      const result = await response.json();
-      console.log("Success:", JSON.parse(JSON.stringify(result)));
-      setRides(JSON.parse(JSON.stringify(result)));
-    } catch (error) {
-      console.log("Error:", error);
-    }
+  const loadData = async () => {
+    setRides(await fetch_Rides(submitLink));
+  };
+
+  const loadBills = async () => {
+    setBills(await retrieveBills("rider", userId));
   };
 
   useEffect(() => {
-    fetch_Rides();
-    const socket = io("http://127.0.0.1:5000/rider", {
-      transports: ["websocket"],
-      withCredentials: true,
-      // cors: {
-      //   origin: "http://localhost:3000/",
-      //   methods: ["GET", "POST", "PUT", "DELETE"],
-      //   allowedHeaders: {
-      //     Accept: "application/json",
-      //     "Content-Type": "application/json",
-      //   },
-      // },
-    });
+    loadData();
 
-    socket.on("connect", (data) => {
+    if (sessionStorage.getItem("status") === "waiting") {
+      setWindow(windows.WAITING);
+    }
+
+    if (socktInstance.current === null) {
+      const socket = io("http://127.0.0.1:5000/rider", {
+        transports: ["websocket"],
+        withCredentials: true,
+        // cors: {
+        //   origin: "http://localhost:3000/",
+        //   methods: ["GET", "POST", "PUT", "DELETE"],
+        //   allowedHeaders: {
+        //     Accept: "application/json",
+        //     "Content-Type": "application/json",
+        //   },
+        // },
+      });
+      socktInstance.current = socket;
+    }
+
+    socktInstance.current.on("connect", (data) => {
       console.log("connected", data);
-      setSocketInstance({ instance: socket, id: socket.id });
     });
 
-    socket.on("connect_error", (error) => {
-      if (socket.active) {
+    socktInstance.current.on("connect_error", (error) => {
+      if (socktInstance.current.active) {
         console.log("trying to reconnect:", error);
       } else {
         console.log(error);
       }
     });
 
-    socket.on("disconnect", (data) => {
+    socktInstance.current.on("disconnect", (data) => {
       console.log("disconnected", data);
     });
   }, [submitLink]);
 
-  async function retrieveBills(id) {
-    const submitLink = `http://127.0.0.1:5000/transaction/reciept/rider/${id}/${Number.MAX_SAFE_INTEGER}/0`;
+  async function changeInstructions(id, name) {
+    const form = document.getElementById("InstructForm");
+    const formacc = new FormData(form);
+
+    let tempInstruct = formacc.get("instructions");
+
+    if (tempInstruct === "") {
+      alert("Please enter instructions!");
+      return;
+    }
+
+    let tempLink = `http://127.0.0.1:5000/rideinfo/rider/${id}/${tempInstruct}/${name}`;
     try {
-      const response = await fetch(submitLink, {
-        method: "GET",
+      const response = await fetch(tempLink, {
+        method: "PUT",
         mode: "cors",
         headers: {
           Accept: "application/json",
@@ -127,7 +107,7 @@ function RiderPage({
       });
       const result = await response.json();
       console.log("Success:", result);
-      setBills(JSON.parse(JSON.stringify(result)));
+      alert("Instructions Updated!");
     } catch (error) {
       console.log("Error:", error);
     }
@@ -152,11 +132,11 @@ function RiderPage({
       return false;
     }
     event.preventDefault();
-    const submitLink = `http://127.0.0.1:5000/singlerider/${userId}/${userName}/0,0/${tempDest}/${socktInstance.id}`;
+    let tempLink = `http://127.0.0.1:5000/singlerider/${userId}/${userName}/0,0/${tempDest}/${socktInstance.id}`;
     setDestination(tempDest);
     console.log("socket ID:", socktInstance.id);
     try {
-      const response = await fetch(submitLink, {
+      const response = await fetch(tempLink, {
         method: "PUT",
         mode: "cors",
         headers: {
@@ -168,39 +148,11 @@ function RiderPage({
       const result = await response.json();
       console.log("Success:", JSON.parse(JSON.stringify(result)));
       setWindow(windows.WAITING);
+      sessionStorage.setItem("status", "waiting");
     } catch (error) {
       console.log(error);
     }
     console.log("done");
-  }
-
-  async function respond_to_review() {
-    const form = document.getElementById("reviewForm");
-    const formacc = new FormData(form);
-    const review = formacc.get("review");
-    if (review === "") {
-      alert("Please enter a review");
-      return;
-    }
-    console.log("review:", review);
-    const submitLink = `http://127.0.0.1:5000/singlerider/post/${review_id}/${review}/0/good/00:00:00/no/0.0`;
-    try {
-      const response = await fetch(submitLink, {
-        method: "PUT",
-        mode: "cors",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        credentials: "same-origin",
-      });
-      const result = await response.json();
-      console.log("Success:", result);
-      /* upon success, get new list of past rides*/
-      updateResponse(review_id, review);
-    } catch (error) {
-      console.log("Error:", error);
-    }
   }
 
   // Function to update a specific row's person[13] based on key updates when the review gets responded to, no need to fetch data again
@@ -271,50 +223,6 @@ function RiderPage({
       );
     }
   });
-
-  function openForm() {
-    document.getElementById("myReview").style.display = "block";
-  }
-
-  function closeForm() {
-    document.getElementById("myReview").style.display = "none";
-  }
-
-  function ResponseForm() {
-    return (
-      <div className="review-form-popup" id="myReview">
-        <form className="review-form-container" id="reviewForm">
-          <h1 style={{ color: "black" }}>Response To Review</h1>
-          <br></br>
-          <textarea
-            type="text"
-            name="review"
-            className="review-box"
-            placeholder={"Add Review"}
-            maxLength={100}
-          ></textarea>
-          <br></br>
-          <button
-            type="button"
-            className="btn"
-            onClick={() => {
-              respond_to_review();
-              closeForm();
-            }}
-          >
-            Submit Review
-          </button>
-          <button
-            type="button"
-            className="btn cancel"
-            onClick={() => closeForm()}
-          >
-            Close
-          </button>
-        </form>
-      </div>
-    );
-  }
 
   /** conditionally renders either
    * 1. past rides, in order to allow user to coment on them.
@@ -518,7 +426,11 @@ function RiderPage({
             <button
               type="button"
               className="button-select"
-              onClick={() => setWindow(windows.REQUEST_RIDE)}
+              onClick={() =>
+                window == windows.WAITING
+                  ? null
+                  : setWindow(windows.REQUEST_RIDE)
+              }
             >
               {window === windows.WAITING || window === windows.GETING_RIDE
                 ? "RIDE REQUESTED"
@@ -533,7 +445,7 @@ function RiderPage({
                 setWindow(windows.BILLS);
                 console.log(bills);
                 if (bills.length === 0) {
-                  retrieveBills(userId);
+                  loadBills();
                 }
               }}
             >
@@ -556,7 +468,11 @@ function RiderPage({
           <div>{renderWindow()}</div>
         </div>
       </div>
-      <ResponseForm />
+      <ResponseForm
+        passedrole="rider"
+        reviewee={review_id}
+        updateResponse={updateResponse}
+      />
     </>
   );
 }
