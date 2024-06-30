@@ -47,6 +47,10 @@ function DriverPage({
   useEffect(() => {
     loadData();
 
+    if (sessionStorage.getItem("status") === "chauffeuring") {
+      setWindow(windows.GIVING_RIDE);
+    }
+
     if (socktInstance.current === null) {
       const socket = io("http://127.0.0.1:5000/driver", {
         transports: ["websocket"],
@@ -104,6 +108,7 @@ function DriverPage({
       ]);
 
       setWindow(windows.GIVING_RIDE);
+      sessionStorage.setItem("status", "chauffeuring");
     } catch (error) {
       console.log("error:", error);
     }
@@ -233,6 +238,17 @@ function DriverPage({
     }
   });
 
+  const listPassengers = passengers?.map((person, index) => {
+    return (
+      <tr key={index}>
+        <td>{person[1]}</td>
+        <td>{person[2]}</td>
+        <td>{person[3]}</td>
+        <td>{person[4]}</td>
+        <td>{person[5]}</td>
+      </tr>
+    );
+  });
   /** conditionally renders either
    * 1. past rides, in order to allow user to coment on them.
    * 2. bills, ie cost of said rides.
@@ -312,19 +328,21 @@ function DriverPage({
         );
       case windows.GIVING_RIDE:
         return (
-          <>
-            <span>RIDE INFO</span>
-            <br></br>
-            <p>RIDER NAME: {passengers[2]}</p>
-            <br></br>
-            <p>RIDER RATING: {passengers[3]}</p>
-            <br></br>
-            <p>PICKUP LOCATION: {passengers[5]}</p>
-            <br></br>
-            <p>DESTINATION: {passengers[6]}</p>
-            <br></br>
-            <p>COST: IMPLEMENT COST</p>
-          </>
+          <table className="passengers">
+            <tbody>
+              <tr>
+                <th colSpan={"100%"}>RIDE INFO</th>
+              </tr>
+              <tr>
+                <th>RIDER NAME</th>
+                <th>RIDER RATING</th>
+                <th>PICKUP LOCATION</th>
+                <th>DESTINATION</th>
+                <th>COST</th>
+              </tr>
+              {listPassengers}
+            </tbody>
+          </table>
         );
       default:
         return <h1>SOMETHINGS WRONG...</h1>;
