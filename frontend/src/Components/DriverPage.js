@@ -4,7 +4,6 @@ import {
   fetch_Rides,
   retrieveBills,
   openForm,
-  closeForm,
 } from "../Shared_Functions/retrieve";
 
 import ResponseForm from "./ResponseForm";
@@ -16,15 +15,7 @@ const windows = Object.freeze({
   GIVING_RIDE: Symbol("giving_ride"),
 });
 
-function DriverPage({
-  userId,
-  userName,
-  userRating,
-  userInstructions,
-  userLocation,
-  userStatus,
-  userCarpool,
-}) {
+function DriverPage(props) {
   const [window, setWindow] = useState(windows.PAST_RIDES);
   const [rides, setRides] = useState([]);
   const [bills, setBills] = useState([]);
@@ -33,14 +24,14 @@ function DriverPage({
   const [review_id, setReview_id] = useState(null); //review_id
   const socktInstance = useRef(null);
 
-  const submitLink = `http://127.0.0.1:5000/rideinfo/driver/${userId}/ignore/${userName}`;
+  const submitLink = `http://127.0.0.1:5000/rideinfo/driver/${props.userId}/ignore/${props.userName}`;
 
   const loadData = async () => {
     setRides(await fetch_Rides(submitLink));
   };
 
   const loadBills = async () => {
-    setBills(await retrieveBills("driver", userId));
+    setBills(await retrieveBills("driver", props.userId));
   };
 
   //SHOULD RETRIEVE PAST RIDES GIVEN NOT TAKEN
@@ -82,7 +73,7 @@ function DriverPage({
     socktInstance.current.on("disconnect", (data) => {
       console.log("disconnected", data);
     });
-  }, [submitLink]);
+  }, [window, socktInstance.current]);
 
   //USER RIDER 1,2,4,5,6
   async function selectRider(id, name, rider) {
@@ -101,7 +92,7 @@ function DriverPage({
       console.log("Success:", result); //use result to create room and add rider and driver to it
       setPassengers(...passengers, [rider]);
       socktInstance.current.emit("join", [
-        userName,
+        props.userName,
         JSON.stringify(result[0]),
         result[1],
         rider[2],
@@ -217,7 +208,9 @@ function DriverPage({
           <td>{person[5]}</td>
           <td>{person[6]}</td>
           <td>
-            <button onClick={() => selectRider(userId, userName, person)}>
+            <button
+              onClick={() => selectRider(props.userId, props.userName, person)}
+            >
               SELECT
             </button>
           </td>
@@ -369,11 +362,13 @@ function DriverPage({
               className="button-select"
               name="get_riders"
               onClick={() => {
-                setWindow(windows.REQUEST_RIDER);
-                retrieveRiders();
+                if (passengers == []) {
+                  setWindow(windows.REQUEST_RIDER);
+                  retrieveRiders();
+                }
               }}
             >
-              REQUEST RIDER
+              {passengers == [] ? "REQUEST RIDER" : "GIVING RIDE"}
             </button>
           </div>
           <div>

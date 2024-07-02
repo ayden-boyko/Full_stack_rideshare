@@ -38,15 +38,14 @@ async function selectUser(userType, id, func) {
     date: userInfo[4],
     rating: userInfo[2],
     instructions: userInfo[3],
-    zipcode: 12345, //setup location enetering upon account creation
+    zipcode: userInfo[6], //setup location enetering upon account creation
     is_active: userInfo[5],
-    carpool: userInfo[6],
+    carpool: false,
   });
 }
 
 async function submitUser(props) {
-  let { userType } = props;
-  let submitRole = String(userType).slice(0, -1);
+  let submitRole = String(props.userType).slice(0, -1);
 
   const form = document.getElementById("userForm");
   const formuser = new FormData(form);
@@ -147,10 +146,8 @@ function NewUserform(props) {
 }
 
 function Accounts(props) {
-  let { userType } = props;
-  let text = `http://127.0.0.1:5000/accountinfo/${userType}`;
-  const [user, setUser] = useState();
-
+  let text = `http://127.0.0.1:5000/accountinfo/${props.userType}`;
+  const [user, setUser] = useState(null);
   useEffect(() => {
     const fetch_Info = async () => {
       const response = await fetch(text, {
@@ -168,14 +165,16 @@ function Accounts(props) {
     };
     fetch_Info();
   }, []);
-
+  let role = String(props.userType).slice(0, -1);
   const listUsers =
     user &&
-    user[userType]?.map((person) => (
-      <tr key={person[0]} className={`account-option-${userType}`}>
+    user[props.userType]?.map((person) => (
+      <tr key={person[0]} className={`account-option-${props.userType}`}>
         <td
-          onClick={() => selectUser(userType, person[0], props.passedFunction)}
-          onMouseOver={() => console.log(`account-option-${userType}`)}
+          onClick={() =>
+            selectUser(props.userType, person[0], props.passedFunction)
+          }
+          onMouseOver={() => console.log(`account-option-${props.userType}`)}
         >
           {person[1]}
         </td>
@@ -194,13 +193,16 @@ function Accounts(props) {
           <tr>
             <td colSpan="100%">
               <button className="button-select" onClick={() => openForm()}>
-                Add New {userType}
+                Add New {role}
               </button>
             </td>
           </tr>
         </tbody>
       </table>
-      <NewUserform userType={userType} passedFunction={props.passedFunction} />
+      <NewUserform
+        userType={props.userType}
+        passedFunction={props.passedFunction}
+      />
     </>
   );
 }

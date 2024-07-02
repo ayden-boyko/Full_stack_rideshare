@@ -1,10 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
-import { io } from "socket.io-client";
+import React, { useEffect, useState, useRef } from "react";
+import { io, emit, send, of, to } from "socket.io-client";
 import {
   fetch_Rides,
   retrieveBills,
   openForm,
-  closeForm,
 } from "../Shared_Functions/retrieve.js";
 import ResponseForm from "./ResponseForm";
 
@@ -15,16 +14,14 @@ const windows = Object.freeze({
   WAITING: Symbol("waiting"),
   GETING_RIDE: Symbol("getting_ride"),
 });
-
-function RiderPage({
-  userId,
-  userName,
-  userRating,
-  userInstructions,
-  userLocation,
-  userStatus,
-  userCarpool,
-}) {
+// props.userId,
+// props.userName,
+// userRating,
+// userInstructions,
+// userLocation,
+// userStatus,
+// userCarpool,
+function RiderPage(props) {
   const [window, setWindow] = useState(windows.PAST_RIDES);
   const [rides, setRides] = useState([]);
   const [bills, setBills] = useState([]);
@@ -33,14 +30,16 @@ function RiderPage({
   const [destination, setDestination] = useState(null);
   const [review_id, setReview_id] = useState(null); //review_id
 
-  const submitLink = `http://127.0.0.1:5000/rideinfo/rider/${userId}/ignore/${userName}`;
-
   const loadData = async () => {
-    setRides(await fetch_Rides(submitLink));
+    setRides(
+      await fetch_Rides(
+        `http://127.0.0.1:5000/rideinfo/rider/${props.userId}/ignore/${props.userName}`
+      )
+    );
   };
 
   const loadBills = async () => {
-    setBills(await retrieveBills("rider", userId));
+    setBills(await retrieveBills("rider", props.userId));
   };
 
   useEffect(() => {
@@ -49,7 +48,6 @@ function RiderPage({
     if (sessionStorage.getItem("status") === "waiting") {
       setWindow(windows.WAITING);
     }
-
     if (socktInstance.current === null) {
       const socket = io("http://127.0.0.1:5000/rider", {
         transports: ["websocket"],
@@ -81,7 +79,7 @@ function RiderPage({
     socktInstance.current.on("disconnect", (data) => {
       console.log("disconnected", data);
     });
-  }, [submitLink]);
+  }, [window, socktInstance.current]);
 
   async function changeInstructions(id, name) {
     const form = document.getElementById("InstructForm");
@@ -132,7 +130,7 @@ function RiderPage({
       return false;
     }
     event.preventDefault();
-    let tempLink = `http://127.0.0.1:5000/singlerider/${userId}/${userName}/0,0/${tempDest}/${socktInstance.id}`;
+    let tempLink = `http://127.0.0.1:5000/singlerider/${props.userId}/${props.userName}/0,0/${tempDest}/${socktInstance.id}`;
     setDestination(tempDest);
     console.log("socket ID:", socktInstance.id);
     try {
@@ -404,14 +402,16 @@ function RiderPage({
               type="text"
               name="instructions"
               placeholder={
-                userInstructions == null ? "add instructions" : userInstructions
+                props.userInstructions == null
+                  ? "add instructions"
+                  : props.userInstructions
               }
             ></textarea>
             <br></br>
             <button
               type="button"
               className="button-select"
-              onClick={() => changeInstructions(userId, userName)}
+              onClick={() => changeInstructions(props.userId, props.userName)}
               style={{
                 marginBottom: "10%",
                 fontSize: "99%",
@@ -427,7 +427,7 @@ function RiderPage({
               type="button"
               className="button-select"
               onClick={() =>
-                window == windows.WAITING
+                window === windows.WAITING
                   ? null
                   : setWindow(windows.REQUEST_RIDE)
               }

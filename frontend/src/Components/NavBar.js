@@ -1,32 +1,24 @@
 import React from "react";
 
-function NavBar({
-  userType,
-  userId,
-  userName,
-  userRating,
-  userLocation,
-  userStatus,
-  passedFunction,
-  logData,
-}) {
-  const style = userType === "driver" ? "navbar-driver" : `navbar-${userType}`;
+function NavBar(props) {
+  const style =
+    props.userType === "driver" ? "navbar-driver" : `navbar-${props.userType}`;
   return (
     <>
       <div className={style}>
-        <p className="navtext">{userName}</p>
-        <p className="navtext">Rating: {userRating}</p>
+        <p className="navtext">{props.userName}</p>
+        <p className="navtext">Rating: {props.userRating}</p>
         <button className="button-select" onClick={() => toggleForm()}>
           Account
         </button>
       </div>
       <AccountForm
-        accountRole={userType}
-        accountId={userId}
-        accountStatus={userStatus}
-        accountLocation={userLocation}
-        passedFunction={passedFunction}
-        logData={logData}
+        accountRole={props.userType}
+        accountId={props.userId}
+        accountStatus={props.userStatus}
+        accountLocation={props.userLocation}
+        passedFunction={props.passedFunction}
+        logData={props.logData}
       />
     </>
   );
@@ -95,14 +87,6 @@ async function updateLocation(accountRole, accountId) {
 }
 
 function AccountForm(props) {
-  let {
-    accountRole,
-    accountId,
-    accountStatus,
-    accountLocation,
-    passedFunction,
-    logData,
-  } = props;
   return (
     <div className="form-popup" id="myForm">
       <form className="form-container" id="accountForm">
@@ -116,7 +100,7 @@ function AccountForm(props) {
         <input
           type="text"
           inputMode="numeric"
-          placeholder={accountLocation}
+          placeholder={props.accountLocation}
           name="zipcode"
           className="input-box"
           minLength="5"
@@ -127,7 +111,7 @@ function AccountForm(props) {
         <button
           type="button"
           className="userbtn"
-          onClick={() => updateLocation(accountRole, accountId)}
+          onClick={() => updateLocation(props.accountRole, props.accountId)}
         >
           Change
         </button>
@@ -138,10 +122,14 @@ function AccountForm(props) {
         <br></br>
         <button
           type="button"
-          className={accountStatus ? "accounttoggleoff" : "accounttoggleon"}
-          onClick={() => changeAccountStatus(accountRole, accountId)}
+          className={
+            props.accountStatus ? "accounttoggleoff" : "accounttoggleon"
+          }
+          onClick={() =>
+            changeAccountStatus(props.accountRole, props.accountId)
+          }
         >
-          {accountStatus ? "Deactivate" : "Activate"}
+          {props.accountStatus ? "Deactivate" : "Activate"}
         </button>
         <br></br>
         <label type="text">
@@ -151,7 +139,7 @@ function AccountForm(props) {
         <button
           type="button"
           className="accounttoggleoff"
-          onClick={() => passedFunction(logData)}
+          onClick={() => props.passedFunction(props.logData)}
         >
           Log Out
         </button>

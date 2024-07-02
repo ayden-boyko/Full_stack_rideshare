@@ -1,7 +1,7 @@
 import React from "react";
 import { closeForm, respond_to_review } from "../Shared_Functions/retrieve";
 
-function ResponseForm(passedrole, reviewee, updateResponse) {
+function ResponseForm(props) {
   return (
     <div className="review-form-popup" id="myReview">
       <form className="review-form-container" id="reviewForm">
@@ -19,7 +19,9 @@ function ResponseForm(passedrole, reviewee, updateResponse) {
           type="button"
           className="btn"
           onClick={() => {
-            updateResponse(respond_to_review(passedrole, reviewee));
+            props.updateResponse(
+              respond_to_review(props.passedrole, props.reviewee)
+            );
             closeForm();
           }}
         >

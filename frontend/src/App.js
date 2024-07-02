@@ -22,7 +22,6 @@ function App() {
     carpool: false,
   });
 
-  const func = setData;
   const logOUT = {
     role: null,
     id: null,
@@ -81,7 +80,7 @@ function App() {
             </div>
           ) : (
             <>
-              <Accounts userType={data.role} passedFunction={func} />
+              <Accounts userType={data.role} passedFunction={setData} />
             </>
           )}
         </div>
@@ -97,7 +96,7 @@ function App() {
           userRating={data.rating}
           userLocation={data.zipcode}
           userStatus={data.is_active}
-          passedFunction={func}
+          passedFunction={setData}
           logData={logOUT}
         />
         {data.role === "driver" ? (

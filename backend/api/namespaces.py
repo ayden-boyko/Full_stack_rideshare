@@ -1,8 +1,8 @@
 from flask_socketio import Namespace, emit, send, SocketIO, join_room, leave_room
 
 class RiderNamespace(Namespace):
-    def on_connect(self):
-        print("Rider Connected")
+    def on_connect(self, data):
+        print("Rider Connected", data)
         send("connected to RiderNameSpace", namespace='/rider')
 
     def on_disconnect(self):

@@ -20,7 +20,7 @@ export async function fetch_Rides(submitLink) {
 export async function retrieveBills(role, id) {
   const submitLink =
     `http://127.0.0.1:5000/transaction/reciept/${role}/${id}/${Number.MAX_SAFE_INTEGER}` +
-    (role == "rider" ? "/0" : "");
+    (role === "rider" ? "/0" : "");
   try {
     const response = await fetch(submitLink, {
       method: "GET",
@@ -62,7 +62,7 @@ export async function respond_to_review(role, review_id) {
     const result = await response.json();
     console.log("Success:", result);
     /* upon success, get new list of past rides*/
-    return review_id, review;
+    return { review_id, review };
   } catch (error) {
     console.log("Error:", error);
   }
