@@ -1,25 +1,19 @@
-import React from "react";
+import React, { useContext } from "react";
+import { DataContext } from "../App";
 
 function NavBar(props) {
-  const style =
-    props.userType === "driver" ? "navbar-driver" : `navbar-${props.userType}`;
+  const { data, setData } = useContext(DataContext);
+  const style = `navbar-${data.role}`;
   return (
     <>
       <div className={style}>
-        <p className="navtext">{props.userName}</p>
-        <p className="navtext">Rating: {props.userRating}</p>
+        <p className="navtext">{data.name}</p>
+        <p className="navtext">Rating: {data.rating}</p>
         <button className="button-select" onClick={() => toggleForm()}>
           Account
         </button>
       </div>
-      <AccountForm
-        accountRole={props.userType}
-        accountId={props.userId}
-        accountStatus={props.userStatus}
-        accountLocation={props.userLocation}
-        passedFunction={props.passedFunction}
-        logData={props.logData}
-      />
+      <AccountForm logData={props.logData} />
     </>
   );
 }
@@ -33,8 +27,8 @@ function toggleForm() {
   }
 }
 
-async function changeAccountStatus(accountRole, accountId) {
-  let submitLink = `http://127.0.0.1:5000/accountinfo/${accountRole}/${accountId}`;
+async function changeAccountStatus(role, id) {
+  let submitLink = `http://127.0.0.1:5000/accountinfo/${role}/${id}`;
 
   const update_Account_Status = async () => {
     try {
@@ -57,13 +51,13 @@ async function changeAccountStatus(accountRole, accountId) {
   update_Account_Status(); //doesnt work in the backend, flask isnt changing true to false and vise versa
 }
 
-async function updateLocation(accountRole, accountId) {
+async function updateLocation(role, id) {
   const form = document.getElementById("accountForm");
   const formacc = new FormData(form);
 
   let tempLoc = formacc.get("zipcode");
 
-  let submitLink = `http://127.0.0.1:5000/account/${accountRole}/${accountId}/${tempLoc}`;
+  let submitLink = `http://127.0.0.1:5000/account/${role}/${id}/${tempLoc}`;
 
   const update_Account_Location = async () => {
     try {
@@ -87,6 +81,7 @@ async function updateLocation(accountRole, accountId) {
 }
 
 function AccountForm(props) {
+  const { data, setData } = useContext(DataContext);
   return (
     <div className="form-popup" id="myForm">
       <form className="form-container" id="accountForm">
@@ -100,7 +95,7 @@ function AccountForm(props) {
         <input
           type="text"
           inputMode="numeric"
-          placeholder={props.accountLocation}
+          placeholder={data.zipcode}
           name="zipcode"
           className="input-box"
           minLength="5"
@@ -111,7 +106,7 @@ function AccountForm(props) {
         <button
           type="button"
           className="userbtn"
-          onClick={() => updateLocation(props.accountRole, props.accountId)}
+          onClick={() => updateLocation(data.role, data.id)}
         >
           Change
         </button>
@@ -122,14 +117,10 @@ function AccountForm(props) {
         <br></br>
         <button
           type="button"
-          className={
-            props.accountStatus ? "accounttoggleoff" : "accounttoggleon"
-          }
-          onClick={() =>
-            changeAccountStatus(props.accountRole, props.accountId)
-          }
+          className={data.is_active ? "accounttoggleoff" : "accounttoggleon"}
+          onClick={() => changeAccountStatus(data.role, data.id)}
         >
-          {props.accountStatus ? "Deactivate" : "Activate"}
+          {data.is_active ? "Deactivate" : "Activate"}
         </button>
         <br></br>
         <label type="text">
@@ -139,7 +130,7 @@ function AccountForm(props) {
         <button
           type="button"
           className="accounttoggleoff"
-          onClick={() => props.passedFunction(props.logData)}
+          onClick={() => setData(props.logData)}
         >
           Log Out
         </button>

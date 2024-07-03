@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { io, emit, send, of, to } from "socket.io-client";
 import {
   fetch_Rides,
   retrieveBills,
   openForm,
 } from "../Shared_Functions/retrieve";
-
+import { DataContext } from "../App";
 import ResponseForm from "./ResponseForm";
 
 const windows = Object.freeze({
@@ -15,7 +15,7 @@ const windows = Object.freeze({
   GIVING_RIDE: Symbol("giving_ride"),
 });
 
-function DriverPage(props) {
+function DriverPage() {
   const [window, setWindow] = useState(windows.PAST_RIDES);
   const [rides, setRides] = useState([]);
   const [bills, setBills] = useState([]);
@@ -23,15 +23,16 @@ function DriverPage(props) {
   const [passengers, setPassengers] = useState([]);
   const [review_id, setReview_id] = useState(null); //review_id
   const socktInstance = useRef(null);
+  const { data, setData } = useContext(DataContext);
 
-  const submitLink = `http://127.0.0.1:5000/rideinfo/driver/${props.userId}/ignore/${props.userName}`;
+  const submitLink = `http://127.0.0.1:5000/rideinfo/driver/${data.id}/ignore/${data.name}`;
 
   const loadData = async () => {
     setRides(await fetch_Rides(submitLink));
   };
 
   const loadBills = async () => {
-    setBills(await retrieveBills("driver", props.userId));
+    setBills(await retrieveBills("driver", data.id));
   };
 
   //SHOULD RETRIEVE PAST RIDES GIVEN NOT TAKEN
@@ -92,7 +93,7 @@ function DriverPage(props) {
       console.log("Success:", result); //use result to create room and add rider and driver to it
       setPassengers(...passengers, [rider]);
       socktInstance.current.emit("join", [
-        props.userName,
+        data.name,
         JSON.stringify(result[0]),
         result[1],
         rider[2],
@@ -208,9 +209,7 @@ function DriverPage(props) {
           <td>{person[5]}</td>
           <td>{person[6]}</td>
           <td>
-            <button
-              onClick={() => selectRider(props.userId, props.userName, person)}
-            >
+            <button onClick={() => selectRider(data.id, data.name, person)}>
               SELECT
             </button>
           </td>
@@ -362,13 +361,13 @@ function DriverPage(props) {
               className="button-select"
               name="get_riders"
               onClick={() => {
-                if (passengers == []) {
+                if (passengers.length == 0) {
                   setWindow(windows.REQUEST_RIDER);
                   retrieveRiders();
                 }
               }}
             >
-              {passengers == [] ? "REQUEST RIDER" : "GIVING RIDE"}
+              {passengers.length == 0 ? "REQUEST RIDER" : "GIVING RIDE"}
             </button>
           </div>
           <div>

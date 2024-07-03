@@ -1,10 +1,11 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import { io, emit, send, of, to } from "socket.io-client";
 import {
   fetch_Rides,
   retrieveBills,
   openForm,
 } from "../Shared_Functions/retrieve.js";
+import { DataContext } from "../App";
 import ResponseForm from "./ResponseForm";
 
 const windows = Object.freeze({
@@ -14,14 +15,14 @@ const windows = Object.freeze({
   WAITING: Symbol("waiting"),
   GETING_RIDE: Symbol("getting_ride"),
 });
-// props.userId,
-// props.userName,
+// data.id,
+// data.name,
 // userRating,
 // userInstructions,
 // userLocation,
 // userStatus,
 // userCarpool,
-function RiderPage(props) {
+function RiderPage() {
   const [window, setWindow] = useState(windows.PAST_RIDES);
   const [rides, setRides] = useState([]);
   const [bills, setBills] = useState([]);
@@ -29,17 +30,18 @@ function RiderPage(props) {
   const [driver, setDriver] = useState(null);
   const [destination, setDestination] = useState(null);
   const [review_id, setReview_id] = useState(null); //review_id
+  const { data, setData } = useContext(DataContext);
 
   const loadData = async () => {
     setRides(
       await fetch_Rides(
-        `http://127.0.0.1:5000/rideinfo/rider/${props.userId}/ignore/${props.userName}`
+        `http://127.0.0.1:5000/rideinfo/rider/${data.id}/ignore/${data.name}`
       )
     );
   };
 
   const loadBills = async () => {
-    setBills(await retrieveBills("rider", props.userId));
+    setBills(await retrieveBills("rider", data.id));
   };
 
   useEffect(() => {
@@ -130,7 +132,7 @@ function RiderPage(props) {
       return false;
     }
     event.preventDefault();
-    let tempLink = `http://127.0.0.1:5000/singlerider/${props.userId}/${props.userName}/0,0/${tempDest}/${socktInstance.id}`;
+    let tempLink = `http://127.0.0.1:5000/singlerider/${data.id}/${data.name}/0,0/${tempDest}/${socktInstance.id}`;
     setDestination(tempDest);
     console.log("socket ID:", socktInstance.id);
     try {
@@ -402,16 +404,16 @@ function RiderPage(props) {
               type="text"
               name="instructions"
               placeholder={
-                props.userInstructions == null
+                data.instructions == null
                   ? "add instructions"
-                  : props.userInstructions
+                  : data.instructions
               }
             ></textarea>
             <br></br>
             <button
               type="button"
               className="button-select"
-              onClick={() => changeInstructions(props.userId, props.userName)}
+              onClick={() => changeInstructions(data.id, data.name)}
               style={{
                 marginBottom: "10%",
                 fontSize: "99%",

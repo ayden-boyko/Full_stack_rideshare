@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useState } from "react";
+import React, { createContext, useState } from "react";
 import User from "./Components/User";
 import Accounts from "./Components/Accounts";
 import NavBar from "./Components/NavBar";
@@ -9,6 +9,8 @@ import { ReactComponent as DriverLogo } from "./Images/driver.svg";
 import { ReactComponent as RiderLogo } from "./Images/rider.svg";
 
 /// TP RUN FRONTEND------------npm start
+
+export const DataContext = createContext(null);
 
 function App() {
   const [data, setData] = useState({
@@ -89,37 +91,10 @@ function App() {
   } else {
     return (
       <body className="App">
-        <NavBar
-          userType={data.role}
-          userId={data.id}
-          userName={data.name}
-          userRating={data.rating}
-          userLocation={data.zipcode}
-          userStatus={data.is_active}
-          passedFunction={setData}
-          logData={logOUT}
-        />
-        {data.role === "driver" ? (
-          <DriverPage
-            userId={data.id}
-            userName={data.name}
-            userRating={data.rating}
-            userInstructions={data.instructions}
-            userLocation={data.zipcode}
-            userStatus={data.is_active}
-            userCarpool={data.carpool}
-          />
-        ) : (
-          <RiderPage
-            userId={data.id}
-            userName={data.name}
-            userRating={data.rating}
-            userInstructions={data.instructions}
-            userLocation={data.zipcode}
-            userStatus={data.is_active}
-            userCarpool={data.carpool}
-          />
-        )}
+        <DataContext.Provider value={{ data, setData }}>
+          <NavBar logData={logOUT} />
+          {data.role === "driver" ? <DriverPage /> : <RiderPage />}
+        </DataContext.Provider>
       </body>
     );
   }
