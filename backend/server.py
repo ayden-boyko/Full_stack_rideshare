@@ -14,8 +14,8 @@ app = Flask(__name__)
 api = Api(app)
 cors = CORS(app, resources={
      r'/*': {
-         'origins': ["http://127.0.0.1:3000", "http://127.0.0.1:5000", "http://localhost:3000", "http://localhost:5000"], 
-         #supabase databse url, links to localport:3000 or 5000
+         'origins': [ "http://localhost:3000"], 
+         #, "http://localhost:5000","http://127.0.0.1:3000", "http://127.0.0.1:5000"
          'methods': ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS']
      }
  })
