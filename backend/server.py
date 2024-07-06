@@ -81,7 +81,7 @@ def after_request(response):
 
 socketio.on_namespace(RiderNamespace('/rider'))
 socketio.on_namespace(DriverNamespace('/driver'))
-#socketio.on_event('join', RiderNamespace.on_join ,namespace='/rider')
+socketio.on_event('message', RiderNamespace.on_match, namespace='/driver')
 #
 
 if __name__ == '__main__':

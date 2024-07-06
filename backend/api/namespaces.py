@@ -1,12 +1,14 @@
+from flask import request
 from flask_socketio import Namespace, emit, send, SocketIO, join_room, leave_room
+import json
 
 class RiderNamespace(Namespace):
-    def on_connect(self, data):
-        print("Rider Connected", data)
+    def on_connect(self):
+        print("Rider Connected: " + request.sid)
         send("connected to RiderNameSpace", namespace='/rider')
 
     def on_disconnect(self):
-        print("Rider Disconnected")
+        print("Rider Disconnected: " + request.sid)
 
     def on_error(self,e):
         print(e)
@@ -25,16 +27,24 @@ class RiderNamespace(Namespace):
         leave_room(room)
         print(username + " has left room #" + room)
         send(username + " has left room #" + room, to=room)
+    
+    def on_match(data):
+        data = json.loads(data)
+        sendee = data['sendee']
+        string = data["string"]
+        sender = data["sender"]
+        print('Rider has recieved data:', string, 'FROM', sender)
+        emit('recieved', (sender + " says " + string), to=sendee)
 
 
 
 class DriverNamespace(Namespace):
     def on_connect(self):
-        print("Driver Connected")
+        print("Driver Connected: " + request.sid)
         send("connected to DriverNameSpace", namespace='/driver')
 
     def on_disconnect(self):
-        print("Driver Disconnected")
+        print("Driver Disconnected: " + request.sid)
 
     def on_error(self,e):
         print(e)
@@ -44,7 +54,7 @@ class DriverNamespace(Namespace):
         room = data[1]
         join_room(room)
         print(username + " has joined room #" + room)
-        self.emit('join', [room, data[2], data[3]], namespace='/rider', room=data[2]) #room num, rider_socketid, rider_name
+        emit('join', [room, data[2], data[3]], namespace='/rider', room=data[2]) #room num, rider_socketid, rider_name
 
     def on_leave(self, data):
         username = data[0]
@@ -52,3 +62,11 @@ class DriverNamespace(Namespace):
         leave_room(room)
         print(username + " has left room #" + room)
         send(username + " has left room #" + room, to=room)
+
+    def on_match(data):
+        data = json.loads(data)
+        sendee = data['sendee']
+        string = data["string"]
+        sender = data["sender"]
+        print('Driver has recieved data:', string, 'FROM', sender)
+       # emit('match', (sender + " says " + string), to=sendee)

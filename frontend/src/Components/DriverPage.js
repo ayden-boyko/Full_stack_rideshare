@@ -22,7 +22,7 @@ function DriverPage() {
   const [riders, setRiders] = useState([]);
   const [passengers, setPassengers] = useState([]);
   const [review_id, setReview_id] = useState(null); //review_id
-  const socktInstance = useRef(null);
+  const socketInstance = useRef(null);
   const { data, setData } = useContext(DataContext);
 
   const submitLink = `http://127.0.0.1:5000/rideinfo/driver/${data.id}/ignore/${data.name}`;
@@ -43,38 +43,39 @@ function DriverPage() {
       setWindow(windows.GIVING_RIDE);
     }
 
-    if (socktInstance.current === null) {
+    if (socketInstance.current === null) {
       const socket = io("http://127.0.0.1:5000/driver", {
         transports: ["websocket"],
-        cors: {
-          origin: "http://localhost:3000/",
-          methods: ["GET", "POST", "PUT", "DELETE"],
-          allowedHeaders: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        },
+        withCredentials: true,
+        // cors: {
+        //   origin: "http://localhost:3000/",
+        //   methods: ["GET", "POST", "PUT", "DELETE"],
+        //   allowedHeaders: {
+        //     Accept: "application/json",
+        //     "Content-Type": "application/json",
+        //   },
+
+        // },
       });
-      socktInstance.current = socket;
+      socketInstance.current = socket;
     }
 
-    socktInstance.current.on("connect", (data) => {
+    socketInstance.current.on("connect", (data) => {
       console.log("connected", data);
     });
 
-    socktInstance.current.on("connect_error", (error) => {
-      if (socktInstance.current.active) {
+    socketInstance.current.on("connect_error", (error) => {
+      if (socketInstance.current.active) {
         console.log("trying to reconnect");
       } else {
         console.log(error.message);
       }
     });
 
-    socktInstance.current.on("disconnect", (data) => {
+    socketInstance.current.on("disconnect", (data) => {
       console.log("disconnected", data);
     });
-  }, [window, socktInstance.current]);
+  }, [window, socketInstance.current]);
 
   //USER RIDER 1,2,4,5,6
   async function selectRider(id, name, rider) {
@@ -90,14 +91,22 @@ function DriverPage() {
         credentials: "same-origin",
       });
       const result = await response.json();
-      console.log("Success:", result); //use result to create room and add rider and driver to it
+      console.log("Select Rider Success:", result); //use result to create room and add rider and driver to it
       setPassengers(...passengers, [rider]);
-      socktInstance.current.emit("join", [
+      socketInstance.current.emit("join", [
         data.name,
         JSON.stringify(result[0]),
         result[1],
         rider[2],
       ]);
+      socketInstance.current.emit(
+        "message",
+        JSON.stringify({
+          sendee: result[1],
+          string: "hello, have I connected?",
+          sender: data.name,
+        })
+      );
 
       setWindow(windows.GIVING_RIDE);
       sessionStorage.setItem("status", "chauffeuring");

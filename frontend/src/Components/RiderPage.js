@@ -26,7 +26,7 @@ function RiderPage() {
   const [window, setWindow] = useState(windows.PAST_RIDES);
   const [rides, setRides] = useState([]);
   const [bills, setBills] = useState([]);
-  const socktInstance = useRef(null);
+  const socketInstance = useRef(null);
   const [driver, setDriver] = useState(null);
   const [destination, setDestination] = useState(null);
   const [review_id, setReview_id] = useState(null); //review_id
@@ -50,7 +50,7 @@ function RiderPage() {
     if (sessionStorage.getItem("status") === "waiting") {
       setWindow(windows.WAITING);
     }
-    if (socktInstance.current === null) {
+    if (socketInstance.current === null) {
       const socket = io("http://127.0.0.1:5000/rider", {
         transports: ["websocket"],
         withCredentials: true,
@@ -63,25 +63,29 @@ function RiderPage() {
         //   },
         // },
       });
-      socktInstance.current = socket;
+      socketInstance.current = socket;
     }
 
-    socktInstance.current.on("connect", (data) => {
+    socketInstance.current.on("connect", (data) => {
       console.log("connected", data);
     });
 
-    socktInstance.current.on("connect_error", (error) => {
-      if (socktInstance.current.active) {
+    socketInstance.current.on("connect_error", (error) => {
+      if (socketInstance.current.active) {
         console.log("trying to reconnect:", error);
       } else {
         console.log(error);
       }
     });
 
-    socktInstance.current.on("disconnect", (data) => {
+    socketInstance.current.on("recieved", (data) => {
+      console.log(data);
+    });
+
+    socketInstance.current.on("disconnect", (data) => {
       console.log("disconnected", data);
     });
-  }, [window, socktInstance.current]);
+  }, [window, socketInstance.current]);
 
   async function changeInstructions(id, name) {
     const form = document.getElementById("InstructForm");
@@ -132,9 +136,9 @@ function RiderPage() {
       return false;
     }
     event.preventDefault();
-    let tempLink = `http://127.0.0.1:5000/singlerider/${data.id}/${data.name}/0,0/${tempDest}/${socktInstance.id}`;
+    let tempLink = `http://127.0.0.1:5000/singlerider/${data.id}/${data.name}/0,0/${tempDest}/${socketInstance.current.id}`;
     setDestination(tempDest);
-    console.log("socket ID:", socktInstance.id);
+    console.log("socket ID:", socketInstance.current.id);
     try {
       const response = await fetch(tempLink, {
         method: "PUT",
