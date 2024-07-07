@@ -27,7 +27,12 @@ function RiderPage() {
   const [rides, setRides] = useState([]);
   const [bills, setBills] = useState([]);
   const socketInstance = useRef(null);
-  const [driver, setDriver] = useState(null);
+  const [driver, setDriver] = useState({
+    driver_Name: null,
+    driver_Id: null,
+    driver_Rating: null,
+    driver_SocketId: null,
+  });
   const [destination, setDestination] = useState(null);
   const [review_id, setReview_id] = useState(null); //review_id
   const { data, setData } = useContext(DataContext);
@@ -49,6 +54,8 @@ function RiderPage() {
 
     if (sessionStorage.getItem("status") === "waiting") {
       setWindow(windows.WAITING);
+    } else if (sessionStorage.getItem("status") === "riding") {
+      setWindow(windows.GETING_RIDE);
     }
     if (socketInstance.current === null) {
       const socket = io("http://127.0.0.1:5000/rider", {
@@ -79,7 +86,17 @@ function RiderPage() {
     });
 
     socketInstance.current.on("recieved", (data) => {
-      console.log(data);
+      console.log("matched:", data);
+      setDriver({
+        driver_Name: data["driver_Name"],
+        driver_Id: data["driver_Id"],
+        driver_Rating: data["driver_Rating"],
+        driver_SocketId: data["sender_sid"],
+      });
+      console.log("after match:", driver);
+      setWindow(windows.GETING_RIDE);
+      sessionStorage.setItem("status", "riding");
+      console.log(window);
     });
 
     socketInstance.current.on("disconnect", (data) => {
@@ -374,9 +391,9 @@ function RiderPage() {
           <>
             <span>RIDE INFO</span>
             <br></br>
-            <p>DRIVER NAME: {driver[1]}</p>
+            <p>DRIVER NAME: {driver.driver_Name}</p>
             <br></br>
-            <p>DRIVER RATING: {driver[2]}</p>
+            <p>DRIVER RATING: {driver.driver_Rating}</p>
             <br></br>
             <p>DESTINATION: {destination}</p>
             <br></br>

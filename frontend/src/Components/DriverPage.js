@@ -64,6 +64,10 @@ function DriverPage() {
       console.log("connected", data);
     });
 
+    socketInstance.current.on("recieved", (data) => {
+      console.log("matched:", data);
+    });
+
     socketInstance.current.on("connect_error", (error) => {
       if (socketInstance.current.active) {
         console.log("trying to reconnect");
@@ -105,6 +109,9 @@ function DriverPage() {
           sendee: result[1],
           string: "hello, have I connected?",
           sender: data.name,
+          driver_id: data.id,
+          rating: data.rating,
+          sender_id: socketInstance.current.id,
         })
       );
 
