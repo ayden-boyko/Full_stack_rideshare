@@ -4,6 +4,7 @@ import csv, json
 from datetime import datetime
 from math import fsum
 from flask import jsonify
+import math
 
 # to print to console do sys.stderr.write(string)
 
@@ -334,7 +335,8 @@ def new_ride(d_id, d_name, rider_id, start = '0,0', end = '0,0'):
     statement = """DELETE FROM awaiting_rides WHERE rider_id = %s"""
     cur.execute(statement, [rider_id])
     db_disconnect(conn)
-    return jsonify(row)
+    cost = math.floor(math.hypot(float(end[1]) - float(start[1]), float(end[3]) - float(start[3])))
+    return jsonify(row, cost)
 
 def cancel_ride(id, name):
     """removes ride from current_rides list this list is for upcoming or ongoing rides"""

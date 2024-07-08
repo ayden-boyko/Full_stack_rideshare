@@ -32,6 +32,8 @@ function RiderPage() {
     driver_Id: null,
     driver_Rating: null,
     driver_SocketId: null,
+    driver_Cost: 0,
+    room: null,
   });
   const [destination, setDestination] = useState(null);
   const [review_id, setReview_id] = useState(null); //review_id
@@ -85,14 +87,17 @@ function RiderPage() {
       }
     });
 
-    socketInstance.current.on("recieved", (data) => {
-      console.log("matched:", data);
+    socketInstance.current.on("recieved", (packet) => {
+      console.log("matched:", packet);
       setDriver({
-        driver_Name: data["driver_Name"],
-        driver_Id: data["driver_Id"],
-        driver_Rating: data["driver_Rating"],
-        driver_SocketId: data["sender_sid"],
+        driver_Name: packet["driver_Name"],
+        driver_Id: parseInt(packet["driver_Id"], 10),
+        driver_Rating: parseFloat(packet["driver_Rating"], 10),
+        driver_SocketId: packet["sender_sid"],
+        driver_Cost: parseInt(packet["cost"], 10),
+        room: parseInt(packet["room"], 10),
       });
+      socketInstance.current.emit("join", [packet["room"], data.id, data.name]);
       console.log("after match:", driver);
       setWindow(windows.GETING_RIDE);
       sessionStorage.setItem("status", "riding");
@@ -388,17 +393,15 @@ function RiderPage() {
         return <h1>WAITING FOR DRIVER</h1>;
       case windows.GETING_RIDE:
         return (
-          <>
-            <span>RIDE INFO</span>
-            <br></br>
-            <p>DRIVER NAME: {driver.driver_Name}</p>
-            <br></br>
-            <p>DRIVER RATING: {driver.driver_Rating}</p>
-            <br></br>
-            <p>DESTINATION: {destination}</p>
-            <br></br>
-            <p>COST: IMPLEMENT COST</p>
-          </>
+          <div className="ride-Info-Page">
+            <b className="ride-Info-Page-title">RIDE INFO</b>
+            <div className="ride-Info-Page-content">
+              <p>DRIVER NAME: {driver.driver_Name}</p>
+              <p>DRIVER RATING: {driver.driver_Rating}</p>
+              <p>DESTINATION: {destination}</p>
+              <p>COST: {driver.driver_Cost}</p>
+            </div>
+          </div>
         );
       default:
         return <h1>SOMETHINGS WRONG...</h1>;

@@ -95,23 +95,28 @@ function DriverPage() {
         credentials: "same-origin",
       });
       const result = await response.json();
-      console.log("Select Rider Success:", result); //use result to create room and add rider and driver to it
+      //console.log("Select Rider Success:", result); //use result to create room and add rider and driver to it
+      //console.log(result[1]);
+      rider.push(result[1]); // adds cost to passengers
       setPassengers(...passengers, [rider]);
       socketInstance.current.emit("join", [
         data.name,
         JSON.stringify(result[0]),
-        result[1],
-        rider[2],
+        // result[1],
+        // rider[2],
       ]);
+      //console.log("room", JSON.stringify(result[0][0]));
       socketInstance.current.emit(
         "message",
         JSON.stringify({
-          sendee: result[1],
+          sendee: result[0][1],
           string: "hello, have I connected?",
           sender: data.name,
           driver_id: data.id,
           rating: data.rating,
           sender_id: socketInstance.current.id,
+          cost: result[1],
+          room: JSON.stringify(result[0][0]),
         })
       );
 
@@ -253,7 +258,7 @@ function DriverPage() {
         <td>{person[3]}</td>
         <td>{person[5]}</td>
         <td>{person[6]}</td>
-        <td>IMPLEMENT COST</td>
+        <td>{person[8]}</td>
         <td>
           <button>FINISH</button>
         </td>

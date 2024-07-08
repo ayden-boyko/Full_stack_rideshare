@@ -96,6 +96,8 @@
 .App {
   min-height: 100vh;
   background-color: #f2f2f2;
+  overflow: hidden;
+  margin: 0;
 }
 .start {
   width: auto;
@@ -330,7 +332,7 @@ label:last-child span {
   resize: none;
   overflow: auto;
   outline: 0;
-  padding: 8px 14px;
+  padding: 8px 8px;
   border: 1px solid rgb(219, 213, 213);
 }
 
@@ -501,4 +503,32 @@ label:last-child span {
   resize: none;
   min-height: 3em;
   max-height: 10em;
+}
+
+.ride-Info-Page {
+  width: 80vw;
+  height: 87vh;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  border: 2px solid black;
+  border-radius: 10px;
+  font-size: calc(10px + 2vmin);
+  background-color: white;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.ride-Info-Page-title {
+  text-align: center;
+  width: 100%;
+  padding-bottom: 25px;
+}
+
+.ride-Info-Page-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align items to the left */
+  padding: 10px;
 }

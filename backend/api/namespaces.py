@@ -14,10 +14,12 @@ class RiderNamespace(Namespace):
         print(e)
     
     def on_join(self, data):
+        print('rider data:', data)
         room = data[0]
         r_sid = data[1]
         username = data[2]
-        join_room(room, sid=r_sid)
+        
+        join_room(room)
         print(username + " has joined room #" + room)
         send(username + " has joined room #" + room, to=room)
 
@@ -30,15 +32,17 @@ class RiderNamespace(Namespace):
     
     def on_match(data):
         data = json.loads(data)
+        print('data:',data)
         sendee = data['sendee']
         string = data["string"]
         sender_name = data["sender"]
         sender_id = data['driver_id']
         sender_rating = data['rating']
         sender_sid = data["sender_id"]
-
+        cost = data['cost']
+        room = data['room']
         print('Rider has recieved data:', string, 'FROM', sender_name)
-        emit('recieved', {'driver_Name':sender_name, 'driver_Id': sender_id , 'driver_Rating': sender_rating,'sender_sid':sender_sid}, namespace='/rider', to=sendee)
+        emit('recieved', {'driver_Name':sender_name, 'driver_Id': sender_id , 'driver_Rating': sender_rating,'sender_sid':sender_sid, 'cost':cost, 'room':room}, namespace='/rider', to=sendee)
 
 
 
@@ -55,10 +59,11 @@ class DriverNamespace(Namespace):
 
     def on_join(self, data):
         username = data[0]
-        room = data[1]
+        room = data[1][1]
+        print('driver data:', data)
         join_room(room)
         print(username + " has joined room #" + room)
-        emit('join', [room, data[2], data[3]], namespace='/rider', room=data[2]) #room num, rider_socketid, rider_name
+        #emit('join', [room, data[2], data[3]], namespace='/rider', room=data[2]) #room num, rider_socketid, rider_name
 
     def on_leave(self, data):
         username = data[0]
