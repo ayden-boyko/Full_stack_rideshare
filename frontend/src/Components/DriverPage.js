@@ -7,6 +7,7 @@ import {
 } from "../Shared_Functions/retrieve";
 import { DataContext } from "../App";
 import ResponseForm from "./ResponseForm";
+import FinishRideForm from "./FinishRideForm";
 
 const windows = Object.freeze({
   PAST_RIDES: Symbol("past_rides"),
@@ -21,7 +22,7 @@ function DriverPage() {
   const [bills, setBills] = useState([]);
   const [riders, setRiders] = useState([]);
   const [passengers, setPassengers] = useState([]);
-  const [review_id, setReview_id] = useState(null); //review_id
+  const [reviewee, setReviewee] = useState(null); //review_id
   const socketInstance = useRef(null);
   const { data, setData } = useContext(DataContext);
 
@@ -147,6 +148,32 @@ function DriverPage() {
     }
   }
 
+  async function finishRide(
+    driver_id,
+    rider_id,
+    rating,
+    review_of_rider,
+    carpool,
+    cost
+  ) {
+    let tempLink = `http://127.0.0.1:5000/singledriver/post/${driver_id}/${rider_id}/0/${rating}/${review_of_rider}/${carpool}/${cost}`;
+    try {
+      const response = await fetch(tempLink, {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        credentials: "same-origin",
+      });
+      const result = await response.json();
+      console.log("Finish Success:", result);
+    } catch (error) {
+      console.log("Error:", error);
+    }
+  }
+
   // Function to update a specific row's person[13] based on key updates when the review gets responded to, no need to fetch data again
   const updateResponse = (key, newResponse) => {
     // Find the index of the ride in the rides array based on key
@@ -183,8 +210,8 @@ function DriverPage() {
             {person[13] === null ? (
               <button
                 onClick={() => {
-                  openForm();
-                  setReview_id(person[0]);
+                  openForm("myReview");
+                  setReviewee(person);
                 }}
               >
                 Respond
@@ -252,15 +279,34 @@ function DriverPage() {
   });
 
   const listPassengers = passengers?.map((person, index) => {
+    console.log(person);
+    {
+      /*person[0] = current_rides_id 
+    person[1] = current_passenger_id
+    person[2] = passenger_name
+    person[3] = passenger_rating
+    person[4] = instructions
+    person[5] = pickup
+    person[6] = end
+    person[7] = socket_sid
+    person[8] = cost*/
+    }
     return (
       <tr key={index}>
-        <td>{person[2]}</td>
-        <td>{person[3]}</td>
-        <td>{person[5]}</td>
-        <td>{person[6]}</td>
-        <td>{person[8]}</td>
+        <td>{person[2]}</td> {/*name*/}
+        <td>{person[3]}</td> {/*rating*/}
+        <td>{person[5]}</td> {/*pickup*/}
+        <td>{person[6]}</td> {/*end*/}
+        <td>{person[8]}</td> {/*cost*/}
         <td>
-          <button>FINISH</button>
+          <button
+            onClick={() => {
+              setReviewee(person);
+              openForm("finishRide");
+            }}
+          >
+            FINISH
+          </button>
         </td>
       </tr>
     );
@@ -425,8 +471,15 @@ function DriverPage() {
       </div>
       <ResponseForm
         passedrole="driver"
-        reviewee={review_id}
+        reviewee={reviewee}
         updateResponse={updateResponse}
+      />
+      <FinishRideForm
+        passedrole="driver"
+        driver_id={data.id}
+        reviewee={reviewee}
+        carpool={passengers.length > 1 ? "true" : "false"}
+        finishRide={finishRide}
       />
     </>
   );

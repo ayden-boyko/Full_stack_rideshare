@@ -68,10 +68,10 @@ export async function respond_to_review(role, review_id) {
   }
 }
 
-export function openForm() {
-  document.getElementById("myReview").style.display = "block";
+export function openForm(id) {
+  document.getElementById(id).style.display = "block";
 }
 
-export function closeForm() {
-  document.getElementById("myReview").style.display = "none";
+export function closeForm(id) {
+  document.getElementById(id).style.display = "none";
 }

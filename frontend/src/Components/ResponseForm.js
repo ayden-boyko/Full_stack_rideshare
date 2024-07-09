@@ -20,9 +20,9 @@ function ResponseForm(props) {
           className="btn"
           onClick={() => {
             props.updateResponse(
-              respond_to_review(props.passedrole, props.reviewee)
+              respond_to_review(props.passedrole, props.reviewee[0])
             );
-            closeForm();
+            closeForm("myReview");
           }}
         >
           Submit Review
@@ -30,7 +30,7 @@ function ResponseForm(props) {
         <button
           type="button"
           className="btn cancel"
-          onClick={() => closeForm()}
+          onClick={() => closeForm("myReview")}
         >
           Close
         </button>

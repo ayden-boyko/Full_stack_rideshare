@@ -214,7 +214,7 @@ function RiderPage() {
         {person[13] === null ? (
           <button
             onClick={() => {
-              openForm();
+              openForm("myReview");
               setReview_id(person[0]);
             }}
           >
