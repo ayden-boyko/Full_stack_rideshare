@@ -6,7 +6,7 @@ import {
   openForm,
 } from "../Shared_Functions/retrieve.js";
 import { DataContext } from "../App";
-import ResponseForm from "./ResponseForm";
+import FinishRideForm from "./FinishRideForm.js";
 
 const windows = Object.freeze({
   PAST_RIDES: Symbol("past_rides"),
@@ -88,7 +88,7 @@ function RiderPage() {
     });
 
     socketInstance.current.on("recieved", (packet) => {
-      console.log("matched:", packet);
+      //console.log("matched:", packet);
       setDriver({
         driver_Name: packet["driver_Name"],
         driver_Id: parseInt(packet["driver_Id"], 10),
@@ -102,6 +102,11 @@ function RiderPage() {
       setWindow(windows.GETING_RIDE);
       sessionStorage.setItem("status", "riding");
       console.log(window);
+    });
+
+    socketInstance.current.on("finish", (packet) => {
+      console.log("finished:", packet);
+      openForm("finishRide");
     });
 
     socketInstance.current.on("disconnect", (data) => {
@@ -179,6 +184,25 @@ function RiderPage() {
       console.log(error);
     }
     console.log("done");
+  }
+
+  async function finishRide(rider_id, rating_of_driver, review_of_driver) {
+    let tempLink = `http://127.0.0.1:5000/singlerider/post//${rider_id}/0/${rating_of_driver}/${review_of_driver}`;
+    try {
+      const response = await fetch(tempLink, {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        credentials: "same-origin",
+      });
+      const result = await response.json();
+      console.log("Finish Success:", result);
+    } catch (error) {
+      console.log("Error:", error);
+    }
   }
 
   // Function to update a specific row's person[13] based on key updates when the review gets responded to, no need to fetch data again
@@ -494,10 +518,12 @@ function RiderPage() {
           <div>{renderWindow()}</div>
         </div>
       </div>
-      <ResponseForm
-        passedrole="rider"
-        reviewee={review_id}
-        updateResponse={updateResponse}
+      <FinishRideForm
+        passedRole="rider"
+        id={data.id}
+        reviewee={driver.driver_Id}
+        carpool={"false"}
+        finishRide={finishRide}
       />
     </>
   );

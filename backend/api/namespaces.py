@@ -44,6 +44,14 @@ class RiderNamespace(Namespace):
         print('Rider has recieved data:', string, 'FROM', sender_name)
         emit('recieved', {'driver_Name':sender_name, 'driver_Id': sender_id , 'driver_Rating': sender_rating,'sender_sid':sender_sid, 'cost':cost, 'room':room}, namespace='/rider', to=sendee)
 
+    def on_end(data):
+        data = json.loads(data)
+        print('data:',data)
+        sendee = data["sendee"]
+        sender_name = data["sender"]
+        print('Ride has finished', 'BY', sender_name)
+        emit('finish', namespace='/rider', to=sendee)
+
 
 
 class DriverNamespace(Namespace):
@@ -79,3 +87,9 @@ class DriverNamespace(Namespace):
         sender = data["sender"]
         print('Driver has recieved data:', string, 'FROM', sender)
         emit('recieved', (sender + " says " + string), namespace='/driver', to=sendee)
+
+    def on_end(data):
+        data = json.loads(data)
+        print('data:',data)
+        sendee = data['sendee']
+        emit('finish', namespace='/rider', to=sendee)

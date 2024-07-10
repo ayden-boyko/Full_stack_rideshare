@@ -61,7 +61,7 @@ api.add_resource(RideSingleRider, '/singlerider/<string:rider_id>/<string:rider_
 
 api.add_resource(RideSingleDriver, '/singledriver/<string:driver_id>/<string:driver_name>/<string:rider_id>/<int:zipcode>/<string:start>/<string:end>', methods=["PUT", "POST", "GET"]) 
 
-api.add_resource(RideSingleRiderPost, '/singlerider/post/<string:rider_id>/<string:review>/<int:rating>/<string:review_of_driver>/<string:time>/<string:carpool>/<float:cost>', methods=[ "GET", "PUT", "POST"]) 
+api.add_resource(RideSingleRiderPost, '/singlerider/post/<string:rider_id>/<string:review>/<int:rating>/<string:review_of_driver>', methods=[ "GET", "PUT", "POST"]) 
 
 api.add_resource(RideSingleDriverPost, '/singledriver/post/<string:driver_id>/<string:rider_id>/<string:review>/<string:rating>/<string:review_of_rider>/<string:carpool>/<string:cost>', methods=[ "GET", "PUT", "POST"]) 
 
@@ -78,10 +78,12 @@ def after_request(response):
     response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
     return response
 
+# TODO add methods to namespaces that allow for messaging between rider and driver
 
 socketio.on_namespace(RiderNamespace('/rider'))
 socketio.on_namespace(DriverNamespace('/driver'))
 socketio.on_event('message', RiderNamespace.on_match, namespace='/driver')
+socketio.on_event('finish', RiderNamespace.on_end, namespace='/driver') # * triggers end of ride event for rider, updates screen, etc...
 socketio.on_event('message', DriverNamespace.on_match, namespace='/rider')
 #
 

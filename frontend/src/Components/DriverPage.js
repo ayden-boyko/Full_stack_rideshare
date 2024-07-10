@@ -106,7 +106,7 @@ function DriverPage() {
         // result[1],
         // rider[2],
       ]);
-      //console.log("room", JSON.stringify(result[0][0]));
+      console.log("sendee", JSON.stringify(result[0][1]));
       socketInstance.current.emit(
         "message",
         JSON.stringify({
@@ -169,6 +169,22 @@ function DriverPage() {
       });
       const result = await response.json();
       console.log("Finish Success:", result);
+
+      let passenger = passengers.filter((passenger) => {
+        return passenger[1] === rider_id;
+      });
+      console.log(passenger[0][7]);
+      socketInstance.current.emit(
+        "finish",
+        JSON.stringify({
+          sendee: passenger[0][7],
+          string: "The ride has ended",
+          sender: data.name,
+          driver_id: data.id,
+          rating: data.rating,
+          sender_id: socketInstance.current.id,
+        })
+      );
     } catch (error) {
       console.log("Error:", error);
     }
@@ -279,7 +295,6 @@ function DriverPage() {
   });
 
   const listPassengers = passengers?.map((person, index) => {
-    console.log(person);
     {
       /*person[0] = current_rides_id 
     person[1] = current_passenger_id
@@ -475,8 +490,8 @@ function DriverPage() {
         updateResponse={updateResponse}
       />
       <FinishRideForm
-        passedrole="driver"
-        driver_id={data.id}
+        passedRole="driver"
+        id={data.id}
         reviewee={reviewee}
         carpool={passengers.length > 1 ? "true" : "false"}
         finishRide={finishRide}

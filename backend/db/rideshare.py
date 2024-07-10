@@ -381,22 +381,28 @@ def get_new_drivers(zipcode):
     (id, name, rating) = result
     return jsonify({'driver_id' : id, 'name' : name, 'rating' : rating})
 
-def rider_finish_ride(id, rating_of_driver=4.5, review_of_driver="they were good", timestamp='1999-01-01 00:00:00', carpool = False, cost = 5.0):
+def rider_finish_ride(id, rating_of_driver=4.5, review_of_driver="they were good", timestamp='1999-01-01 00:00:00'):
     """finishes the riders current ride and adds ride to past rides"""
     conn, cur = db_connect()
 
     statement = """SELECT * FROM current_rides WHERE rider_id = %s"""
     cur.execute(statement, [id])
     info = cur.fetchone()
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     if info != None:
-        statement2 = """ INSERT INTO past_rides (driver_id, driver_name, rider_id, rider_name, special_instructions, start, "end", finish_time, rofd, driver_rating) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
-        cur.execute(statement2, [info[1], info[2], info[3], info[4], info[5], info[6], info[7], timestamp, review_of_driver, rating_of_driver])
-        statement = """DELETE FROM current_rides WHERE rider_id = %s"""
-        cur.execute(statement, [id])
+        statement2 = """ UPDATE past_rides
+                        SET rofd = %s, driver_rating = %s
+                        WHERE past_rides_id = (
+                        SELECT past_rides_id
+                        FROM past_rides
+                        WHERE rider_id = %s AND finish_time < %s
+                        ORDER BY ABS(EXTRACT(EPOCH FROM (finish_time - %s)))
+                        LIMIT 1
+                    )"""
+        cur.execute(statement2, [review_of_driver, rating_of_driver, id, timestamp, timestamp])
         statement = """UPDATE rider SET wants_ride = False WHERE rider_id = %s"""
         cur.execute(statement, [id])
-        charge(id, info[4], cost, timestamp)
         
 
     #updates the driver rating
@@ -406,21 +412,7 @@ def rider_finish_ride(id, rating_of_driver=4.5, review_of_driver="they were good
     result = result[0]
     result = str(result).split(",")
     d_id = str(result[0])
-    rider_name = str(result[0].rstrip(")"))
     update_rating("driver", int(d_id[1:]), rating_of_driver)
-
-    if carpool == True:
-
-        statement = """SELECT passengers FROM current_rides WHERE driver_id = %s"""
-        cur.execute(statement, [info[1]])
-        result = cur.fetchone()
-
-        statement = """UPDATE current_rides SET passengers = passengers - 1 WHERE driver_id = %s"""
-        cur.execute(statement, [info[1]])
-        charge(id, rider_name, cost/result[0], timestamp)
-        #USE THE CARPOOL METHOD TO SHIFT DESTINATION FOR DRIVER
-
-    
 
     db_disconnect(conn)
     return True
@@ -445,7 +437,7 @@ def driver_finish_ride(id, rid, rating_of_rider=4.5, review_of_rider="they were 
     end = cur.fetchone()[0]
 
     if info != None:
-        statement2 = """ INSERT INTO past_rides (driver_id, driver_name, rider_id, rider_name, special_instructions, start, "end", finish_time, rofd, driver_rating) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+        statement2 = """ INSERT INTO past_rides (driver_id, driver_name, rider_id, rider_name, special_instructions, start, "end", finish_time, rofr, rider_rating) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
         cur.execute(statement2, [info[1], info[2], info[3], info[4], info[5], start, end, timestamp, review_of_rider, rating_of_rider])
         
         statement = """DELETE FROM current_rides WHERE rider_id = %s"""
