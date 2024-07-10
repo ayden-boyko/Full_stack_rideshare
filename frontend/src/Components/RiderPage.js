@@ -4,6 +4,7 @@ import {
   fetch_Rides,
   retrieveBills,
   openForm,
+  cancel_Ride,
 } from "../Shared_Functions/retrieve.js";
 import { DataContext } from "../App";
 import FinishRideForm from "./FinishRideForm.js";
@@ -204,6 +205,13 @@ function RiderPage() {
     } catch (error) {
       console.log("Error:", error);
     }
+  }
+
+  async function remove_Ride_Request(role, id, name) {
+    cancel_Ride(role, id, name);
+    setWindow(windows.PAST_RIDES);
+    setDestination(null);
+    sessionStorage.setItem("status", "none");
   }
 
   // Function to update a specific row's person[13] based on key updates when the review gets responded to, no need to fetch data again
@@ -479,12 +487,12 @@ function RiderPage() {
               className="button-select"
               onClick={() =>
                 window === windows.WAITING
-                  ? null
+                  ? remove_Ride_Request("rider", data.id, data.name)
                   : setWindow(windows.REQUEST_RIDE)
               }
             >
               {window === windows.WAITING || window === windows.GETING_RIDE
-                ? "RIDE REQUESTED"
+                ? "CANCEL RIDE"
                 : "REQUEST RIDE"}
             </button>
           </div>

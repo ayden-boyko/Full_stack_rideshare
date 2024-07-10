@@ -4,6 +4,7 @@ import {
   fetch_Rides,
   retrieveBills,
   openForm,
+  cancel_Ride,
 } from "../Shared_Functions/retrieve";
 import { DataContext } from "../App";
 import ResponseForm from "./ResponseForm";
@@ -192,6 +193,16 @@ function DriverPage() {
     }
   }
 
+  async function remove_Rider(role, rider) {
+    cancel_Ride(role, rider[1], rider[2]);
+    let thingy = passengers.filter((passenger) => passenger[1] !== rider[1]);
+    sessionStorage.setItem("status", "waiting");
+    setPassengers(thingy);
+    if (thingy.length === 0) {
+      setWindow(windows.PAST_RIDES);
+    }
+  }
+
   // Function to update a specific row's person[13] based on key updates when the review gets responded to, no need to fetch data again
   const updateResponse = (key, newResponse) => {
     // Find the index of the ride in the rides array based on key
@@ -325,6 +336,15 @@ function DriverPage() {
             FINISH
           </button>
         </td>
+        <td>
+          <button
+            onClick={() => {
+              remove_Rider("driver", person);
+            }}
+          >
+            CANCEL
+          </button>
+        </td>
       </tr>
     );
   });
@@ -420,6 +440,7 @@ function DriverPage() {
                 <th>DESTINATION</th>
                 <th>COST</th>
                 <th>STATUS</th>
+                <th>CANCEL RIDE</th>
               </tr>
               {listPassengers}
             </tbody>

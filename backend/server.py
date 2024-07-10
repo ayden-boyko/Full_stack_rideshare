@@ -57,9 +57,9 @@ api.add_resource(RideSingleRiderPre, '/singlerider/pre/<string:zipcode>', method
 
 api.add_resource(RideSingleDriverPre, '/singledriver/pre', methods=[ "GET"]) 
 
-api.add_resource(RideSingleRider, '/singlerider/<string:rider_id>/<string:rider_name>/<string:start>/<string:end>/<string:socket_id>', methods=["PUT", "POST", "GET"]) 
+api.add_resource(RideSingleRider, '/singlerider/<string:rider_id>/<string:rider_name>/<string:start>/<string:end>/<string:socket_id>', methods=["PUT", "POST", "GET", "DELETE"]) 
 
-api.add_resource(RideSingleDriver, '/singledriver/<string:driver_id>/<string:driver_name>/<string:rider_id>/<int:zipcode>/<string:start>/<string:end>', methods=["PUT", "POST", "GET"]) 
+api.add_resource(RideSingleDriver, '/singledriver/<string:driver_id>/<string:driver_name>/<string:rider_id>/<int:zipcode>/<string:start>/<string:end>', methods=["PUT", "POST", "GET", "DELETE"]) 
 
 api.add_resource(RideSingleRiderPost, '/singlerider/post/<string:rider_id>/<string:review>/<int:rating>/<string:review_of_driver>', methods=[ "GET", "PUT", "POST"]) 
 

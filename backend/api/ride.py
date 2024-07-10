@@ -67,11 +67,11 @@ class RideSingleRider(Resource):
         #return new_ride(id, name, drivers[0][0], drivers[0][1], drivers[0][3], start, end)
     
     """cancels ride"""
-    def delete(self, rider_id, rider_name):
+    def delete(self, rider_id, rider_name, start, end, socket_id):
         if not rider_id or not rider_name:
             abort(400, message="Rider identifier and name are required.")
         try:
-            return cancel_ride(rider_id, rider_name)
+            return cancel_ride('rider', rider_id, rider_name)
         except Exception:
             abort(500, message="Failed to cancel ride.")
 
@@ -107,12 +107,11 @@ class RideSingleDriver(Resource):
             abort(500, message=f"Failed to create new ride: {error}")
     
     """cancels ride"""
-    def delete(self, rider_id, zipcode):
-        rider = get_rider(rider_id)
-        if rider is None:
-            abort(400, message="Rider not found.")
+    def delete(self,driver_id, driver_name, rider_id, zipcode, start, end):
+        if any(param is None for param in (rider_id)):
+            abort(400, message="Rider identifier and name are required.")
         try:
-            return cancel_ride(rider[0], rider[1])
+            return cancel_ride('driver',rider_id, None)
         except Exception as error:
             abort(500, message=f"Failed to cancel ride: {error}")
     

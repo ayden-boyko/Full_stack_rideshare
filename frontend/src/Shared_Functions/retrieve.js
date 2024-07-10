@@ -68,6 +68,29 @@ export async function respond_to_review(role, review_id) {
   }
 }
 
+export async function cancel_Ride(role, rider_id, rider_name) {
+  const submitLink =
+    role === "rider"
+      ? `http://localhost:5000/singlerider/${rider_id}/${rider_name}/0/0/0`
+      : `http://localhost:5000/singledriver/0/0/${rider_id}/0/0/0`;
+  try {
+    const response = await fetch(submitLink, {
+      method: "DELETE",
+      mode: "cors",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      credentials: "same-origin",
+    });
+    const result = await response.json();
+    console.log("Success:", result);
+    return result;
+  } catch (error) {
+    console.log("Error:", error);
+  }
+}
+
 export function openForm(id) {
   document.getElementById(id).style.display = "block";
 }

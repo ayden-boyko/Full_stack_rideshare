@@ -338,23 +338,30 @@ def new_ride(d_id, d_name, rider_id, start = '0,0', end = '0,0'):
     cost = math.floor(math.hypot(float(end[1]) - float(start[1]), float(end[3]) - float(start[3])))
     return jsonify(row, cost)
 
-def cancel_ride(id, name):
+def cancel_ride(role, id, name):
     """removes ride from current_rides list this list is for upcoming or ongoing rides"""
     conn, cur = db_connect()
     
-    statement = """SELECT * FROM current_rides WHERE rider_id = %s AND r_name = %s """
-    cur.execute(statement, [id, name])
-    pre = cur.fetchone()
+    if (role == "driver"):
+        statement = """DELETE FROM current_rides WHERE rider_id = %s"""
+        cur.execute(statement, [id])
 
-    statement = """DELETE FROM current_rides WHERE rider_id = %s AND r_name = %s"""
-    cur.execute(statement, [id, name])
+        statement = """SELECT * FROM current_rides WHERE rider_id = %s"""
+        cur.execute(statement, [id])
+        post = cur.fetchone()
+        
+    elif (role == "rider"):
+        statement = """DELETE FROM awaiting_rides WHERE rider_id = %s AND rider_name = %s"""
+        post = cur.execute(statement, [id, name])
 
-    statement = """SELECT * FROM current_rides WHERE rider_id = %s AND r_name = %s"""
-    cur.execute(statement, [id, name])
-    post = cur.fetchone()
+        statement = """SELECT * FROM awaiting_rides WHERE rider_id = %s AND rider_name = %s"""
+        post = cur.execute(statement, [id, name])
+    
+    else:
+        return jsonify('Error')
 
     db_disconnect(conn)
-    return jsonify({'Before' : pre, 'After' : post})
+    return jsonify(post)
 
 ##get rider from wants ride table
 def get_new_rider(zipcode):
@@ -401,8 +408,6 @@ def rider_finish_ride(id, rating_of_driver=4.5, review_of_driver="they were good
                         LIMIT 1
                     )"""
         cur.execute(statement2, [review_of_driver, rating_of_driver, id, timestamp, timestamp])
-        statement = """UPDATE rider SET wants_ride = False WHERE rider_id = %s"""
-        cur.execute(statement, [id])
         
 
     #updates the driver rating
@@ -444,9 +449,6 @@ def driver_finish_ride(id, rid, rating_of_rider=4.5, review_of_rider="they were 
         cur.execute(statement, [info[3]]) 
 
         charge(id, info[4], cost, timestamp)
-    
-    statement = """UPDATE driver SET is_active = true WHERE driver_id = %s"""
-    cur.execute(statement, [id])
 
     #updates the rider rating
     statement = """SELECT (rider_id, rider_name) FROM past_rides WHERE driver_id = %s"""
