@@ -16,7 +16,7 @@ function FinishRideForm(props) {
             placeholder={"Add Review"}
             maxLength={"100"}
             size={"100"}
-            required
+            required={true}
           ></textarea>
           <br></br>
           <input
@@ -27,7 +27,7 @@ function FinishRideForm(props) {
             placeholder={"Add Rating"}
             maxLength="3"
             size={"3"}
-            required
+            required={true}
           ></input>
           <br></br>
           <button
@@ -61,7 +61,7 @@ function FinishRideForm(props) {
     return (
       <div className="review-form-popup" id="finishRide">
         <form className="review-form-container" id="finishRide">
-          <h1 style={{ color: "black" }}>Response To Review</h1>
+          <h1 style={{ color: "black" }}>Ride Finished, Review your Driver!</h1>
           <br></br>
           <textarea
             type="text"
@@ -71,7 +71,7 @@ function FinishRideForm(props) {
             placeholder={"Add Review"}
             maxLength={"100"}
             size={"100"}
-            required
+            required={true}
           ></textarea>
           <br></br>
           <input
@@ -82,7 +82,7 @@ function FinishRideForm(props) {
             placeholder={"Add Rating"}
             maxLength="3"
             size={"3"}
-            required
+            required={true}
           ></input>
           <br></br>
           <button

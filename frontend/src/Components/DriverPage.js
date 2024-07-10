@@ -185,6 +185,8 @@ function DriverPage() {
           sender_id: socketInstance.current.id,
         })
       );
+
+      setWindow(windows.PAST_RIDES);
     } catch (error) {
       console.log("Error:", error);
     }

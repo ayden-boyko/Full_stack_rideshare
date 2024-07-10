@@ -200,6 +200,7 @@ function RiderPage() {
       });
       const result = await response.json();
       console.log("Finish Success:", result);
+      setWindow(windows.PAST_RIDES);
     } catch (error) {
       console.log("Error:", error);
     }
