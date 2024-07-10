@@ -192,33 +192,31 @@ def create_account(role, name, date):
 def change_account_status(role, id): #needs fixing
     """deactivates an account"""
     conn, cur = db_connect()
-    if role == "driver":
-
-        statement = """SELECT is_active FROM driver WHERE driver_id = %s"""
-        cur.execute(statement, [id])
-        is_active = cur.fetchone()
-        
-        if (is_active == False): 
-            is_active=True 
-        else: 
-            is_active=False
-            
-        
-        statement = """UPDATE driver SET is_active = %s WHERE driver_id = %s"""
-        cur.execute(statement, [is_active, id])
-        return is_active
-    else:
+   
+    if (role=='rider'):
         statement = """SELECT is_active FROM rider WHERE rider_id = %s"""
-        cur.execute(statement, [id])
+        cur.execute(statement, [ id])
         is_active = cur.fetchone()
-        
-        if (is_active == False): 
-            is_active=True 
+        if (is_active[0] == False): 
+            is_active='True' 
         else: 
-            is_active=False
+            is_active='False'
 
         statement = """UPDATE rider SET is_active = %s WHERE rider_id = %s"""
-        cur.execute(statement, [is_active, id])
+        cur.execute(statement, [ is_active, id])
+
+    elif (role=='driver'):
+        statement = """SELECT is_active FROM driver WHERE driver_id = %s"""
+        cur.execute(statement, [ id])
+        is_active = cur.fetchone()
+        
+        if (is_active[0] == False): 
+            is_active='True' 
+        else: 
+            is_active='False'
+
+        statement = """UPDATE driver SET is_active = %s WHERE driver_id = %s"""
+        cur.execute(statement, [ is_active, id])
 
     db_disconnect(conn)
     return is_active

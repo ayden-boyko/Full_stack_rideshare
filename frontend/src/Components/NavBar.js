@@ -28,7 +28,8 @@ function toggleForm() {
 }
 
 async function changeAccountStatus(role, id) {
-  let submitLink = `http://127.0.0.1:5000/accountinfo/${role}/${id}`;
+  let submitLink = `http://127.0.0.1:5000/accountinfo/${role}/0/0/${id}/0`;
+  console.log(role, id);
 
   const update_Account_Status = async () => {
     try {
@@ -48,7 +49,7 @@ async function changeAccountStatus(role, id) {
       console.log("Error:", error);
     }
   };
-  update_Account_Status(); //doesnt work in the backend, flask isnt changing true to false and vise versa
+  update_Account_Status();
 }
 
 async function updateLocation(role, id) {
@@ -118,7 +119,10 @@ function AccountForm(props) {
         <button
           type="button"
           className={data.is_active ? "accounttoggleoff" : "accounttoggleon"}
-          onClick={() => changeAccountStatus(data.role, data.id)}
+          onClick={() => {
+            changeAccountStatus(data.role, data.id);
+            setData({ ...data, is_active: !data.is_active });
+          }}
         >
           {data.is_active ? "Deactivate" : "Activate"}
         </button>

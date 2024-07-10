@@ -37,7 +37,7 @@ class AccountInfoRider(Resource):
         return create_account("rider", name, date)
     
     """deactivates a users account(deletes it)"""
-    def delete(self, rider_id, name, date, new_instructions):
+    def delete(self, name, date, rider_id, new_instructions):
         rider = get_rider(rider_id)
         if rider is None:
             abort(404, message="Rider not found.")
@@ -64,7 +64,7 @@ class AccountInfoDriver(Resource):
     
     ##
     """changes a drivers info"""
-    def put(self, driver_id,name, date, driver_instructions):
+    def put(self, name, date,driver_id, driver_instructions):
         if driver_id is None:
             abort(400, message="Driver id cannot be null.")
         if driver_instructions is None:
@@ -79,7 +79,7 @@ class AccountInfoDriver(Resource):
         return create_account("driver", name, date)
     
     """deactivates a users account(deletes it)"""
-    def delete(self, driver_id):
+    def delete(self, name, date, driver_id, driver_instructions):
         if driver_id is None:
             raise abort(400, message="Driver id cannot be null.")
         driver = get_driver(driver_id)
