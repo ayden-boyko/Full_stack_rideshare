@@ -105,6 +105,21 @@ function RiderPage() {
       console.log(window);
     });
 
+    socketInstance.current.on("canceled", (packet) => {
+      console.log("canceled", packet);
+      setWindow(windows.PAST_RIDES);
+      setDestination(null);
+      setDriver({
+        driver_Name: null,
+        driver_Id: null,
+        driver_Rating: null,
+        driver_SocketId: null,
+        driver_Cost: 0,
+        room: null,
+      });
+      sessionStorage.setItem("status", "none");
+    });
+
     socketInstance.current.on("finish", (packet) => {
       console.log("finished:", packet);
       openForm("finishRide");

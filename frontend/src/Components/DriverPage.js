@@ -201,6 +201,20 @@ function DriverPage() {
     if (thingy.length === 0) {
       setWindow(windows.PAST_RIDES);
     }
+    let passenger = passengers.filter((passenger) => {
+      return passenger[1] === rider[1];
+    });
+    socketInstance.current.emit(
+      "canceled",
+      JSON.stringify({
+        sendee: passenger[0][7],
+        string: "The ride has been canceled",
+        sender: data.name,
+        driver_id: data.id,
+        rating: data.rating,
+        sender_id: socketInstance.current.id,
+      })
+    );
   }
 
   // Function to update a specific row's person[13] based on key updates when the review gets responded to, no need to fetch data again

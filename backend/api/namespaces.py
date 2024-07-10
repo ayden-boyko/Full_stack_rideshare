@@ -52,6 +52,14 @@ class RiderNamespace(Namespace):
         print('Ride has finished', 'BY', sender_name)
         emit('finish', namespace='/rider', to=sendee)
 
+    def on_cancel(data):
+        data = json.loads(data)
+        print('data:',data)
+        sendee = data["sendee"]
+        sender_name = data["sender"]
+        print('Ride has been canceled', 'BY', sender_name)
+        emit('canceled', namespace='/rider', to=sendee)
+
 
 
 class DriverNamespace(Namespace):
