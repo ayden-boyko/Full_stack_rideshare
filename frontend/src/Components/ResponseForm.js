@@ -20,7 +20,7 @@ function ResponseForm(props) {
           className="btn"
           onClick={() => {
             props.updateResponse(
-              respond_to_review(props.passedrole, props.reviewee[0])
+              respond_to_review(props.passedrole, props.reviewee)
             );
             closeForm("myReview");
           }}

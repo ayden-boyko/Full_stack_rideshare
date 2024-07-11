@@ -48,7 +48,11 @@ export async function respond_to_review(role, review_id) {
     return;
   }
   console.log("review:", review);
-  const submitLink = `http://127.0.0.1:5000/single${role}/post/${review_id}/${review}/0/good/00:00:00/no/0.0`;
+
+  const submitLink =
+    role == "rider"
+      ? `http://127.0.0.1:5000/singlerider/post/${review_id}/${review}/0/0`
+      : `http://127.0.0.1:5000/singledriver/post/${review_id}/0/${review}/0/0/0`;
   try {
     const response = await fetch(submitLink, {
       method: "PUT",

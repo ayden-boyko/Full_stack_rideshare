@@ -8,6 +8,7 @@ import {
 } from "../Shared_Functions/retrieve.js";
 import { DataContext } from "../App";
 import FinishRideForm from "./FinishRideForm.js";
+import ResponseForm from "./ResponseForm.js";
 
 const windows = Object.freeze({
   PAST_RIDES: Symbol("past_rides"),
@@ -227,6 +228,19 @@ function RiderPage() {
       });
     } catch (error) {
       console.log("Error:", error);
+    }
+  }
+
+  function handle_Ride_State() {
+    switch (window) {
+      case windows.WAITING:
+        remove_Ride_Request("rider", data.id, data.name);
+        break;
+      case windows.GETING_RIDE:
+        break;
+      default:
+        setWindow(windows.REQUEST_RIDE);
+        break;
     }
   }
 
@@ -489,14 +503,12 @@ function RiderPage() {
             <button
               type="button"
               className="button-select"
-              onClick={() =>
-                window === windows.WAITING
-                  ? remove_Ride_Request("rider", data.id, data.name)
-                  : setWindow(windows.REQUEST_RIDE)
-              }
+              onClick={handle_Ride_State}
             >
-              {window === windows.WAITING || window === windows.GETING_RIDE
+              {window === windows.WAITING
                 ? "CANCEL RIDE"
+                : window === windows.GETING_RIDE
+                ? "RIDE IN PROGRESS"
                 : "REQUEST RIDE"}
             </button>
           </div>
@@ -531,6 +543,11 @@ function RiderPage() {
           <div>{renderWindow()}</div>
         </div>
       </div>
+      <ResponseForm
+        passedrole="rider"
+        reviewee={review_id}
+        updateResponse={updateResponse}
+      />
       <FinishRideForm
         passedRole="rider"
         id={data.id}

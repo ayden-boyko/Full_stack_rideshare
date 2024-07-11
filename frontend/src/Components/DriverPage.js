@@ -247,20 +247,20 @@ function DriverPage() {
           <td>{person[11]}</td>
           <td>{person[12]}</td>
 
-          <td>{person[14] === null ? "No Response Yet" : person[14]}</td>
+          <td>{person[13] === null ? "No Response Yet" : person[13]}</td>
           {/*Riders response*/}
           <td>
-            {person[13] === null ? (
+            {person[14] === null ? (
               <button
                 onClick={() => {
                   openForm("myReview");
-                  setReviewee(person);
+                  setReviewee(person[0]);
                 }}
               >
                 Respond
               </button>
             ) : (
-              person[13]
+              person[14]
             )}
           </td>
           {/*Drivers response*/}
