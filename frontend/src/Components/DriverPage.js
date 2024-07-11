@@ -475,6 +475,11 @@ function DriverPage() {
               className="button-select"
               name="get_riders"
               onClick={() => {
+                if (
+                  document.getElementById("myForm").style.display == "block"
+                ) {
+                  document.getElementById("myForm").style.display = "none";
+                }
                 if (passengers.length == 0) {
                   setWindow(windows.REQUEST_RIDER);
                   retrieveRiders();
@@ -490,6 +495,11 @@ function DriverPage() {
               className="button-select"
               name="get_bills"
               onClick={() => {
+                if (
+                  document.getElementById("myForm").style.display == "block"
+                ) {
+                  document.getElementById("myForm").style.display = "none";
+                }
                 setWindow(windows.BILLS);
                 if (bills.length === 0) {
                   loadBills();
@@ -505,6 +515,11 @@ function DriverPage() {
               className="button-select"
               name="get_past_rides "
               onClick={() => {
+                if (
+                  document.getElementById("myForm").style.display == "block"
+                ) {
+                  document.getElementById("myForm").style.display = "none";
+                }
                 setWindow(windows.PAST_RIDES);
               }}
             >

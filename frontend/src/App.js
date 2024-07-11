@@ -38,6 +38,7 @@ function App() {
   if (data.id == null) {
     return (
       <body className="App">
+        <div className="blurred-background" id="blurred"></div>
         <div className="start">
           <div className="bar">
             {data.role == null ? (
@@ -82,7 +83,9 @@ function App() {
             </div>
           ) : (
             <>
-              <Accounts userType={data.role} passedFunction={setData} />
+              <DataContext.Provider value={{ data, setData }}>
+                <Accounts />
+              </DataContext.Provider>
             </>
           )}
         </div>

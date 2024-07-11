@@ -50,7 +50,7 @@ export async function respond_to_review(role, review_id) {
   console.log("review:", review);
 
   const submitLink =
-    role == "rider"
+    role === "rider"
       ? `http://127.0.0.1:5000/singlerider/post/${review_id}/${review}/0/0`
       : `http://127.0.0.1:5000/singledriver/post/${review_id}/0/${review}/0/0/0`;
   try {

@@ -4,6 +4,7 @@ import { DataContext } from "../App";
 function NavBar(props) {
   const { data, setData } = useContext(DataContext);
   const style = `navbar-${data.role}`;
+
   return (
     <>
       <div className={style}>
@@ -20,11 +21,9 @@ function NavBar(props) {
 
 function toggleForm() {
   let form = document.getElementById("myForm").style.display;
-  if (form === "block") {
-    document.getElementById("myForm").style.display = "none";
-  } else {
-    document.getElementById("myForm").style.display = "block";
-  }
+  form === "block"
+    ? (document.getElementById("myForm").style.display = "none")
+    : (document.getElementById("myForm").style.display = "block");
 }
 
 async function changeAccountStatus(role, id) {
@@ -96,7 +95,7 @@ function AccountForm(props) {
         <input
           type="text"
           inputMode="numeric"
-          placeholder={data.zipcode}
+          placeholder={data.zipcode.toString()}
           name="zipcode"
           className="input-box"
           minLength="5"

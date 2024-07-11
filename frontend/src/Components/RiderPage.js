@@ -155,6 +155,8 @@ function RiderPage() {
       const result = await response.json();
       console.log("Success:", result);
       alert("Instructions Updated!");
+      document.getElementById("myInstructions").placeholder = tempInstruct;
+      document.getElementById("myInstructions").value = "";
     } catch (error) {
       console.log("Error:", error);
     }
@@ -477,6 +479,7 @@ function RiderPage() {
             </label>
             <textarea
               type="text"
+              id="myInstructions"
               name="instructions"
               placeholder={
                 data.instructions == null
@@ -488,7 +491,14 @@ function RiderPage() {
             <button
               type="button"
               className="button-select"
-              onClick={() => changeInstructions(data.id, data.name)}
+              onClick={() => {
+                if (
+                  document.getElementById("myForm").style.display == "block"
+                ) {
+                  document.getElementById("myForm").style.display = "none";
+                }
+                changeInstructions(data.id, data.name);
+              }}
               style={{
                 marginBottom: "10%",
                 fontSize: "99%",
@@ -503,7 +513,14 @@ function RiderPage() {
             <button
               type="button"
               className="button-select"
-              onClick={handle_Ride_State}
+              onClick={() => {
+                if (
+                  document.getElementById("myForm").style.display == "block"
+                ) {
+                  document.getElementById("myForm").style.display = "none";
+                }
+                handle_Ride_State();
+              }}
             >
               {window === windows.WAITING
                 ? "CANCEL RIDE"
@@ -517,8 +534,13 @@ function RiderPage() {
               type="button"
               className="button-select"
               onClick={() => {
+                if (
+                  document.getElementById("myForm").style.display == "block"
+                ) {
+                  document.getElementById("myForm").style.display = "none";
+                }
                 setWindow(windows.BILLS);
-                console.log(bills);
+                // console.log(bills);
                 if (bills.length === 0) {
                   loadBills();
                 }
@@ -532,6 +554,11 @@ function RiderPage() {
               type="button"
               className="button-select"
               onClick={() => {
+                if (
+                  document.getElementById("myForm").style.display == "block"
+                ) {
+                  document.getElementById("myForm").style.display = "none";
+                }
                 setWindow(windows.PAST_RIDES);
               }}
             >

@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import { DataContext } from "../App";
 
 function openForm() {
   document.getElementById("myForm").style.display = "block";
@@ -38,8 +39,8 @@ async function selectUser(userType, id, func) {
     date: userInfo[4],
     rating: userInfo[2],
     instructions: userInfo[3],
-    zipcode: userInfo[6], //setup location enetering upon account creation
-    is_active: userInfo[5],
+    zipcode: userInfo[5], //setup location enetering upon account creation
+    is_active: userInfo[6],
     carpool: false,
   });
 }
@@ -85,7 +86,7 @@ async function submitUser(props) {
     date: date,
     rating: 4,
     instructions: null,
-    zipcode: null,
+    zipcode: 12345,
     is_active: true,
     carpool: false,
   });
@@ -145,9 +146,10 @@ function NewUserform(props) {
   );
 }
 
-function Accounts(props) {
-  let text = `http://127.0.0.1:5000/accountinfo/${props.userType}`;
+function Accounts() {
   const [user, setUser] = useState(null);
+  const { data, setData } = useContext(DataContext);
+  let text = `http://127.0.0.1:5000/accountinfo/${data.role}`;
   useEffect(() => {
     const fetch_Info = async () => {
       const response = await fetch(text, {
@@ -165,17 +167,12 @@ function Accounts(props) {
     };
     fetch_Info();
   }, []);
-  let role = String(props.userType).slice(0, -1);
+  let role = String(data.role).slice(0, -1);
   const listUsers =
     user &&
-    user[props.userType]?.map((person) => (
-      <tr key={person[0]} className={`account-option-${props.userType}`}>
-        <td
-          onClick={() =>
-            selectUser(props.userType, person[0], props.passedFunction)
-          }
-          onMouseOver={() => console.log(`account-option-${props.userType}`)}
-        >
+    user[data.role]?.map((person) => (
+      <tr key={person[0]} className={`account-option-${data.role}`}>
+        <td onClick={() => selectUser(data.role, person[0], setData)}>
           {person[1]}
         </td>
       </tr>
@@ -199,10 +196,7 @@ function Accounts(props) {
           </tr>
         </tbody>
       </table>
-      <NewUserform
-        userType={props.userType}
-        passedFunction={props.passedFunction}
-      />
+      <NewUserform userType={data.role} passedFunction={setData} />
     </>
   );
 }
