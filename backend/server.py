@@ -63,7 +63,7 @@ api.add_resource(RideSingleDriver, '/singledriver/<string:driver_id>/<string:dri
 
 api.add_resource(RideSingleRiderPost, '/singlerider/post/<string:rider_id>/<string:review>/<int:rating>/<string:review_of_driver>', methods=[ "GET", "PUT", "POST"]) 
 
-api.add_resource(RideSingleDriverPost, '/singledriver/post/<string:driver_id>/<string:rider_id>/<string:review>/<string:rating>/<string:review_of_rider>/<string:carpool>/<string:cost>', methods=[ "GET", "PUT", "POST"]) 
+api.add_resource(RideSingleDriverPost, '/singledriver/post/<string:driver_id>/<string:rider_id>/<string:review>/<string:rating>/<string:review_of_rider>/<string:cost>', methods=[ "GET", "PUT", "POST"]) 
 
 api.add_resource(TransactionInfoRider, '/transaction/reciept/rider/<string:id>/<string:amount>/<string:timestamp>', methods=["POST", "GET"])
 

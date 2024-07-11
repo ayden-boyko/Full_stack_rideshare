@@ -39,7 +39,6 @@ function FinishRideForm(props) {
                 props.reviewee[1],
                 document.getElementById("finish_rating").value,
                 document.getElementById("finish_review").value,
-                props.carpool,
                 props.reviewee[8]
               );
               closeForm("finishRide");

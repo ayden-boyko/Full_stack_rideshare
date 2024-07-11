@@ -154,10 +154,9 @@ function DriverPage() {
     rider_id,
     rating,
     review_of_rider,
-    carpool,
     cost
   ) {
-    let tempLink = `http://127.0.0.1:5000/singledriver/post/${driver_id}/${rider_id}/0/${rating}/${review_of_rider}/${carpool}/${cost}`;
+    let tempLink = `http://127.0.0.1:5000/singledriver/post/${driver_id}/${rider_id}/0/${rating}/${review_of_rider}/${cost}`;
     try {
       const response = await fetch(tempLink, {
         method: "POST",
@@ -174,11 +173,11 @@ function DriverPage() {
       let passenger = passengers.filter((passenger) => {
         return passenger[1] === rider_id;
       });
-      console.log(passenger[0][7]);
+      console.log(passenger[0]);
       socketInstance.current.emit(
         "finish",
         JSON.stringify({
-          sendee: passenger[0][7],
+          sendee: passenger[0],
           string: "The ride has ended",
           sender: data.name,
           driver_id: data.id,
@@ -186,8 +185,9 @@ function DriverPage() {
           sender_id: socketInstance.current.id,
         })
       );
-
+      setPassengers(passenger);
       setWindow(windows.PAST_RIDES);
+      sessionStorage.setItem("status", "none");
     } catch (error) {
       console.log("Error:", error);
     }
@@ -470,11 +470,6 @@ function DriverPage() {
       <div className=" account-page">
         <div className=" account-page-sidebar-driver">
           <div>
-            <button type="button" className="button-select" onClick={() => 0}>
-              CARPOOL
-            </button>
-          </div>
-          <div>
             <button
               type="button"
               className="button-select"
@@ -530,7 +525,6 @@ function DriverPage() {
         passedRole="driver"
         id={data.id}
         reviewee={reviewee}
-        carpool={passengers.length > 1 ? "true" : "false"}
         finishRide={finishRide}
       />
     </>

@@ -21,8 +21,7 @@ CREATE TABLE IF NOT EXISTS "driver"(
     "special_instructions" TEXT,
     "birthday" DATE,
     "is_active" BOOLEAN DEFAULT true,
-    "zipcode" CHAR(5) DEFAULT '94131' CHECK ("zipcode" ~ '[0-9-]+' AND length("zipcode") = 5),
-    "carpool" BOOLEAN DEFAULT false
+    "zipcode" CHAR(5) DEFAULT '94131' CHECK ("zipcode" ~ '[0-9-]+' AND length("zipcode") = 5)
 );
 
 CREATE TABLE IF NOT EXISTS "rider"(
@@ -65,7 +64,6 @@ CREATE TABLE IF NOT EXISTS "current_rides"(
     "end" POINT, 
     "time" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(2),
     "zipcode" CHAR(5) DEFAULT '94131' CHECK ("zipcode" ~ '[0-9-]+' AND length("zipcode") = 5),
-    "carpool" BOOLEAN DEFAULT false,
     "passengers" INTEGER DEFAULT 1
 );
 
@@ -80,13 +78,12 @@ CREATE TABLE IF NOT EXISTS "past_rides"(
     "start" POINT, 
     "end" POINT,
     "finish_time" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(2),
-    "rofd" VARCHAR(100) DEFAULT 'OKAY',
-    "driver_rating" FLOAT DEFAULT 4.5,
-    "rofr" VARCHAR(100) DEFAULT 'OKAY',
-    "rider_rating" FLOAT DEFAULT 4.5,
+    "rofd" VARCHAR(100),
+    "driver_rating" FLOAT,
+    "rofr" VARCHAR(100),
+    "rider_rating" FLOAT,
     "r_response" VARCHAR(100),
     "d_response" VARCHAR(100),
-    "carpool" BOOLEAN DEFAULT false,
     "passengers" INTEGER DEFAULT 1
 );
 

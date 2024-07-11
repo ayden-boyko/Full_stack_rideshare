@@ -22,7 +22,6 @@ const windows = Object.freeze({
 // userInstructions,
 // userLocation,
 // userStatus,
-// userCarpool,
 function RiderPage() {
   const [window, setWindow] = useState(windows.PAST_RIDES);
   const [rides, setRides] = useState([]);
@@ -203,7 +202,7 @@ function RiderPage() {
   }
 
   async function finishRide(rider_id, rating_of_driver, review_of_driver) {
-    let tempLink = `http://127.0.0.1:5000/singlerider/post//${rider_id}/0/${rating_of_driver}/${review_of_driver}`;
+    let tempLink = `http://127.0.0.1:5000/singlerider/post/${rider_id}/0/${rating_of_driver}/${review_of_driver}`;
     try {
       const response = await fetch(tempLink, {
         method: "POST",
@@ -217,6 +216,15 @@ function RiderPage() {
       const result = await response.json();
       console.log("Finish Success:", result);
       setWindow(windows.PAST_RIDES);
+      sessionStorage.setItem("status", "none");
+      setDriver({
+        driver_Name: null,
+        driver_Id: null,
+        driver_Rating: null,
+        driver_SocketId: null,
+        driver_Cost: 0,
+        room: null,
+      });
     } catch (error) {
       console.log("Error:", error);
     }
@@ -406,25 +414,6 @@ function RiderPage() {
                 </div>
               </span>
             </div>
-            <span>
-              <div className="mychoice">
-                <div style={{ justifyContent: "center" }}>
-                  <label style={{ fontWeight: "bold", color: "black" }}>
-                    CARPOOL?
-                  </label>
-                </div>
-                <div>
-                  <label>
-                    <input type="radio" name="check" />
-                    <span>Yes</span>
-                  </label>
-                  <label>
-                    <input type="radio" name="check" defaultChecked />
-                    <span>No</span>
-                  </label>
-                </div>
-              </div>
-            </span>
             <br></br>
             <span>
               <button
@@ -546,7 +535,6 @@ function RiderPage() {
         passedRole="rider"
         id={data.id}
         reviewee={driver.driver_Id}
-        carpool={"false"}
         finishRide={finishRide}
       />
     </>

@@ -121,7 +121,6 @@ class RideSingleRiderPost(Resource):
     parser.add_argument('review')
     parser.add_argument('rating')
     parser.add_argument('review_of_driver')
-    parser.add_argument('time')
 
     """all methods accociated with rider info"""
     def get(self, rider_id):
@@ -131,16 +130,16 @@ class RideSingleRiderPost(Resource):
         return get_reviews(rider_id, 'rider')
     
     """creates new ride"""
-    def post(self, rider_id, rating, review_of_driver, time, carpool, cost):
-        if any(param is None for param in (rider_id, rating, review_of_driver, time)):
+    def post(self, rider_id, rating, review_of_driver, review):
+        if any(param is None for param in (rider_id, rating, review_of_driver)):
             abort(400, message="All parameters cannot be null.")
         try:
-            return rider_finish_ride(rider_id, rating, review_of_driver, time)
+            return rider_finish_ride(rider_id, rating, review_of_driver )
         except Exception:
             abort(500, message="Failed to finish ride")
     
     """responds to comments on ride"""
-    def put(self, rider_id, review, rating=None, review_of_driver=None, time=None, carpool=None, cost=None):
+    def put(self, rider_id, review, rating=None, review_of_driver=None, time=None, cost=None):
         if any(param is None for param in (rider_id, review)):
             abort(400, message="Rider ID and review cannot be null.")
         try:
@@ -156,7 +155,6 @@ class RideSingleDriverPost(Resource):
     parser.add_argument('review')
     parser.add_argument('rating')
     parser.add_argument('review_of_rider')
-    parser.add_argument('carpool')
     parser.add_argument('cost')
 
     """all methods accociated with rider info"""
@@ -167,16 +165,16 @@ class RideSingleDriverPost(Resource):
         return get_reviews(driver_id, 'driver')
     
     """creates new ride"""
-    def post(self, driver_id, rider_id, rating, review, review_of_rider, carpool, cost):
-        if any(param is None for param in (driver_id, rider_id, rating, review_of_rider, carpool, cost)):
+    def post(self, driver_id, rider_id, rating, review, review_of_rider, cost):
+        if any(param is None for param in (driver_id, rider_id, rating, review_of_rider, cost)):
             abort(400, message="All parameters cannot be null.")
         try:
-            return driver_finish_ride(driver_id, rider_id, rating, review_of_rider, carpool, cost)
+            return driver_finish_ride(driver_id, rider_id, rating, review_of_rider, cost)
         except Exception as error:
             abort(500, message=f"Failed to finish ride: {error}")
     
     """cancels ride"""
-    def put(self, driver_id, review, rider_id=None, rating=None, review_of_rider=None, carpool=None, cost=None):
+    def put(self, driver_id, review, rider_id=None, rating=None, review_of_rider=None, cost=None):
         if any(param is None for param in (driver_id, review)):
             abort(400, message="Rider ID and review cannot be null.")
         try:
