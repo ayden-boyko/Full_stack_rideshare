@@ -508,20 +508,20 @@ def get_bills(id, name, start = datetime(1, 1, 1), end = datetime(9999, 12, 31))
     """returns all bills associated with an account"""
     conn, cur = db_connect()
 
-    statement = """SELECT billed_id, name, charge, timestamp::VARCHAR(21) FROM tab WHERE billed_id = %s AND name = %s AND timestamp > %s AND timestamp < %s"""
+    statement = """SELECT billed_id, name, charge, timestamp FROM tab WHERE billed_id = %s AND name = %s AND timestamp > %s AND timestamp < %s"""
     cur.execute(statement, [id, name, start, end])
     result = cur.fetchall()
 
     db_disconnect(conn)
     return jsonify(result)
 
-def get_owed(id, start = datetime(1, 1, 1), end = datetime(9999, 12, 31)):
+def get_owed(id):
 
     """returns all owed amounts associated with a driver"""
     conn, cur = db_connect()
 
-    statement = """SELECT T.name, T.charge, T.timestamp FROM tab T INNER JOIN past_rides P ON T.ride_id = P.past_rides_id WHERE timestamp > %s AND timestamp < %s AND P.driver_id = %s"""
-    cur.execute(statement, [ start, end, id])
+    statement = """SELECT T.name, T.charge, T.timestamp FROM tab T INNER JOIN past_rides P ON T.name = P.rider_name WHERE P.driver_id = %s"""
+    cur.execute(statement, [id])
     result = cur.fetchall()
 
     db_disconnect(conn)

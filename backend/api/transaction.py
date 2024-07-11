@@ -49,6 +49,7 @@ class TransactionInfoDriver(Resource):
             allreceipts = get_owed(id).get_json()
             amount = min(int(amount), len(allreceipts))
             receipts = allreceipts[:amount]
+            print(receipts)
             return receipts
         except Exception as e:
             abort(400, message=f"Error occurred while fetching receipts: {str(e)}")
