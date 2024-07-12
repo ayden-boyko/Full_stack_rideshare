@@ -32,6 +32,8 @@ async function selectUser(userType, id, func) {
     }
   };
   const userInfo = await getUser();
+  let zip = submitRole == "rider" ? userInfo[6] : userInfo[5];
+  let active = submitRole == "rider" ? userInfo[5] : userInfo[6];
   func({
     role: submitRole,
     id: id,
@@ -39,8 +41,8 @@ async function selectUser(userType, id, func) {
     date: userInfo[4],
     rating: userInfo[2],
     instructions: userInfo[3],
-    zipcode: userInfo[5], //setup location enetering upon account creation
-    is_active: userInfo[6],
+    zipcode: zip, //wierd crap with the way i was storing rider and drivers zipcode
+    is_active: active,
     carpool: false,
   });
 }

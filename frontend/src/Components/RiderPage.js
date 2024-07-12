@@ -443,7 +443,12 @@ function RiderPage() {
           </form>
         );
       case windows.WAITING:
-        return <h1>WAITING FOR DRIVER</h1>;
+        return (
+          <>
+            <h1>WAITING FOR DRIVER</h1>
+            <br></br>
+          </>
+        );
       case windows.GETING_RIDE:
         return (
           <div className="ride-Info-Page">
@@ -471,7 +476,7 @@ function RiderPage() {
               style={{
                 fontWeight: "bold",
                 marginTop: "10%",
-                color: "white",
+                color: "black",
                 padding: "10px",
               }}
             >

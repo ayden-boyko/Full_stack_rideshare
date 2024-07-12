@@ -8,8 +8,12 @@ function NavBar(props) {
   return (
     <>
       <div className={style}>
-        <p className="navtext">{data.name}</p>
-        <p className="navtext">Rating: {data.rating}</p>
+        <p className="navtext" style={{ color: "black" }}>
+          {data.name}
+        </p>
+        <p className="navtext" style={{ color: "black" }}>
+          Rating: {data.rating}
+        </p>
         <button className="button-select" onClick={() => toggleForm()}>
           Account
         </button>
@@ -82,9 +86,10 @@ async function updateLocation(role, id) {
 
 function AccountForm(props) {
   const { data, setData } = useContext(DataContext);
+  const style = `form-container-${data.role}`;
   return (
     <div className="form-popup" id="myForm">
-      <form className="form-container" id="accountForm">
+      <form className={style} id="accountForm">
         <h1 style={{ color: "black" }}>Account Info</h1>
 
         <label type="text">

@@ -50,7 +50,7 @@
 
 .navbar-driver {
   display: grid;
-  grid-template-columns: 20% 20% 20%;
+  grid-template-columns: 22% 20% 20%;
   grid-gap: 15vw;
   align-items: center;
   justify-content: center;
@@ -59,12 +59,12 @@
   height: 50%;
   margin-left: auto;
   margin-right: auto;
-  background-color: var(--driver-color-dark);
+  background-color: var(--driver-color-slightest);
 }
 
 .navbar-rider {
   display: grid;
-  grid-template-columns: 20% 20% 20%;
+  grid-template-columns: 22% 20% 20%;
   grid-gap: 15vw;
   align-items: center;
   justify-content: center;
@@ -73,7 +73,7 @@
   height: 50%;
   margin-left: auto;
   margin-right: auto;
-  background-color: var(--rider-color-dark);
+  background-color: var(--rider-color-slightest);
 }
 
 .navtext {
@@ -206,10 +206,21 @@ label:last-child span {
   transform: translate(-50%, -50%);
 }
 
-.form-container {
+.form-container-rider {
   min-width: 50vw;
   padding: 10px;
-  background-color: lightgray;
+  background-color: var(--rider-color-slightest);
+  border-radius: 10px;
+  /* center elements in popup */
+  text-align: center;
+  margin: 10px;
+  border: 2px solid black;
+}
+
+.form-container-driver {
+  min-width: 50vw;
+  padding: 10px;
+  background-color: var(--driver-color-slightest);
   border-radius: 10px;
   /* center elements in popup */
   text-align: center;
@@ -218,9 +229,9 @@ label:last-child span {
 }
 
 /* Full-width input fields */
-.form-container input[type="text"],
-.form-container input[type="location"],
-.form-container input[type="date"] {
+.form-container-driver input[type="text"],
+.form-container-driver input[type="location"],
+.form-container-driver input[type="date"] {
   width: 75%;
   padding: 15px;
   margin: 5px 0 22px 0;
@@ -230,9 +241,29 @@ label:last-child span {
 }
 
 /* When the inputs get focus, do something */
-.form-container input[type="text"]:focus,
-.form-container input[type="location"],
-.form-container input[type="date"]:focus {
+.form-container-driver input[type="text"]:focus,
+.form-container-driver input[type="location"],
+.form-container-driver input[type="date"]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+/* Full-width input fields */
+.form-container-rider input[type="text"],
+.form-container-rider input[type="location"],
+.form-container-rider input[type="date"] {
+  width: 75%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  border: none;
+  background: #f1f1f1;
+  font-size: calc(10px + 2vmin);
+}
+
+/* When the inputs get focus, do something */
+.form-container-rider input[type="text"]:focus,
+.form-container-rider input[type="location"],
+.form-container-rider input[type="date"]:focus {
   background-color: #ddd;
   outline: none;
 }
@@ -319,7 +350,7 @@ label:last-child span {
   justify-content: center;
   align-items: center;
   justify-items: center;
-  background-color: var(--rider-color-dark);
+  background-color: var(--rider-color-slightest);
   height: 87.8vh;
 }
 
@@ -357,7 +388,7 @@ label:last-child span {
   justify-content: center;
   align-items: center;
   justify-items: center;
-  background-color: var(--driver-color-dark);
+  background-color: var(--driver-color-slightest);
   height: 87.8vh;
 }
 .account-page-main {
