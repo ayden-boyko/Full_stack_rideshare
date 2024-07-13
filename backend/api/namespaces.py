@@ -60,6 +60,15 @@ class RiderNamespace(Namespace):
         print('Ride has been canceled', 'BY', sender_name)
         emit('canceled', namespace='/rider', to=sendee)
 
+    def on_chat(data):
+        data = json.loads(data)
+        print('data:',data)
+        sendee = data["sendee"]
+        sender_name = data["sender"]
+        message = data["message"]
+        print('Rider has recieved chat:', message, 'FROM', sender_name)
+        emit('chat', {'sender':sender_name, 'message':message}, namespace='/rider', to=sendee)
+
 
 
 class DriverNamespace(Namespace):
@@ -101,3 +110,12 @@ class DriverNamespace(Namespace):
         print('data:',data)
         sendee = data['sendee']
         emit('finish', namespace='/rider', to=sendee)
+
+    def on_chat(data):
+        data = json.loads(data)
+        print('data:',data)
+        sendee = data["sendee"]
+        sender = data["sender"]
+        message = data["message"]
+        print('Driver has recieved chat:', message, 'FROM', sender)
+        emit('chat', {'sender':sender, 'message':message}, namespace='/driver', to=sendee)

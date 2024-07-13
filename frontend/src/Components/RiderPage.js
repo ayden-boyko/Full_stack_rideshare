@@ -9,6 +9,7 @@ import {
 import { DataContext } from "../App";
 import FinishRideForm from "./FinishRideForm.js";
 import ResponseForm from "./ResponseForm.js";
+import ChatBox from "./ChatBox.js";
 
 const windows = Object.freeze({
   PAST_RIDES: Symbol("past_rides"),
@@ -333,40 +334,44 @@ function RiderPage() {
         if (rides.length !== 0) {
           return (
             <table className="infotable">
-              <tr>
-                <th>Driver</th>
-                <th>Rider</th>
-                <th>Instructions</th>
-                <th>Start</th>
-                <th>End</th>
-                <th>Time</th>
-                <th>Review of Driver</th>
-                <th>Rating of Driver</th>
-                <th>Review of Rider</th>
-                <th>Rating of Rider</th>
-                <th>Driver's Response</th>
-                <th>Rider's Response</th>
-              </tr>
+              <thead>
+                <tr>
+                  <th>Driver</th>
+                  <th>Rider</th>
+                  <th>Instructions</th>
+                  <th>Start</th>
+                  <th>End</th>
+                  <th>Time</th>
+                  <th>Review of Driver</th>
+                  <th>Rating of Driver</th>
+                  <th>Review of Rider</th>
+                  <th>Rating of Rider</th>
+                  <th>Driver's Response</th>
+                  <th>Rider's Response</th>
+                </tr>
+              </thead>
               <tbody>{listPastRides}</tbody>
             </table>
           );
         } else {
           return (
             <table className="infotable">
-              <tr>
-                <th>Driver</th>
-                <th>Rider</th>
-                <th>Instructions</th>
-                <th>Start</th>
-                <th>End</th>
-                <th>Time</th>
-                <th>Review of Driver</th>
-                <th>Rating of Driver</th>
-                <th>Review of Rider</th>
-                <th>Rating of Rider</th>
-                <th>Driver's Response</th>
-                <th>Rider's Response</th>
-              </tr>
+              <thead>
+                <tr>
+                  <th>Driver</th>
+                  <th>Rider</th>
+                  <th>Instructions</th>
+                  <th>Start</th>
+                  <th>End</th>
+                  <th>Time</th>
+                  <th>Review of Driver</th>
+                  <th>Rating of Driver</th>
+                  <th>Review of Rider</th>
+                  <th>Rating of Rider</th>
+                  <th>Driver's Response</th>
+                  <th>Rider's Response</th>
+                </tr>
+              </thead>
               <tbody>
                 <tr>
                   <td colSpan={"100%"}>NO PAST RIDES YET</td>
@@ -379,14 +384,14 @@ function RiderPage() {
         if (bills.length !== 0) {
           return (
             <table className="infotable">
-              <tbody>
+              <thead>
                 <tr>
                   <th>Rider</th>
                   <th>Cost</th>
                   <th>Time</th>
                 </tr>
-                {listBills}
-              </tbody>
+              </thead>
+              <tbody>{listBills}</tbody>
             </table>
           );
         } else
@@ -451,13 +456,19 @@ function RiderPage() {
         );
       case windows.GETING_RIDE:
         return (
-          <div className="ride-Info-Page">
-            <b className="ride-Info-Page-title">RIDE INFO</b>
-            <div className="ride-Info-Page-content">
-              <p>DRIVER NAME: {driver.driver_Name}</p>
-              <p>DRIVER RATING: {driver.driver_Rating}</p>
-              <p>DESTINATION: {destination}</p>
-              <p>COST: {driver.driver_Cost}</p>
+          <div className="ride-Info-Page-GettingRide">
+            <div className="ride-Info-Page-content-GettingRide">
+              <div
+                className="rider-content-GettingRide"
+                style={{ flexBasis: "49%" }}
+              >
+                <b className="ride-Info-Page-title-GettingRide">RIDE INFO</b>
+                <p>DRIVER NAME: {driver.driver_Name}</p>
+                <p>DRIVER RATING: {driver.driver_Rating}</p>
+                <p>DESTINATION: {destination}</p>
+                <p>COST: {driver.driver_Cost}</p>
+              </div>
+              <ChatBox rider_socket={socketInstance} driver={driver} />
             </div>
           </div>
         );

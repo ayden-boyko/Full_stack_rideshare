@@ -86,7 +86,8 @@ socketio.on_event('message', RiderNamespace.on_match, namespace='/driver')
 socketio.on_event('finish', RiderNamespace.on_end, namespace='/driver') # * triggers end of ride event for rider, updates screen, etc...
 socketio.on_event('canceled', RiderNamespace.on_cancel, namespace='/driver') # * notifies rider that their ride has been canceled
 socketio.on_event('message', DriverNamespace.on_match, namespace='/rider')
-#
+socketio.on_event('chat', DriverNamespace.on_chat, namespace='/rider')
+socketio.on_event('chat', RiderNamespace.on_chat, namespace='/driver')
 
 if __name__ == '__main__':
     rebuild_tables()

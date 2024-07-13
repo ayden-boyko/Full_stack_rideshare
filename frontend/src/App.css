@@ -351,7 +351,7 @@ label:last-child span {
   align-items: center;
   justify-items: center;
   background-color: var(--rider-color-slightest);
-  height: 87.8vh;
+  height: 88vh;
 }
 
 .InstructForm {
@@ -389,8 +389,9 @@ label:last-child span {
   align-items: center;
   justify-items: center;
   background-color: var(--driver-color-slightest);
-  height: 87.8vh;
+  height: 88vh;
 }
+
 .account-page-main {
   padding: 10px;
   flex: 1;
@@ -539,6 +540,43 @@ label:last-child span {
   resize: none;
   min-height: 3em;
   max-height: 10em;
+}
+
+.ride-Info-Page-GettingRide {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  justify-content: flex-start;
+}
+
+.ride-Info-Page-title-GettingRide {
+  text-align: center;
+  width: 100%;
+  padding-bottom: 25px;
+}
+
+.ride-Info-Page-content-GettingRide {
+  width: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start; /* Align items to the left */
+  padding: 10px;
+  columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.rider-content-GettingRide {
+  width: 100%;
+  height: 82vh;
+  padding: 10px;
+  border: 2px solid black;
+  border-radius: 10px;
+  font-size: calc(10px + 2vmin);
+  background-color: white;
+  align-items: center;
+  justify-content: center;
 }
 
 .ride-Info-Page {
