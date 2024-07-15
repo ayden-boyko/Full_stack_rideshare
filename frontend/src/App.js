@@ -37,7 +37,7 @@ function App() {
 
   if (data.id == null) {
     return (
-      <body className="App">
+      <>
         <div className="blurred-background" id="blurred"></div>
         <div className="start">
           <div className="bar">
@@ -89,16 +89,14 @@ function App() {
             </>
           )}
         </div>
-      </body>
+      </>
     );
   } else {
     return (
-      <body className="App">
-        <DataContext.Provider value={{ data, setData }}>
-          <NavBar logData={logOUT} />
-          {data.role === "driver" ? <DriverPage /> : <RiderPage />}
-        </DataContext.Provider>
-      </body>
+      <DataContext.Provider value={{ data, setData }}>
+        <NavBar logData={logOUT} />
+        {data.role === "driver" ? <DriverPage /> : <RiderPage />}
+      </DataContext.Provider>
     );
   }
 }

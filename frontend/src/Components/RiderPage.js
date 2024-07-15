@@ -468,7 +468,7 @@ function RiderPage() {
                 <p>DESTINATION: {destination}</p>
                 <p>COST: {driver.driver_Cost}</p>
               </div>
-              <ChatBox rider_socket={socketInstance} driver={driver} />
+              <ChatBox rider_socket={socketInstance} recipient={driver} />
             </div>
           </div>
         );
@@ -509,7 +509,7 @@ function RiderPage() {
               className="button-select"
               onClick={() => {
                 if (
-                  document.getElementById("myForm").style.display == "block"
+                  document.getElementById("myForm").style.display === "block"
                 ) {
                   document.getElementById("myForm").style.display = "none";
                 }
@@ -531,7 +531,7 @@ function RiderPage() {
               className="button-select"
               onClick={() => {
                 if (
-                  document.getElementById("myForm").style.display == "block"
+                  document.getElementById("myForm").style.display === "block"
                 ) {
                   document.getElementById("myForm").style.display = "none";
                 }
@@ -551,7 +551,7 @@ function RiderPage() {
               className="button-select"
               onClick={() => {
                 if (
-                  document.getElementById("myForm").style.display == "block"
+                  document.getElementById("myForm").style.display === "block"
                 ) {
                   document.getElementById("myForm").style.display = "none";
                 }
@@ -571,7 +571,7 @@ function RiderPage() {
               className="button-select"
               onClick={() => {
                 if (
-                  document.getElementById("myForm").style.display == "block"
+                  document.getElementById("myForm").style.display === "block"
                 ) {
                   document.getElementById("myForm").style.display = "none";
                 }

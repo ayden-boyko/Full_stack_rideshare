@@ -9,10 +9,9 @@ function closeForm() {
   document.getElementById("myForm").style.display = "none";
 }
 
-async function selectUser(userType, id, func) {
+async function selectUser(id, userType, setData) {
   let submitRole = String(userType).slice(0, -1);
   let submitLink = `http://127.0.0.1:5000/accountinfo/${submitRole}/none/0/${id}/none`;
-
   const getUser = async () => {
     try {
       const response = await fetch(submitLink, {
@@ -32,19 +31,32 @@ async function selectUser(userType, id, func) {
     }
   };
   const userInfo = await getUser();
-  let zip = submitRole == "rider" ? userInfo[6] : userInfo[5];
-  let active = submitRole == "rider" ? userInfo[5] : userInfo[6];
-  func({
-    role: submitRole,
-    id: id,
-    name: userInfo[1],
-    date: userInfo[4],
-    rating: userInfo[2],
-    instructions: userInfo[3],
-    zipcode: zip, //wierd crap with the way i was storing rider and drivers zipcode
-    is_active: active,
-    carpool: false,
-  });
+  let zip = submitRole === "rider" ? userInfo[6] : userInfo[5];
+  let active = submitRole === "rider" ? userInfo[5] : userInfo[6];
+  try {
+    console.log({
+      role: submitRole,
+      id: id,
+      name: userInfo[1],
+      rating: userInfo[2],
+      instructions: userInfo[3],
+      zipcode: zip, //wierd crap with the way i was storing rider and drivers zipcode
+      is_active: active,
+      carpool: false,
+    });
+    setData({
+      role: submitRole,
+      id: id,
+      name: userInfo[1],
+      rating: userInfo[2],
+      instructions: userInfo[3],
+      zipcode: zip, //wierd crap with the way i was storing rider and drivers zipcode
+      is_active: active,
+      carpool: false,
+    });
+  } catch (error) {
+    console.log("Error:", error);
+  }
 }
 
 async function submitUser(props) {
@@ -172,13 +184,18 @@ function Accounts() {
   let role = String(data.role).slice(0, -1);
   const listUsers =
     user &&
-    user[data.role]?.map((person) => (
-      <tr key={person[0]} className={`account-option-${data.role}`}>
-        <td onClick={() => selectUser(data.role, person[0], setData)}>
-          {person[1]}
-        </td>
-      </tr>
-    ));
+    user[data.role]?.map(
+      (person) => (
+        console.log(person),
+        (
+          <tr key={person[0]} className={`account-option-${data.role}`}>
+            <td onClick={() => selectUser(person[0], data.role, setData)}>
+              {person[1]}
+            </td>
+          </tr>
+        )
+      )
+    );
   return (
     <>
       <table className="account-table">

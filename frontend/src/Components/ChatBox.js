@@ -2,13 +2,22 @@ import React, { useState, useContext } from "react";
 import { DataContext } from "../App";
 
 function ChatBox(props) {
-  const { rider_socket, driver } = props;
-  const [chat, setUser] = useState([]);
+  const { rider_socket, recipient } = props;
+  const [chat, setUser] = useState([
+    { sender: "rider", message: "hello" },
+    { sender: "driver", message: "how are you" },
+    { sender: "rider", message: "good" },
+    { sender: "driver", message: "fine" },
+    { sender: "rider", message: "thank you" },
+    { sender: "driver", message: "bye" },
+    { sender: "rider", message: "bye" },
+    { sender: "driver", message: "bye" },
+    { sender: "rider", message: "bye" },
+  ]);
   const { data, setData } = useContext(DataContext);
 
   async function message_Driver() {
-    let message = document.getElementById("message_Driver").value;
-    let recipient = driver.driver_SocketId;
+    let message = document.getElementById("message_Recipient").value;
 
     if (message === "") {
       alert("Please enter a message");
@@ -16,31 +25,47 @@ function ChatBox(props) {
       rider_socket.emit(
         "chat",
         JSON.stringify({
-          sendee: recipient,
+          sendee: recipient.driver_SocketId,
           message: message,
           sender: data.socketInstance.id,
-          room: driver.room,
+          room: recipient.room,
         })
       );
-      setUser([...chat, { sender: "rider", message }]);
+      setUser([...chat, { sender: data.role, message: message }]);
     }
   }
 
-  chat.map((chat) => {
-    let style =
-      chat.sender === "rider"
-        ? { jsutifyContent: "end" }
-        : { justifyContent: "start" };
+  let messages = chat.map((chat, index) => {
+    let thing =
+      data.role === chat.sender
+        ? { textAlign: "right" }
+        : { textAlign: "left" };
     return (
-      <div>
-        <p style={style}>{chat.message}</p>
+      <div
+        key={index}
+        style={{
+          display: "flex",
+          justifyContent:
+            thing.textAlign === "right" ? "flex-end" : "flex-start",
+        }}
+      >
+        <p
+          style={{
+            backgroundColor: chat.sender === "rider" ? "#98f1ff" : "#ffad8f",
+            padding: "10px",
+            borderRadius: "10px",
+            maxWidth: "60%",
+          }}
+        >
+          {chat.message}
+        </p>
       </div>
     );
   });
 
   return (
     <div className="rider-content-GettingRide" style={{ flexBasis: "30%" }}>
-      <p>CHAT WITH {driver.driver_Name}</p>
+      <p>CHAT WITH {recipient.driver_Name}</p>
       <div
         style={{
           height: "80%",
@@ -50,11 +75,11 @@ function ChatBox(props) {
           padding: "10px",
         }}
       >
-        {chat.length === 0 ? "No messages yet" : chat}
+        {chat.length === 0 ? "No messages yet" : messages}
       </div>
       <input
         type="text"
-        id="message_Driver"
+        id="message_Recipient"
         name="message"
         placeholder="Enter message"
         required
