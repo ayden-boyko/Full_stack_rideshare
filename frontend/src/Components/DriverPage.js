@@ -10,13 +10,7 @@ import { DataContext } from "../App";
 import ResponseForm from "./ResponseForm";
 import FinishRideForm from "./FinishRideForm";
 import ChatBox from "./ChatBox";
-
-const windows = Object.freeze({
-  PAST_RIDES: Symbol("past_rides"),
-  BILLS: Symbol("bills"),
-  REQUEST_RIDER: Symbol("request_riders"),
-  GIVING_RIDE: Symbol("giving_ride"),
-});
+import windows from "../Types/WindowStates";
 
 function DriverPage() {
   const [window, setWindow] = useState(windows.PAST_RIDES);
@@ -174,7 +168,7 @@ function DriverPage() {
       let passenger = passengers.filter((passenger) => {
         return passenger[1] === rider_id;
       });
-      console.log(passenger[0]);
+
       socketInstance.current.emit(
         "finish",
         JSON.stringify({
@@ -186,6 +180,11 @@ function DriverPage() {
           sender_id: socketInstance.current.id,
         })
       );
+
+      passenger = passengers.filter((passenger) => {
+        return passenger[1] !== rider_id;
+      });
+
       setPassengers(passenger);
       setWindow(windows.PAST_RIDES);
       sessionStorage.setItem("status", "none");
@@ -322,51 +321,11 @@ function DriverPage() {
     }
   });
 
-  const listPassengers = passengers?.map((person, index) => {
-    {
-      /*person[0] = current_rides_id 
-    person[1] = current_passenger_id
-    person[2] = passenger_name
-    person[3] = passenger_rating
-    person[4] = instructions
-    person[5] = pickup
-    person[6] = end
-    person[7] = socket_sid
-    person[8] = cost*/
-    }
-    return (
-      <tr key={index}>
-        <td>{person[2]}</td> {/*name*/}
-        <td>{person[3]}</td> {/*rating*/}
-        <td>{person[5]}</td> {/*pickup*/}
-        <td>{person[6]}</td> {/*end*/}
-        <td>{person[8]}</td> {/*cost*/}
-        <td>
-          <button
-            onClick={() => {
-              setReviewee(person);
-              openForm("finishRide");
-            }}
-          >
-            FINISH
-          </button>
-        </td>
-        <td>
-          <button
-            onClick={() => {
-              remove_Rider("driver", person);
-            }}
-          >
-            CANCEL
-          </button>
-        </td>
-      </tr>
-    );
-  });
   /** conditionally renders either
    * 1. past rides, in order to allow user to coment on them.
    * 2. bills, ie cost of said rides.
-   * 3.the request ride window. */
+   * 3. the select rider window.
+   * 4. the finish ride window.*/
 
   const renderWindow = () => {
     switch (window) {
@@ -465,6 +424,22 @@ function DriverPage() {
                 <p>RIDER RATING: {passengers[0][3]}</p>
                 <p>DESTINATION: {passengers[0][6]}</p>
                 <p>COST: {passengers[0][8]}</p>
+                <button
+                  onClick={() => {
+                    setReviewee(passengers[0]);
+                    openForm("finishRide");
+                  }}
+                >
+                  FINISH
+                </button>
+                <br></br>
+                <button
+                  onClick={() => {
+                    remove_Rider("driver", passengers[0]);
+                  }}
+                >
+                  CANCEL
+                </button>
               </div>
               <ChatBox
                 rider_socket={socketInstance}
@@ -554,6 +529,7 @@ function DriverPage() {
         id={data.id}
         reviewee={reviewee}
         finishRide={finishRide}
+        setWindow={setWindow}
       />
     </>
   );

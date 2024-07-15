@@ -10,14 +10,7 @@ import { DataContext } from "../App";
 import FinishRideForm from "./FinishRideForm.js";
 import ResponseForm from "./ResponseForm.js";
 import ChatBox from "./ChatBox.js";
-
-const windows = Object.freeze({
-  PAST_RIDES: Symbol("past_rides"),
-  BILLS: Symbol("bills"),
-  REQUEST_RIDE: Symbol("request_ride"),
-  WAITING: Symbol("waiting"),
-  GETING_RIDE: Symbol("getting_ride"),
-});
+import windows from "../Types/WindowStates.js";
 // data.id,
 // data.name,
 // userRating,
