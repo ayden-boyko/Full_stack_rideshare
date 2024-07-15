@@ -461,7 +461,10 @@ function RiderPage() {
                 <p>DESTINATION: {destination}</p>
                 <p>COST: {driver.driver_Cost}</p>
               </div>
-              <ChatBox rider_socket={socketInstance} recipient={driver} />
+              <ChatBox
+                user_socket={socketInstance.current}
+                recipient={driver}
+              />
             </div>
           </div>
         );

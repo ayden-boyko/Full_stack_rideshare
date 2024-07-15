@@ -78,8 +78,6 @@ def after_request(response):
     response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
     return response
 
-# TODO add methods to namespaces that allow for messaging between rider and driver
-
 socketio.on_namespace(RiderNamespace('/rider'))
 socketio.on_namespace(DriverNamespace('/driver'))
 socketio.on_event('message', RiderNamespace.on_match, namespace='/driver')

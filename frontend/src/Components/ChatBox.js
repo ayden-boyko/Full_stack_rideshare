@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { DataContext } from "../App";
 
 //drivers passenger
@@ -14,7 +14,7 @@ import { DataContext } from "../App";
 
 function ChatBox(props) {
   const { user_socket, recipient } = props;
-  const [chat, setUser] = useState([
+  const [chat, setChat] = useState([
     { sender: "rider", message: "hello" },
     { sender: "driver", message: "how are you" },
     { sender: "rider", message: "good" },
@@ -33,19 +33,30 @@ function ChatBox(props) {
     if (message === "") {
       alert("Please enter a message");
     } else {
-      user_socket.emit(
-        "chat",
-        JSON.stringify({
-          sendee:
-            data.role === "driver" ? recipient[7] : recipient.driver_SocketId,
-          message: message,
-          sender: data.socketInstance.id,
-          room: data.role === "driver" ? recipient[0] : recipient.room,
-        })
-      );
-      setUser([...chat, { sender: data.role, message: message }]);
+      try {
+        user_socket.emit(
+          "chat",
+          JSON.stringify({
+            sendee:
+              data.role === "driver" ? recipient[7] : recipient.driver_SocketId,
+            message: message,
+            sender: data.role,
+            // room: data.role === "driver" ? recipient[0] : recipient.room,
+          })
+        );
+        setChat([...chat, { sender: data.role, message: message }]);
+        document.getElementById("message_Recipient").value = "";
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
+
+  useEffect(() => {
+    user_socket.on("chat", (data) =>
+      setChat([...chat, { sender: data.sender, message: data.message }])
+    );
+  }, [chat]);
 
   let messages = chat.map((chat, index) => {
     let thing =
@@ -99,7 +110,7 @@ function ChatBox(props) {
         placeholder="Enter message"
         required
       ></input>
-      <button type="submit" className="" onClick={(event) => event}>
+      <button type="submit" className="" onClick={() => message_Driver()}>
         SEND
       </button>
     </div>

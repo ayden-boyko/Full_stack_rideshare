@@ -442,7 +442,7 @@ function DriverPage() {
                 </button>
               </div>
               <ChatBox
-                rider_socket={socketInstance}
+                user_socket={socketInstance.current}
                 recipient={passengers[0]}
               />
             </div>
