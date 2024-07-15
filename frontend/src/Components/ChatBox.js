@@ -1,8 +1,19 @@
 import React, { useState, useContext } from "react";
 import { DataContext } from "../App";
 
+//drivers passenger
+/*person[0] = current_rides_id 
+    person[1] = current_passenger_id
+    person[2] = passenger_name
+    person[3] = passenger_rating
+    person[4] = instructions
+    person[5] = pickup
+    person[6] = end
+    person[7] = socket_sid
+    person[8] = cost*/
+
 function ChatBox(props) {
-  const { rider_socket, recipient } = props;
+  const { user_socket, recipient } = props;
   const [chat, setUser] = useState([
     { sender: "rider", message: "hello" },
     { sender: "driver", message: "how are you" },
@@ -22,13 +33,14 @@ function ChatBox(props) {
     if (message === "") {
       alert("Please enter a message");
     } else {
-      rider_socket.emit(
+      user_socket.emit(
         "chat",
         JSON.stringify({
-          sendee: recipient.driver_SocketId,
+          sendee:
+            data.role === "driver" ? recipient[7] : recipient.driver_SocketId,
           message: message,
           sender: data.socketInstance.id,
-          room: recipient.room,
+          room: data.role === "driver" ? recipient[0] : recipient.room,
         })
       );
       setUser([...chat, { sender: data.role, message: message }]);
@@ -65,7 +77,10 @@ function ChatBox(props) {
 
   return (
     <div className="rider-content-GettingRide" style={{ flexBasis: "30%" }}>
-      <p>CHAT WITH {recipient.driver_Name}</p>
+      <p>
+        CHAT WITH{" "}
+        {data.role === "driver" ? recipient[2] : recipient.driver_Name}
+      </p>
       <div
         style={{
           height: "80%",

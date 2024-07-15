@@ -9,6 +9,7 @@ import {
 import { DataContext } from "../App";
 import ResponseForm from "./ResponseForm";
 import FinishRideForm from "./FinishRideForm";
+import ChatBox from "./ChatBox";
 
 const windows = Object.freeze({
   PAST_RIDES: Symbol("past_rides"),
@@ -414,7 +415,7 @@ function DriverPage() {
                   <th>Cost</th>
                   <th>Time</th>
                 </tr>
-                <tr key={1}>
+                <tr>
                   <td>None</td>
                   <td>None</td>
                   <td>None</td>
@@ -439,26 +440,38 @@ function DriverPage() {
             </tbody>
           </table>
         );
+
+      /*person[0] = current_rides_id 
+    person[1] = current_passenger_id
+    person[2] = passenger_name
+    person[3] = passenger_rating
+    person[4] = instructions
+    person[5] = pickup
+    person[6] = end
+    person[7] = socket_sid
+    person[8] = cost*/
       case windows.GIVING_RIDE:
         //Change info table to be more detailed
+        console.log(passengers[0]);
         return (
-          <table className="infotable">
-            <tbody>
-              <tr>
-                <th colSpan={"100%"}>RIDE INFO</th>
-              </tr>
-              <tr>
-                <th>RIDER NAME</th>
-                <th>RIDER RATING</th>
-                <th>PICKUP</th>
-                <th>DESTINATION</th>
-                <th>COST</th>
-                <th>STATUS</th>
-                <th>CANCEL RIDE</th>
-              </tr>
-              {listPassengers}
-            </tbody>
-          </table>
+          <div className="ride-Info-Page-GettingRide">
+            <div className="ride-Info-Page-content-GettingRide">
+              <div
+                className="rider-content-GettingRide"
+                style={{ flexBasis: "49%" }}
+              >
+                <b className="ride-Info-Page-title-GettingRide">RIDE INFO</b>
+                <p>RIDER NAME: {passengers[0][2]}</p>
+                <p>RIDER RATING: {passengers[0][3]}</p>
+                <p>DESTINATION: {passengers[0][6]}</p>
+                <p>COST: {passengers[0][8]}</p>
+              </div>
+              <ChatBox
+                rider_socket={socketInstance}
+                recipient={passengers[0]}
+              />
+            </div>
+          </div>
         );
       default:
         return <h1>SOMETHINGS WRONG...</h1>;
