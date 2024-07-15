@@ -214,6 +214,8 @@ function RiderPage() {
       console.log("Finish Success:", result);
       setWindow(windows.PAST_RIDES);
       sessionStorage.setItem("status", "none");
+
+      socketInstance.current.emit("leave", [data.name, driver.room]);
       setDriver({
         driver_Name: null,
         driver_Id: null,

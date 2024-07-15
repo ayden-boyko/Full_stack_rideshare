@@ -8,6 +8,7 @@ class RiderNamespace(Namespace):
         send("connected to RiderNameSpace", namespace='/rider')
 
     def on_disconnect(self):
+        emit('disconnect', 'rider disconnected', namespace='/rider')
         print("Rider Disconnected: " + request.sid)
 
     def on_error(self,e):
@@ -19,7 +20,7 @@ class RiderNamespace(Namespace):
         r_sid = data[1]
         username = data[2]
         
-        join_room(room)
+        # join_room(room)
         print(username + " has joined room #" + room)
         send(username + " has joined room #" + room, to=room)
 
@@ -27,8 +28,8 @@ class RiderNamespace(Namespace):
         username = data[0]
         room = data[1]
         leave_room(room)
-        print(username + " has left room #" + room)
-        send(username + " has left room #" + room, to=room)
+        print(username + " has left room #" + str(room))
+        send(username + " has left room #" + str(room), to=room)
     
     def on_match(data):
         data = json.loads(data)
@@ -77,6 +78,7 @@ class DriverNamespace(Namespace):
         send("connected to DriverNameSpace", namespace='/driver')
 
     def on_disconnect(self):
+        emit('disconnect', 'driver disconnected', namespace='/driver')
         print("Driver Disconnected: " + request.sid)
 
     def on_error(self,e):
@@ -86,7 +88,7 @@ class DriverNamespace(Namespace):
         username = data[0]
         room = data[1][1]
         print('driver data:', data)
-        join_room(room)
+        # join_room(room)
         print(username + " has joined room #" + room)
         #emit('join', [room, data[2], data[3]], namespace='/rider', room=data[2]) #room num, rider_socketid, rider_name
 
@@ -94,8 +96,8 @@ class DriverNamespace(Namespace):
         username = data[0]
         room = data[1]
         leave_room(room)
-        print(username + " has left room #" + room)
-        send(username + " has left room #" + room, to=room)
+        print(username + " has left room #" + str(room))
+        send(username + " has left room #" + str(room), to=room)
 
     def on_match(data):
         data = json.loads(data)

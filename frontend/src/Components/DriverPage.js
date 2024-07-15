@@ -428,6 +428,10 @@ function DriverPage() {
                   onClick={() => {
                     setReviewee(passengers[0]);
                     openForm("finishRide");
+                    socketInstance.current.emit("leave", [
+                      data.name,
+                      passengers[0][0],
+                    ]);
                   }}
                 >
                   FINISH
@@ -436,6 +440,10 @@ function DriverPage() {
                 <button
                   onClick={() => {
                     remove_Rider("driver", passengers[0]);
+                    socketInstance.current.emit("disconnect", [
+                      data.name,
+                      passengers[0][0],
+                    ]);
                   }}
                 >
                   CANCEL
