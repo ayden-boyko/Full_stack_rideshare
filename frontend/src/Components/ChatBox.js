@@ -14,17 +14,7 @@ import { DataContext } from "../App";
 
 function ChatBox(props) {
   const { user_socket, recipient } = props;
-  const [chat, setChat] = useState([
-    { sender: "rider", message: "hello" },
-    { sender: "driver", message: "how are you" },
-    { sender: "rider", message: "good" },
-    { sender: "driver", message: "fine" },
-    { sender: "rider", message: "thank you" },
-    { sender: "driver", message: "bye" },
-    { sender: "rider", message: "bye" },
-    { sender: "driver", message: "bye" },
-    { sender: "rider", message: "bye" },
-  ]);
+  const [chat, setChat] = useState([]);
   const { data, setData } = useContext(DataContext);
 
   async function message_Driver() {
@@ -89,12 +79,12 @@ function ChatBox(props) {
   return (
     <div className="rider-content-GettingRide" style={{ flexBasis: "30%" }}>
       <p>
-        CHAT WITH{" "}
+        Chat With{" "}
         {data.role === "driver" ? recipient[2] : recipient.driver_Name}
       </p>
       <div
         style={{
-          height: "80%",
+          height: "75%",
           border: "1px solid black",
           overflowY: "auto",
           overflowWrap: "break-word",
@@ -103,16 +93,31 @@ function ChatBox(props) {
       >
         {chat.length === 0 ? "No messages yet" : messages}
       </div>
-      <input
-        type="text"
-        id="message_Recipient"
-        name="message"
-        placeholder="Enter message"
-        required
-      ></input>
-      <button type="submit" className="" onClick={() => message_Driver()}>
-        SEND
-      </button>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          paddingTop: "10px",
+          gap: "10px",
+        }}
+      >
+        <input
+          type="text"
+          id="message_Recipient"
+          name="message"
+          placeholder="Enter message"
+          className="input-box-chat"
+          required
+        ></input>
+        <button
+          type="submit"
+          className="button-select"
+          onClick={() => message_Driver()}
+        >
+          SEND
+        </button>
+      </div>
     </div>
   );
 }

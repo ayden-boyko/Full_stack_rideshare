@@ -422,32 +422,45 @@ function DriverPage() {
                 <b className="ride-Info-Page-title-GettingRide">RIDE INFO</b>
                 <p>RIDER NAME: {passengers[0][2]}</p>
                 <p>RIDER RATING: {passengers[0][3]}</p>
+                <p>START: {passengers[0][5]}</p>
                 <p>DESTINATION: {passengers[0][6]}</p>
-                <p>COST: {passengers[0][8]}</p>
-                <button
-                  onClick={() => {
-                    setReviewee(passengers[0]);
-                    openForm("finishRide");
-                    socketInstance.current.emit("leave", [
-                      data.name,
-                      passengers[0][0],
-                    ]);
+                <p>COST: {passengers[0][8]}$</p>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "10px",
+                    placeContent: "start",
+                    justifyContent: "flex-end",
+                    height: "48%",
                   }}
                 >
-                  FINISH
-                </button>
-                <br></br>
-                <button
-                  onClick={() => {
-                    remove_Rider("driver", passengers[0]);
-                    socketInstance.current.emit("disconnect", [
-                      data.name,
-                      passengers[0][0],
-                    ]);
-                  }}
-                >
-                  CANCEL
-                </button>
+                  <button
+                    onClick={() => {
+                      setReviewee(passengers[0]);
+                      openForm("finishRide");
+                      socketInstance.current.emit("leave", [
+                        data.name,
+                        passengers[0][0],
+                      ]);
+                    }}
+                    className="button-select"
+                  >
+                    FINISH
+                  </button>
+                  <button
+                    onClick={() => {
+                      remove_Rider("driver", passengers[0]);
+                      socketInstance.current.emit("disconnect", [
+                        data.name,
+                        passengers[0][0],
+                      ]);
+                    }}
+                    className="button-select"
+                  >
+                    CANCEL
+                  </button>
+                </div>
               </div>
               <ChatBox
                 user_socket={socketInstance.current}

@@ -11,6 +11,7 @@ import FinishRideForm from "./FinishRideForm.js";
 import ResponseForm from "./ResponseForm.js";
 import ChatBox from "./ChatBox.js";
 import windows from "../Types/WindowStates.js";
+import { ReactComponent as RiderLoadingLogo } from "../Images/rider_loading.svg";
 // data.id,
 // data.name,
 // userRating,
@@ -447,6 +448,14 @@ function RiderPage() {
           <>
             <h1>WAITING FOR DRIVER</h1>
             <br></br>
+            <RiderLoadingLogo
+              style={{
+                width: "50%",
+                height: "50%",
+                display: "block",
+                margin: "auto",
+              }}
+            />
           </>
         );
       case windows.GETING_RIDE:
@@ -487,6 +496,7 @@ function RiderPage() {
                 marginTop: "10%",
                 color: "black",
                 padding: "10px",
+                fontSize: "calc(10px + 2vmin)",
               }}
             >
               Instructions
@@ -522,8 +532,7 @@ function RiderPage() {
               UPDATE INSTRUCTIONS
             </button>
           </form>
-
-          <div>
+          <div style={{ paddingTop: "20px" }}>
             <button
               type="button"
               className="button-select"
