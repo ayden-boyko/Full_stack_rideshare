@@ -457,6 +457,8 @@ label:last-child span {
   border-bottom: 1px solid black;
   padding: 8px;
   text-align: center;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .infotable th {
