@@ -391,7 +391,6 @@ def rider_finish_ride(id, rating_of_driver=4.5, review_of_driver="they were good
     conn, cur = db_connect()
 
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    result1 = None
     statement2 = """WITH closest_ride AS (
         SELECT past_rides_id
         FROM past_rides
@@ -520,7 +519,7 @@ def get_owed(id):
     """returns all owed amounts associated with a driver"""
     conn, cur = db_connect()
 
-    statement = """SELECT T.name, T.charge, T.timestamp FROM tab T INNER JOIN past_rides P ON T.name = P.rider_name WHERE P.driver_id = %s"""
+    statement = """SELECT DISTINCT T.name, T.charge, T.timestamp FROM tab T INNER JOIN past_rides P ON T.name = P.rider_name WHERE P.driver_id = %s"""
     cur.execute(statement, [id])
     result = cur.fetchall()
 

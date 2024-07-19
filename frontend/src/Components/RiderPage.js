@@ -5,6 +5,7 @@ import {
   retrieveBills,
   openForm,
   cancel_Ride,
+  formatTimestamp,
 } from "../Shared_Functions/retrieve.js";
 import { DataContext } from "../App";
 import FinishRideForm from "./FinishRideForm.js";
@@ -272,7 +273,7 @@ function RiderPage() {
       <td>{person[5] == null ? "None" : person[5]}</td> {/*isntructions*/}
       <td>{person[6]}</td> {/*start*/}
       <td>{person[7]}</td> {/*end*/}
-      <td>{person[8]}</td> {/*time*/}
+      <td>{formatTimestamp(person[8])}</td> {/*time*/}
       <td>{person[9]}</td> {/*review of driver*/}
       <td>{person[10]}</td> {/*rating of driver*/}
       <td>{person[11]}</td> {/*review of rider*/}
@@ -303,7 +304,7 @@ function RiderPage() {
         <tr key={index}>
           <td>{person[1]}</td>
           <td>{person[2]}</td>
-          <td>{person[3]}</td>
+          <td>{formatTimestamp(person[3])}</td>
         </tr>
       );
     } else {
@@ -330,6 +331,16 @@ function RiderPage() {
         if (rides.length !== 0) {
           return (
             <table className="infotable">
+              <caption
+                style={{
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: "20px",
+                  padding: "10px",
+                }}
+              >
+                Past Rides
+              </caption>
               <thead>
                 <tr>
                   <th>Driver</th>
@@ -352,6 +363,16 @@ function RiderPage() {
         } else {
           return (
             <table className="infotable">
+              <caption
+                style={{
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: "20px",
+                  padding: "10px",
+                }}
+              >
+                Past Rides
+              </caption>
               <thead>
                 <tr>
                   <th>Driver</th>
@@ -380,6 +401,16 @@ function RiderPage() {
         if (bills.length !== 0) {
           return (
             <table className="infotable">
+              <caption
+                style={{
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: "20px",
+                  padding: "10px",
+                }}
+              >
+                Bills
+              </caption>
               <thead>
                 <tr>
                   <th>Rider</th>
@@ -393,6 +424,16 @@ function RiderPage() {
         } else
           return (
             <table className="infotable">
+              <caption
+                style={{
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: "20px",
+                  padding: "10px",
+                }}
+              >
+                Bills
+              </caption>
               <tbody>
                 <tr>
                   <th>Rider</th>
@@ -413,6 +454,20 @@ function RiderPage() {
             <div className="mychoice">
               <span>
                 <div style={{ justifyContent: "center" }}>
+                  <label
+                    style={{
+                      fontWeight: "bold",
+                      color: "black",
+                      padding: "10px",
+                      fontSize: "20px",
+                    }}
+                  >
+                    Request Ride From Driver
+                  </label>
+                </div>
+              </span>
+              <span>
+                <div style={{ justifyContent: "center" }}>
                   <label style={{ fontWeight: "bold", color: "black" }}>
                     LOCATION
                   </label>
@@ -430,17 +485,20 @@ function RiderPage() {
                   ></input>
                 </div>
               </span>
+
+              <br></br>
+              <span>
+                <div style={{ justifyContent: "center" }}>
+                  <button
+                    type="submit"
+                    className="button-select"
+                    onClick={(event) => request_ride(event)}
+                  >
+                    CONFIRM RIDE
+                  </button>
+                </div>
+              </span>
             </div>
-            <br></br>
-            <span>
-              <button
-                type="submit"
-                className="button-select"
-                onClick={(event) => request_ride(event)}
-              >
-                CONFIRM RIDE
-              </button>
-            </span>
           </form>
         );
       case windows.WAITING:

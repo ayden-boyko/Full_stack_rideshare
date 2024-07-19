@@ -5,6 +5,7 @@ import {
   retrieveBills,
   openForm,
   cancel_Ride,
+  formatTimestamp,
 } from "../Shared_Functions/retrieve";
 import { DataContext } from "../App";
 import ResponseForm from "./ResponseForm";
@@ -241,7 +242,7 @@ function DriverPage() {
           <td>{person[5] == null ? "None" : person[5]}</td>
           <td>{person[6]}</td>
           <td>{person[7]}</td>
-          <td>{person[8]}</td>
+          <td>{formatTimestamp(person[8])}</td>
           <td>{person[9]}</td>
           <td>{person[10]}</td>
           <td>{person[11]}</td>
@@ -276,7 +277,7 @@ function DriverPage() {
         <tr key={index}>
           <td>{person[0]}</td>
           <td>{person[1]}</td>
-          <td>{person[2]}</td>
+          <td>{formatTimestamp(person[2])}</td>
         </tr>
       );
     } else {
@@ -332,6 +333,16 @@ function DriverPage() {
       case windows.PAST_RIDES:
         return (
           <table className="infotable">
+            <caption
+              style={{
+                textAlign: "center",
+                fontWeight: "bold",
+                fontSize: "20px",
+                padding: "10px",
+              }}
+            >
+              Past Rides
+            </caption>
             <tbody>
               <tr>
                 <th>Driver</th>
@@ -355,6 +366,16 @@ function DriverPage() {
         if (bills.length !== 0) {
           return (
             <table className="infotable">
+              <caption
+                style={{
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: "20px",
+                  padding: "10px",
+                }}
+              >
+                Bills
+              </caption>
               <tbody>
                 <tr>
                   <th>Rider</th>
@@ -368,6 +389,16 @@ function DriverPage() {
         } else
           return (
             <table className="infotable">
+              <caption
+                style={{
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: "20px",
+                  padding: "10px",
+                }}
+              >
+                Bills
+              </caption>
               <tbody>
                 <tr>
                   <th>Rider</th>
@@ -385,6 +416,16 @@ function DriverPage() {
       case windows.REQUEST_RIDER:
         return (
           <table className="infotable">
+            <caption
+              style={{
+                textAlign: "center",
+                fontWeight: "bold",
+                fontSize: "20px",
+                padding: "10px",
+              }}
+            >
+              Request Rider
+            </caption>
             <tbody>
               <tr>
                 <th>Rider_Id</th>
