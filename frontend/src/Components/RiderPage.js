@@ -287,6 +287,12 @@ function RiderPage() {
               openForm("myReview");
               setReview_id(person[0]);
             }}
+            className="button-select"
+            style={{
+              width: "fit-content",
+              fontSize: ".8rem",
+              padding: "8px 15px",
+            }}
           >
             Respond
           </button>
@@ -303,7 +309,7 @@ function RiderPage() {
       return (
         <tr key={index}>
           <td>{person[1]}</td>
-          <td>{person[2]}</td>
+          <td>{person[2]}$</td>
           <td>{formatTimestamp(person[3])}</td>
         </tr>
       );

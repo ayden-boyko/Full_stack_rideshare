@@ -257,6 +257,12 @@ function DriverPage() {
                   openForm("myReview");
                   setReviewee(person[0]);
                 }}
+                className="button-select"
+                style={{
+                  width: "fit-content",
+                  fontSize: ".8rem",
+                  padding: "8px 15px",
+                }}
               >
                 Respond
               </button>
@@ -276,7 +282,7 @@ function DriverPage() {
       return (
         <tr key={index}>
           <td>{person[0]}</td>
-          <td>{person[1]}</td>
+          <td>{person[1]}$</td>
           <td>{formatTimestamp(person[2])}</td>
         </tr>
       );
