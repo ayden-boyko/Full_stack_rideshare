@@ -88,7 +88,7 @@ socketio.on_event('chat', DriverNamespace.on_chat, namespace='/rider')
 socketio.on_event('chat', RiderNamespace.on_chat, namespace='/driver')
 
 if __name__ == '__main__':
-    rebuild_tables()
+    #rebuild_tables()
     #add_data_CSV('data/users.csv')
     #add_data_JSON('data/users.json')
     socketio.run(app, debug=True, host='127.0.0.1', port=5000)
