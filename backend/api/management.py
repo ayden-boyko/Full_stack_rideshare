@@ -22,3 +22,7 @@ class Version(Resource):
         except Exception as e:
             abort(500, message=f"Error occurred during database version retrieval: {str(e)}")
 
+class Test(Resource):
+    def get(self):
+        return "Flask is running!"
+

@@ -14,7 +14,7 @@ app = Flask(__name__)
 api = Api(app)
 cors = CORS(app, resources={
      r'/*': {
-         'origins': [ "https://full-stack-rideshare-git-main-aydenboykos-projects.vercel.app/", "https://full-stack-rideshare.vercel.app/"], 
+         'origins': [ "https://full-stack-rideshare-aydenboykos-projects.vercel.app/", "https://full-stack-rideshare.vercel.app/"], 
          #, "http://localhost:5000","http://127.0.0.1:3000", "http://127.0.0.1:5000"
          'methods': ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS']
      }
@@ -30,6 +30,8 @@ app.config.update(
 socketio = SocketIO(app,cors_allowed_origins="*")
 
 #--------TO RUN BACKEND----python server.py--------------------
+
+api.add_resource(Test, '/')
 
 api.add_resource(Init, '/manage/init') #Management API for initializing the DB
 
