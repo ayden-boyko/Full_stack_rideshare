@@ -1,5 +1,5 @@
 import sys
-from db_utils import *
+from .db_utils import *
 import csv, json
 from datetime import datetime
 from math import fsum
