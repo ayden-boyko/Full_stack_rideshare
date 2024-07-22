@@ -1,9 +1,9 @@
 from flask import abort
 from flask_restful import Resource, reqparse, request  #NOTE: Import from flask_restful, not python
 
-from db.db_utils import *
+from backend.db.db_utils import *
 
-from db.example import *
+from backend.db.example import *
 
 class Init(Resource):
     def post(self):
