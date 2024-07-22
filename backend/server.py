@@ -2,13 +2,13 @@ from flask import Flask
 from flask_restful import Resource, Api
 from flask_cors import CORS
 from flask_socketio import namespace, emit, send, SocketIO
-from api.management import *
-from api.accountinfo import *
-from api.rideinfo import *
-from api.transaction import *
-from api.account import *
-from api.ride import *
-from api.namespaces import RiderNamespace, DriverNamespace
+from .api.management import *
+from .api.accountinfo import *
+from .api.rideinfo import *
+from .api.transaction import *
+from .api.account import *
+from .api.ride import *
+from .api.namespaces import RiderNamespace, DriverNamespace
 
 app = Flask(__name__)
 api = Api(app)
