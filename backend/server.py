@@ -14,7 +14,7 @@ app = Flask(__name__)
 api = Api(app)
 cors = CORS(app, resources={
      r'/*': {
-         'origins': [ "http://localhost:3000"], 
+         'origins': [ "https://full-stack-rideshare.vercel.app/"], 
          #, "http://localhost:5000","http://127.0.0.1:3000", "http://127.0.0.1:5000"
          'methods': ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS']
      }
