@@ -39,7 +39,7 @@ function RiderPage() {
   const loadData = async () => {
     setRides(
       await fetch_Rides(
-        `http://127.0.0.1:5000/rideinfo/rider/${data.id}/ignore/${data.name}`
+        `https://full-stack-rideshare.vercel.app/rideinfo/rider/${data.id}/ignore/${data.name}`
       )
     );
   };
@@ -57,7 +57,7 @@ function RiderPage() {
       setWindow(windows.GETING_RIDE);
     }
     if (socketInstance.current === null) {
-      const socket = io("http://127.0.0.1:5000/rider", {
+      const socket = io("https://full-stack-rideshare.vercel.app/rider", {
         transports: ["websocket"],
         withCredentials: true,
         // cors: {
@@ -137,7 +137,7 @@ function RiderPage() {
       return;
     }
 
-    let tempLink = `http://127.0.0.1:5000/rideinfo/rider/${id}/${tempInstruct}/${name}`;
+    let tempLink = `https://full-stack-rideshare.vercel.app/rideinfo/rider/${id}/${tempInstruct}/${name}`;
     try {
       const response = await fetch(tempLink, {
         method: "PUT",
@@ -177,7 +177,7 @@ function RiderPage() {
       return false;
     }
     event.preventDefault();
-    let tempLink = `http://127.0.0.1:5000/singlerider/${data.id}/${data.name}/0,0/${tempDest}/${socketInstance.current.id}`;
+    let tempLink = `https://full-stack-rideshare.vercel.app/singlerider/${data.id}/${data.name}/0,0/${tempDest}/${socketInstance.current.id}`;
     setDestination(tempDest);
     console.log("socket ID:", socketInstance.current.id);
     try {
@@ -201,7 +201,7 @@ function RiderPage() {
   }
 
   async function finishRide(rider_id, rating_of_driver, review_of_driver) {
-    let tempLink = `http://127.0.0.1:5000/singlerider/post/${rider_id}/0/${rating_of_driver}/${review_of_driver}`;
+    let tempLink = `https://full-stack-rideshare.vercel.app/singlerider/post/${rider_id}/0/${rating_of_driver}/${review_of_driver}`;
     try {
       const response = await fetch(tempLink, {
         method: "POST",

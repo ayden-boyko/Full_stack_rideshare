@@ -11,7 +11,7 @@ function closeForm() {
 
 async function selectUser(id, userType, setData) {
   let submitRole = String(userType).slice(0, -1);
-  let submitLink = `http://127.0.0.1:5000/accountinfo/${submitRole}/none/0/${id}/none`;
+  let submitLink = `https://full-stack-rideshare.vercel.app/accountinfo/${submitRole}/none/0/${id}/none`;
   const getUser = async () => {
     try {
       const response = await fetch(submitLink, {
@@ -70,7 +70,7 @@ async function submitUser(props) {
   const name = formuser.get("name");
   const date = tempDate[1] + "-" + tempDate[2] + "-" + tempDate[0]; //reformat to mm-dd-yyyy
 
-  let submitLink = `http://127.0.0.1:5000/accountinfo/${submitRole}/${name}/${date}/1/None`;
+  let submitLink = `https://full-stack-rideshare.vercel.app/accountinfo/${submitRole}/${name}/${date}/1/None`;
 
   const post_Info = async () => {
     try {
@@ -163,7 +163,7 @@ function NewUserform(props) {
 function Accounts() {
   const [user, setUser] = useState(null);
   const { data, setData } = useContext(DataContext);
-  let text = `http://127.0.0.1:5000/accountinfo/${data.role}`;
+  let text = `https://full-stack-rideshare.vercel.app/accountinfo/${data.role}`;
   useEffect(() => {
     const fetch_Info = async () => {
       const response = await fetch(text, {
