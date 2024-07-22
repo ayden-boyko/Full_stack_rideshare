@@ -91,4 +91,4 @@ if __name__ == '__main__':
     #rebuild_tables()
     #add_data_CSV('data/users.csv')
     #add_data_JSON('data/users.json')
-    socketio.run(app, debug=True, host='127.0.0.1', port=5000)
+    socketio.run(app, debug=True, host='full-stack-rideshare.vercel.app')
