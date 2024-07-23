@@ -77,7 +77,7 @@ function DriverPage() {
     socketInstance.current.on("disconnect", (data) => {
       console.log("disconnected", data);
     });
-  }, [window]);
+  }, [window, submitLink]);
 
   //USER RIDER 1,2,4,5,6
   async function selectRider(id, name, rider) {
