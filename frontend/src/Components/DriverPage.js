@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
-import { io, emit, send, of, to } from "socket.io-client";
+import { io } from "socket.io-client";
 import {
   fetch_Rides,
   retrieveBills,
@@ -77,7 +77,7 @@ function DriverPage() {
     socketInstance.current.on("disconnect", (data) => {
       console.log("disconnected", data);
     });
-  }, [window, socketInstance.current]);
+  }, [window]);
 
   //USER RIDER 1,2,4,5,6
   async function selectRider(id, name, rider) {
@@ -532,17 +532,17 @@ function DriverPage() {
               name="get_riders"
               onClick={() => {
                 if (
-                  document.getElementById("myForm").style.display == "block"
+                  document.getElementById("myForm").style.display === "block"
                 ) {
                   document.getElementById("myForm").style.display = "none";
                 }
-                if (passengers.length == 0) {
+                if (passengers.length === 0) {
                   setWindow(windows.REQUEST_RIDER);
                   retrieveRiders();
                 }
               }}
             >
-              {passengers.length == 0 ? "REQUEST RIDER" : "GIVING RIDE"}
+              {passengers.length === 0 ? "REQUEST RIDER" : "GIVING RIDE"}
             </button>
           </div>
           <div>
@@ -552,7 +552,7 @@ function DriverPage() {
               name="get_bills"
               onClick={() => {
                 if (
-                  document.getElementById("myForm").style.display == "block"
+                  document.getElementById("myForm").style.display === "block"
                 ) {
                   document.getElementById("myForm").style.display = "none";
                 }
@@ -572,7 +572,7 @@ function DriverPage() {
               name="get_past_rides "
               onClick={() => {
                 if (
-                  document.getElementById("myForm").style.display == "block"
+                  document.getElementById("myForm").style.display === "block"
                 ) {
                   document.getElementById("myForm").style.display = "none";
                 }

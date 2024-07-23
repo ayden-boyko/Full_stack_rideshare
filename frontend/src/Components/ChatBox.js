@@ -46,7 +46,7 @@ function ChatBox(props) {
     user_socket.on("chat", (data) =>
       setChat([...chat, { sender: data.sender, message: data.message }])
     );
-  }, [chat]);
+  }, [chat, user_socket]);
 
   let messages = chat.map((chat, index) => {
     let thing =

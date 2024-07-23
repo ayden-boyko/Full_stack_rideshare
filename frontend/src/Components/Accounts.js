@@ -184,18 +184,13 @@ function Accounts() {
   let role = String(data.role).slice(0, -1);
   const listUsers =
     user &&
-    user[data.role]?.map(
-      (person) => (
-        console.log(person),
-        (
-          <tr key={person[0]} className={`account-option-${data.role}`}>
-            <td onClick={() => selectUser(person[0], data.role, setData)}>
-              {person[1]}
-            </td>
-          </tr>
-        )
-      )
-    );
+    user[data.role]?.map((person) => (
+      <tr key={person[0]} className={`account-option-${data.role}`}>
+        <td onClick={() => selectUser(person[0], data.role, setData)}>
+          {person[1]}
+        </td>
+      </tr>
+    ));
   return (
     <>
       <table className="account-table">

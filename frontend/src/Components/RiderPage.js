@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
-import { io, emit, send, of, to } from "socket.io-client";
+import { io } from "socket.io-client";
 import {
   fetch_Rides,
   retrieveBills,
@@ -124,7 +124,7 @@ function RiderPage() {
     socketInstance.current.on("disconnect", (data) => {
       console.log("disconnected", data);
     });
-  }, [window, socketInstance.current]);
+  }, [window, driver, data]);
 
   async function changeInstructions(id, name) {
     const form = document.getElementById("InstructForm");
