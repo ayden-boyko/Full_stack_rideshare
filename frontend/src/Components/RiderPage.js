@@ -124,7 +124,7 @@ function RiderPage() {
     socketInstance.current.on("disconnect", (data) => {
       console.log("disconnected", data);
     });
-  }, [window, driver, data]);
+  }, [window, driver, data, loadData]);
 
   async function changeInstructions(id, name) {
     const form = document.getElementById("InstructForm");

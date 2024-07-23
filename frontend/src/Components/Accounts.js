@@ -180,7 +180,7 @@ function Accounts() {
       }
     };
     fetch_Info();
-  }, []);
+  });
   let role = String(data.role).slice(0, -1);
   const listUsers =
     user &&
