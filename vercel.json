@@ -18,7 +18,10 @@
     },
     {
       "src": "/(.*)",
-      "dest": "/frontend/src/App.js"
+      "dest": "/frontend/build/$1"
     }
-  ]
+  ],
+  "env": {
+    "NODE_OPTIONS": "--openssl-legacy-provider"
+  }
 }
