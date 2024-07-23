@@ -25,16 +25,16 @@ function DriverPage() {
 
   const submitLink = `https://full-stack-rideshare.vercel.app/api/rideinfo/driver/${data.id}/ignore/${data.name}`;
 
-  const loadData = async () => {
-    setRides(await fetch_Rides(submitLink));
-  };
-
   const loadBills = async () => {
     setBills(await retrieveBills("driver", data.id));
   };
 
   //SHOULD RETRIEVE PAST RIDES GIVEN NOT TAKEN
   useEffect(() => {
+    const loadData = async () => {
+      setRides(await fetch_Rides(submitLink));
+    };
+
     loadData();
 
     if (sessionStorage.getItem("status") === "chauffeuring") {

@@ -36,19 +36,18 @@ function RiderPage() {
   const [review_id, setReview_id] = useState(null); //review_id
   const { data } = useContext(DataContext);
 
-  const loadData = async () => {
-    setRides(
-      await fetch_Rides(
-        `https://full-stack-rideshare.vercel.app/api/rideinfo/rider/${data.id}/ignore/${data.name}`
-      )
-    );
-  };
-
   const loadBills = async () => {
     setBills(await retrieveBills("rider", data.id));
   };
 
   useEffect(() => {
+    const loadData = async () => {
+      setRides(
+        await fetch_Rides(
+          `https://full-stack-rideshare.vercel.app/api/rideinfo/rider/${data.id}/ignore/${data.name}`
+        )
+      );
+    };
     loadData();
 
     if (sessionStorage.getItem("status") === "waiting") {
