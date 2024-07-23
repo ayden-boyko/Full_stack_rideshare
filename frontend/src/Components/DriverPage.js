@@ -23,7 +23,7 @@ function DriverPage() {
   const socketInstance = useRef(null);
   const { data, setData } = useContext(DataContext);
 
-  const submitLink = `https://full-stack-rideshare.vercel.app/rideinfo/driver/${data.id}/ignore/${data.name}`;
+  const submitLink = `https://full-stack-rideshare.vercel.app/api/rideinfo/driver/${data.id}/ignore/${data.name}`;
 
   const loadData = async () => {
     setRides(await fetch_Rides(submitLink));
@@ -42,7 +42,7 @@ function DriverPage() {
     }
 
     if (socketInstance.current === null) {
-      const socket = io("https://full-stack-rideshare.vercel.app/driver", {
+      const socket = io("https://full-stack-rideshare.vercel.app/api/driver", {
         transports: ["websocket"],
         withCredentials: true,
         // cors: {
@@ -81,7 +81,7 @@ function DriverPage() {
 
   //USER RIDER 1,2,4,5,6
   async function selectRider(id, name, rider) {
-    let tempLink = `https://full-stack-rideshare.vercel.app/singledriver/${id}/${name}/${rider[1]}/0/${rider[5]}/${rider[6]}`;
+    let tempLink = `https://full-stack-rideshare.vercel.app/api/singledriver/${id}/${name}/${rider[1]}/0/${rider[5]}/${rider[6]}`;
     try {
       const response = await fetch(tempLink, {
         method: "POST",
@@ -126,7 +126,7 @@ function DriverPage() {
   }
 
   async function retrieveRiders() {
-    let tempLink = `https://full-stack-rideshare.vercel.app/singledriver/pre`;
+    let tempLink = `https://full-stack-rideshare.vercel.app/api/singledriver/pre`;
     try {
       const response = await fetch(tempLink, {
         method: "GET",
@@ -152,7 +152,7 @@ function DriverPage() {
     review_of_rider,
     cost
   ) {
-    let tempLink = `https://full-stack-rideshare.vercel.app/singledriver/post/${driver_id}/${rider_id}/0/${rating}/${review_of_rider}/${cost}`;
+    let tempLink = `https://full-stack-rideshare.vercel.app/api/singledriver/post/${driver_id}/${rider_id}/0/${rating}/${review_of_rider}/${cost}`;
     try {
       const response = await fetch(tempLink, {
         method: "POST",

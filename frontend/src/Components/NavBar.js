@@ -31,7 +31,7 @@ function toggleForm() {
 }
 
 async function changeAccountStatus(role, id) {
-  let submitLink = `https://full-stack-rideshare.vercel.app/accountinfo/${role}/0/0/${id}/0`;
+  let submitLink = `https://full-stack-rideshare.vercel.app/api/accountinfo/${role}/0/0/${id}/0`;
   console.log(role, id);
 
   const update_Account_Status = async () => {
@@ -61,7 +61,7 @@ async function updateLocation(role, id) {
 
   let tempLoc = formacc.get("zipcode");
 
-  let submitLink = `https://full-stack-rideshare.vercel.app/account/${role}/${id}/${tempLoc}`;
+  let submitLink = `https://full-stack-rideshare.vercel.app/api/account/${role}/${id}/${tempLoc}`;
 
   const update_Account_Location = async () => {
     try {

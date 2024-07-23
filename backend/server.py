@@ -33,43 +33,43 @@ socketio = SocketIO(app,cors_allowed_origins="*")
 
 api.add_resource(Test, '/')
 
-api.add_resource(Init, '/manage/init') #Management API for initializing the DB
+api.add_resource(Init, '/api/manage/init') #Management API for initializing the DB
 
-api.add_resource(Version, '/manage/version') #Management API for checking DB version
+api.add_resource(Version, '/api/manage/version') #Management API for checking DB version
 
-api.add_resource(AccountInfoRider, '/accountinfo/rider/<string:name>/<string:date>/<string:rider_id>/<string:new_instructions>', methods=["PUT", "POST", "GET", "DELETE"])
+api.add_resource(AccountInfoRider, '/api/accountinfo/rider/<string:name>/<string:date>/<string:rider_id>/<string:new_instructions>', methods=["PUT", "POST", "GET", "DELETE"])
 
-api.add_resource(AccountInfoDriver, '/accountinfo/driver/<string:name>/<string:date>/<string:driver_id>/<string:driver_instructions>', methods=["PUT", "POST", "GET", "DELETE"])
+api.add_resource(AccountInfoDriver, '/api/accountinfo/driver/<string:name>/<string:date>/<string:driver_id>/<string:driver_instructions>', methods=["PUT", "POST", "GET", "DELETE"])
 
-api.add_resource(AccountInfoDrivers, '/accountinfo/drivers', methods=["GET"])
+api.add_resource(AccountInfoDrivers, '/api/accountinfo/drivers', methods=["GET"])
 
-api.add_resource(AccountInfoRiders, '/accountinfo/riders', methods=["GET"])
+api.add_resource(AccountInfoRiders, '/api/accountinfo/riders', methods=["GET"])
 
-api.add_resource(AccountDriver, '/account/driver/<string:driver_id>/<int:new_zipcode>', methods=["PUT", "GET"])
+api.add_resource(AccountDriver, '/api/account/driver/<string:driver_id>/<int:new_zipcode>', methods=["PUT", "GET"])
 
-api.add_resource(AccountRider, '/account/rider/<string:rider_id>/<int:new_zipcode>', methods=["PUT", "GET"])
+api.add_resource(AccountRider, '/api/account/rider/<string:rider_id>/<int:new_zipcode>', methods=["PUT", "GET"])
 
-api.add_resource(RideInfo, '/rideinfo', methods=["GET"])
+api.add_resource(RideInfo, '/api/rideinfo', methods=["GET"])
 
-api.add_resource(RideInfoDriver, '/rideinfo/driver/<string:id>/<string:instructions>/<string:name>', methods=["GET", "PUT"])
+api.add_resource(RideInfoDriver, '/api/rideinfo/driver/<string:id>/<string:instructions>/<string:name>', methods=["GET", "PUT"])
 
-api.add_resource(RideInfoRider, '/rideinfo/rider/<string:id>/<string:instructions>/<string:name>', methods=[ "GET", "PUT"])
+api.add_resource(RideInfoRider, '/api/rideinfo/rider/<string:id>/<string:instructions>/<string:name>', methods=[ "GET", "PUT"])
 
-api.add_resource(RideSingleRiderPre, '/singlerider/pre/<string:zipcode>', methods=[ "GET"]) 
+api.add_resource(RideSingleRiderPre, '/api/singlerider/pre/<string:zipcode>', methods=[ "GET"]) 
 
-api.add_resource(RideSingleDriverPre, '/singledriver/pre', methods=[ "GET"]) 
+api.add_resource(RideSingleDriverPre, '/api/singledriver/pre', methods=[ "GET"]) 
 
-api.add_resource(RideSingleRider, '/singlerider/<string:rider_id>/<string:rider_name>/<string:start>/<string:end>/<string:socket_id>', methods=["PUT", "POST", "GET", "DELETE"]) 
+api.add_resource(RideSingleRider, '/api/singlerider/<string:rider_id>/<string:rider_name>/<string:start>/<string:end>/<string:socket_id>', methods=["PUT", "POST", "GET", "DELETE"]) 
 
-api.add_resource(RideSingleDriver, '/singledriver/<string:driver_id>/<string:driver_name>/<string:rider_id>/<int:zipcode>/<string:start>/<string:end>', methods=["PUT", "POST", "GET", "DELETE"]) 
+api.add_resource(RideSingleDriver, '/api/singledriver/<string:driver_id>/<string:driver_name>/<string:rider_id>/<int:zipcode>/<string:start>/<string:end>', methods=["PUT", "POST", "GET", "DELETE"]) 
 
-api.add_resource(RideSingleRiderPost, '/singlerider/post/<string:rider_id>/<string:review>/<int:rating>/<string:review_of_driver>', methods=[ "GET", "PUT", "POST"]) 
+api.add_resource(RideSingleRiderPost, '/api/singlerider/post/<string:rider_id>/<string:review>/<int:rating>/<string:review_of_driver>', methods=[ "GET", "PUT", "POST"]) 
 
-api.add_resource(RideSingleDriverPost, '/singledriver/post/<string:driver_id>/<string:rider_id>/<string:review>/<string:rating>/<string:review_of_rider>/<string:cost>', methods=[ "GET", "PUT", "POST"]) 
+api.add_resource(RideSingleDriverPost, '/api/singledriver/post/<string:driver_id>/<string:rider_id>/<string:review>/<string:rating>/<string:review_of_rider>/<string:cost>', methods=[ "GET", "PUT", "POST"]) 
 
-api.add_resource(TransactionInfoRider, '/transaction/reciept/rider/<string:id>/<string:amount>/<string:timestamp>', methods=["POST", "GET"])
+api.add_resource(TransactionInfoRider, '/api/transaction/reciept/rider/<string:id>/<string:amount>/<string:timestamp>', methods=["POST", "GET"])
 
-api.add_resource(TransactionInfoDriver, '/transaction/reciept/driver/<string:id>/<string:amount>', methods=[ "GET"])
+api.add_resource(TransactionInfoDriver, '/api/transaction/reciept/driver/<string:id>/<string:amount>', methods=[ "GET"])
 
 
 @app.after_request

@@ -19,7 +19,7 @@ export async function fetch_Rides(submitLink) {
 
 export async function retrieveBills(role, id) {
   const submitLink =
-    `https://full-stack-rideshare.vercel.app/transaction/reciept/${role}/${id}/${Number.MAX_SAFE_INTEGER}` +
+    `https://full-stack-rideshare.vercel.app/api/transaction/reciept/${role}/${id}/${Number.MAX_SAFE_INTEGER}` +
     (role === "rider" ? "/0" : "");
   try {
     const response = await fetch(submitLink, {
@@ -51,8 +51,8 @@ export async function respond_to_review(role, review_id) {
 
   const submitLink =
     role === "rider"
-      ? `https://full-stack-rideshare.vercel.app/singlerider/post/${review_id}/${review}/0/0`
-      : `https://full-stack-rideshare.vercel.app/singledriver/post/${review_id}/0/${review}/0/0/0`;
+      ? `https://full-stack-rideshare.vercel.app/api/singlerider/post/${review_id}/${review}/0/0`
+      : `https://full-stack-rideshare.vercel.app/api/singledriver/post/${review_id}/0/${review}/0/0/0`;
   try {
     const response = await fetch(submitLink, {
       method: "PUT",
@@ -75,8 +75,8 @@ export async function respond_to_review(role, review_id) {
 export async function cancel_Ride(role, rider_id, rider_name) {
   const submitLink =
     role === "rider"
-      ? `https://full-stack-rideshare.vercel.app/singlerider/${rider_id}/${rider_name}/0/0/0`
-      : `https://full-stack-rideshare.vercel.app/singledriver/0/0/${rider_id}/0/0/0`;
+      ? `https://full-stack-rideshare.vercel.app/api/singlerider/${rider_id}/${rider_name}/0/0/0`
+      : `https://full-stack-rideshare.vercel.app/api/singledriver/0/0/${rider_id}/0/0/0`;
   try {
     const response = await fetch(submitLink, {
       method: "DELETE",
