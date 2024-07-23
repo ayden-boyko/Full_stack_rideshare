@@ -34,7 +34,7 @@ function RiderPage() {
   });
   const [destination, setDestination] = useState(null);
   const [review_id, setReview_id] = useState(null); //review_id
-  const { data, setData } = useContext(DataContext);
+  const { data } = useContext(DataContext);
 
   const loadData = async () => {
     setRides(
@@ -124,7 +124,7 @@ function RiderPage() {
     socketInstance.current.on("disconnect", (data) => {
       console.log("disconnected", data);
     });
-  }, [window, driver, data, loadData]);
+  }, [window, driver, data]);
 
   async function changeInstructions(id, name) {
     const form = document.getElementById("InstructForm");

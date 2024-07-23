@@ -21,7 +21,7 @@ function DriverPage() {
   const [passengers, setPassengers] = useState([]);
   const [reviewee, setReviewee] = useState(null); //review_id
   const socketInstance = useRef(null);
-  const { data, setData } = useContext(DataContext);
+  const { data } = useContext(DataContext);
 
   const submitLink = `https://full-stack-rideshare.vercel.app/api/rideinfo/driver/${data.id}/ignore/${data.name}`;
 

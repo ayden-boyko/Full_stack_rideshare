@@ -15,7 +15,7 @@ import { DataContext } from "../App";
 function ChatBox(props) {
   const { user_socket, recipient } = props;
   const [chat, setChat] = useState([]);
-  const { data, setData } = useContext(DataContext);
+  const { data } = useContext(DataContext);
 
   async function message_Driver() {
     let message = document.getElementById("message_Recipient").value;

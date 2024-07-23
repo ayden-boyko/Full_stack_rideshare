@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { DataContext } from "../App";
 
 function NavBar(props) {
-  const { data, setData } = useContext(DataContext);
+  const { data } = useContext(DataContext);
   const style = `navbar-${data.role}`;
 
   return (
