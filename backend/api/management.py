@@ -1,4 +1,4 @@
-from flask import abort, render_template
+from flask import abort, app, send_from_directory
 from flask_restful import Resource, reqparse, request  #NOTE: Import from flask_restful, not python
 
 from backend.db.db_utils import *
@@ -24,5 +24,5 @@ class Version(Resource):
 
 class Main(Resource):
     def get(self):
-        return render_template('index.html')
+        return send_from_directory('frontend\public\index.html', 'index.html')
 
