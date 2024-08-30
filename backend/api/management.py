@@ -24,5 +24,5 @@ class Version(Resource):
 
 class Main(Resource):
     def get(self):
-        return send_from_directory('frontend\public\index.html', 'index.html')
+        return send_from_directory('frontend\public', 'index.html')
 
