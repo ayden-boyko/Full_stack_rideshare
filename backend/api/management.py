@@ -1,4 +1,4 @@
-from flask import abort
+from flask import abort, render_template
 from flask_restful import Resource, reqparse, request  #NOTE: Import from flask_restful, not python
 
 from backend.db.db_utils import *
@@ -22,7 +22,7 @@ class Version(Resource):
         except Exception as e:
             abort(500, message=f"Error occurred during database version retrieval: {str(e)}")
 
-class Test(Resource):
+class Main(Resource):
     def get(self):
-        return "Flask is running!"
+        return render_template('index.html')
 
