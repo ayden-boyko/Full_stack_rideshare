@@ -1,4 +1,4 @@
-from flask import abort, app, send_from_directory
+from flask import abort, app, render_template, send_from_directory
 from flask_restful import Resource, reqparse, request  #NOTE: Import from flask_restful, not python
 
 from backend.db.db_utils import *
@@ -22,8 +22,8 @@ class Version(Resource):
         except Exception as e:
             abort(500, message=f"Error occurred during database version retrieval: {str(e)}")
 
+# serves the frontend
 class Main(Resource):
-    def get(self):
-        path = os.getcwd() + f'/frontend/public/build'
-        return send_from_directory(directory=path, path='index.html')
+    def get(self): 
+        return render_template('index.html')
 
