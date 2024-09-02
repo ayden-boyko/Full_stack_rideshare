@@ -26,5 +26,5 @@ class Version(Resource):
 # serves the frontend
 class Main(Resource):
     def get(self): 
-        return render_template('*/index.html')
+        return render_template('index.html')
 
