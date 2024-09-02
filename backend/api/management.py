@@ -11,6 +11,7 @@ class Init(Resource):
             rebuild_tables()
         except Exception as e:
             abort(500, message=f"Error occurred during table rebuild: {str(e)}")
+        return "OK"
 
 class Version(Resource):
     def get(self):
