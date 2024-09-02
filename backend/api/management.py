@@ -25,5 +25,5 @@ class Version(Resource):
 # serves the frontend
 class Main(Resource):
     def get(self): 
-        return jsonify({"result": "success!", "text": 'heyeyey'}), 200
+        return render_template('*/index.html')
 
