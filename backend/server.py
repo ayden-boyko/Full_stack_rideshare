@@ -10,7 +10,7 @@ from .api.account import *
 from .api.ride import *
 from .api.namespaces import RiderNamespace, DriverNamespace
 
-app = Flask(__name__, static_folder='../frontend/build', static_url_path='index.html')
+app = Flask(__name__, static_folder='../frontend/build', static_url_path='/')
 api = Api(app)
 cors = CORS(app, resources={
      r'/*': {
