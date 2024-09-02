@@ -32,7 +32,7 @@ socketio = SocketIO(app,cors_allowed_origins="*")
 #--------TO RUN BACKEND----python server.py--------------------
 
 # serves the frontend
-api.add_resource(Main, '/')
+api.add_resource(Main, '/', methods=["GET"])
 
 api.add_resource(Init, '/api/manage/init') #Management API for initializing the DB
 
