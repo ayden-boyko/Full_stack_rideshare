@@ -8,7 +8,8 @@
       ".localhost"
     ],
     "proxy": [
-      "https://localhost:5000/"
+      "https://localhost:5000/",
+      "https://full-stack-rideshare.vercel.app/"
     ]
   },
   "dependencies": {
