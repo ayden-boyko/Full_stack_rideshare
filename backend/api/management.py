@@ -1,4 +1,4 @@
-from flask import abort, app, render_template, send_from_directory
+from flask import abort, app, jsonify, render_template, send_from_directory
 from flask_restful import Resource, reqparse, request  #NOTE: Import from flask_restful, not python
 
 from backend.db.db_utils import *
@@ -25,5 +25,5 @@ class Version(Resource):
 # serves the frontend
 class Main(Resource):
     def get(self): 
-        return "HELLO"
+        return jsonify({"result": "success!", "text": 'heyeyey'}), 200
 
