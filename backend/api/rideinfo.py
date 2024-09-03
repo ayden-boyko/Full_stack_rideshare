@@ -1,9 +1,9 @@
 from flask import abort
 from flask_restful import Resource, reqparse, request  #NOTE: Import from flask_restful, not python
 
-from backend.db.db_utils import *
+from db.db_utils import *
 
-from backend.db.rideshare import *
+from db.rideshare import *
 
 class RideInfo(Resource):
     """gets all past rides"""

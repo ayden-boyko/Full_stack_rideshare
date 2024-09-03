@@ -1,8 +1,8 @@
 from flask_restful import Resource, reqparse, request, abort  #NOTE: Import from flask_restful, not python
 
-from backend.db.db_utils import *
+from db.db_utils import *
 
-from backend.db.rideshare import *
+from db.rideshare import *
 
 class AccountDriver(Resource):
     parser = reqparse.RequestParser()

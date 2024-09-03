@@ -1,9 +1,9 @@
 from flask import abort, app, jsonify, render_template, send_from_directory
 from flask_restful import Resource, reqparse, request  #NOTE: Import from flask_restful, not python
 
-from backend.db.db_utils import *
+from db.db_utils import *
 
-from backend.db.example import *
+from db.example import *
 
 class Init(Resource):
     def post(self):
@@ -26,5 +26,9 @@ class Version(Resource):
 # serves the frontend
 class Main(Resource):
     def get(self): 
-        return render_template('index.html')
-
+        #return render_template('index.html')
+        index_path = os.path.join('../frontend/build', 'index.html')
+        if os.path.exists(index_path):
+            return send_from_directory('../frontend/build', 'index.html')
+        else:
+            abort(404, description="File not found")

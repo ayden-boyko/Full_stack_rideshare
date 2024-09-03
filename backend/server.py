@@ -1,22 +1,24 @@
-from flask import Flask
+from flask import Flask, logging
 from flask_restful import Resource, Api
 from flask_cors import CORS
 from flask_socketio import namespace, emit, send, SocketIO
-from .api.management import *
-from .api.accountinfo import *
-from .api.rideinfo import *
-from .api.transaction import *
-from .api.account import *
-from .api.ride import *
-from .api.namespaces import RiderNamespace, DriverNamespace
+from api.management import *
+from api.accountinfo import *
+from api.rideinfo import *
+from api.transaction import *
+from api.account import *
+from api.ride import *
+from api.namespaces import RiderNamespace, DriverNamespace
 
-app = Flask(__name__, static_folder='../frontend/public', static_url_path='/')
+#app = Flask(__name__, static_folder='../frontend/public', static_url_path='/')
+app = Flask(__name__, static_folder='../frontend/build/static')
 api = Api(app)
 cors = CORS(app, resources={
-     r'/*': {
-         'origins': [ "https://full-stack-rideshare-aydenboykos-projects.vercel.app/", "https://full-stack-rideshare.vercel.app/"], 
-         #, "http://localhost:5000","http://127.0.0.1:3000", "http://127.0.0.1:5000"
-         'methods': ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS']
+     r'/api/*': {
+         'origins': [ "*"], 
+         #
+         'methods': ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
+         "allow_headers": ["Content-Type", "Authorization"]
      }
  })
  
@@ -81,6 +83,14 @@ def after_request(response):
     response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
     return response
 
+@app.route('/manifest.json')
+def serve_manifest():
+    return send_from_directory('../frontend/build', 'manifest.json')
+
+@app.route('/logo192.png')
+def serve_logo():
+    return send_from_directory('../frontend/build', 'logo192.png')
+
 socketio.on_namespace(RiderNamespace('/rider'))
 socketio.on_namespace(DriverNamespace('/driver'))
 socketio.on_event('message', RiderNamespace.on_match, namespace='/driver')
@@ -94,4 +104,5 @@ if __name__ == '__main__':
     #rebuild_tables()
     #add_data_CSV('data/users.csv')
     #add_data_JSON('data/users.json')
-    socketio.run(app, debug=True, host='0.0.0.0')
+    # , host='0.0.0.0'
+    socketio.run(app, debug=True)
