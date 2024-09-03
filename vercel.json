@@ -1,12 +1,3 @@
-// {
-//   "rewrites": [
-//     {
-//       "source": "/(.*)",
-//       "destination": "/frontend/public/index.html"
-//     }
-//   ]
-// }
-
 {
   "builds": [
     {
