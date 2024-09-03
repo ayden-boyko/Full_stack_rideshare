@@ -172,6 +172,7 @@ function Accounts() {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
+        credentials: "include",
       });
       const json = await response.json();
       if (response.ok) {

@@ -42,7 +42,7 @@ function App() {
         <div className="start">
           <div className="bar">
             {data.role == null ? (
-              <h1 style={{ color: "black" }}>SELECT ROLE</h1>
+              <h1 style={{ color: "black" }}>SELECT A ROLE</h1>
             ) : (
               <button
                 className="button-select"
