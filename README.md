@@ -4,7 +4,7 @@ This full-stack rideshare application is the perfect blend of **frontend** and *
 
 ## Key Features ✨
 
-- **Pairing System**: A robust pairing system that matches riders with drivers based on proximity and availability, ensuring timely and efficient rides.
+- **Pairing System**: A robust pairing system that matches riders with drivers, drivers can choose riders if there is a speific person they enjoy transporting.
 - **Review & Comment System**: After completing a ride, users can leave ratings and feedback, creating a system of trust and accountability between riders and drivers.
 - **Real-Time Chat**: Leveraging **Socket.IO**, users can chat with each other in real-time, discussing ride details, route preferences, or even last-minute changes — ensuring the communication stays smooth and responsive.
 - **User Accounts & Authentication**: Users can sign up, log in, and manage their profiles securely with **JWT** authentication, making sure only authorized users have access to the app's core features.
@@ -28,13 +28,9 @@ This full-stack rideshare application is the perfect blend of **frontend** and *
 - **User-Centric Design**: With seamless authentication and intuitive interfaces, the app makes it easy for users to interact with minimal friction.
 - **Scalability**: By utilizing **PostgreSQL** for data management and **Flask** as the web framework, the app is built to scale, accommodating an increasing number of users without compromising performance.
 
-This project is a true reflection of my full-stack development capabilities, demonstrating both the power of modern technologies and my ability to deliver a cohesive, well-functioning system that makes ride-sharing easier and more efficient.
-
 ### Future Enhancements 🚀
 
-I plan to enhance this project further by adding:
+Additional enhancements to this project include:
 - **Geolocation Services**: Integrating real-time geolocation for ride tracking and driver availability.
 - **Payment Gateway Integration**: Implementing secure payment processing for seamless transactions.
 - **Enhanced Chat Features**: Adding multimedia support, such as sending images and location sharing, to improve communication.
-
-Feel free to explore the full functionality of the project and see how I've combined multiple technologies to deliver a fully integrated ride-sharing application.
