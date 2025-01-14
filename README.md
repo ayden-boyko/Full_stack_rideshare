@@ -31,7 +31,7 @@ To ensure scalability, ease of management, and enhanced performance, I opted for
 - **Real-Time Data Sync**: One of the standout features of Supabase is its ability to push real-time updates directly to the client. This is ideal for applications like the rideshare system, where instant communication and data synchronization are key to providing an optimal user experience.
 - **Authentication & Storage**: Supabase also handles authentication (with **JWT** tokens) and file storage, making it a one-stop solution for managing both database and user session data.
 
-### Future Enhancements 🚀
+## Future Enhancements 🚀
 
 Additional enhancements to this project include:
 - **Geolocation Services**: Integrating real-time geolocation for ride tracking and driver availability.
