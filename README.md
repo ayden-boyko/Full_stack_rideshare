@@ -31,14 +31,6 @@ To ensure scalability, ease of management, and enhanced performance, I opted for
 - **Real-Time Data Sync**: One of the standout features of Supabase is its ability to push real-time updates directly to the client. This is ideal for applications like the rideshare system, where instant communication and data synchronization are key to providing an optimal user experience.
 - **Authentication & Storage**: Supabase also handles authentication (with **JWT** tokens) and file storage, making it a one-stop solution for managing both database and user session data.
 
-By integrating Supabase, I was able to easily manage both the **backend database** and **user authentication**, ensuring smooth operation across various environments, from local development to production.
-
-## What Makes This Project Stand Out 🌟
-
-- **Dynamic Interaction**: From pairing riders with drivers to leaving feedback on completed rides, every action is designed to be fluid and immediate.
-- **User-Centric Design**: With seamless authentication and intuitive interfaces, the app makes it easy for users to interact with minimal friction.
-- **Scalability**: By utilizing **PostgreSQL** for data management and **Flask** as the web framework, the app is built to scale, accommodating an increasing number of users without compromising performance.
-
 ### Future Enhancements 🚀
 
 Additional enhancements to this project include:
